@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include "metadata.h"
-#include "ducklib/duckdb.hpp"
+#include "duckdb.hpp"
 
 using namespace duckdb;
 
@@ -21,7 +21,7 @@ class DuckStore : public MetaStorage{
         void getSingleToFile(std::string pdbid, std::string fileextension);
         std::vector<std::string> getIDsByConstraint(std::string constraint);
         std::unique_ptr<MaterializedQueryResult> current_result;
-        std::string idcolumn;
+        std::string idcolumn = "rowid";
     protected:
         DuckDB * db;
         Connection * conn;

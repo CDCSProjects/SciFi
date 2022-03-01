@@ -18,9 +18,9 @@ class RocksStore : public AssetStore{
         RocksStore(std::string name);
         void open();
         void insert(std::string key, std::string value);
-        void create(std::string directory, int recursive=0);
+        void create(std::string directory, int recursive=0, int depth =0, int useext=0);
         void getSingle(std::string pdbid);
-        void createportable(std::string directory, int recursive=0);
+        void createportable(std::string directory, int recursive=0, int depth =0, int useext=0);
         void insertFromFile(std::string file,  std::string path="");
         void getSingleToFile(std::string pdbid, std::string fileextension);
         void import(std::string sstfile);

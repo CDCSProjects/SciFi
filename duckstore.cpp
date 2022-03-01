@@ -11,6 +11,7 @@ DuckStore::DuckStore(){
 DuckStore::DuckStore(std::string p_name){
         db = new DuckDB(p_name);
 	    conn = new Connection(*db);
+        execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
         execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");/**/
         std::string IDCol = current_result->ToString();
         idcolumn = IDCol.erase (0, IDCol.find_last_of(']') +1 );
@@ -48,11 +49,18 @@ void DuckStore::getSingle(std::string pdbid){
 void DuckStore::getSingleToFile(std::string pdbid, std::string p_fileextension){
     std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
     execQuery(query);
+    
+    std::string id = pdbid;
+    size_t split = id.find_last_of("/");
+    if (split != std::string::npos){
+        id=id.substr(split+1,id.size());
+    }
+    
     std::ofstream o;
-    o.open(pdbid + "meta." + p_fileextension); 
+    o.open(id + "meta" + p_fileextension); 
     o << current_result->ToString();
     o.close();
-    std::cout << "\033[32mMetadata written to file meta." + p_fileextension << "\033[0m" << std::endl;
+    std::cout << "\033[32mMetadata written to file meta" + p_fileextension << "\033[0m" << std::endl;
     return;
 }
 

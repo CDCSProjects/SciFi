@@ -22,18 +22,19 @@ class Storage{
       
       A* asset_store;
       M* meta_store;
-      std::string afe = "pdb";
-      std::string mfe = "txt";
+      std::string afe = ".dat";
+      std::string mfe = ".txt";
       
       void load_asset_from_file(std::string file, std::string directory = ""){
         asset_store->insertFromFile(file, directory);
         return;
       }
 
-      void load_assets_from_directory(std::string dir, int portable =0, int recursive=0){
+      void load_assets_from_directory(std::string dir, int portable =0, int recursive=0, int depth=0, int ext=0){
+        
           if (portable==0)
-              asset_store->create(dir, recursive);
-          else asset_store->createportable(dir, recursive);
+              asset_store->create(dir, recursive, depth, ext);
+          else asset_store->createportable(dir, recursive, depth, ext);
       }
       
       void load_asset_from_remote(std::string address){
@@ -94,10 +95,12 @@ class Storage{
             after = idmt.erase(0,pos);
         }
         createquery = before + " PRIMARY KEY" + after;
-        //std::cout << createquery << std::endl;
+        std::cout << createquery << std::endl;
         
         meta_store->execQuery(createquery);
+        meta_store->current_result->Print();
         meta_store->execQuery("COPY metadata FROM '" + file + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")");
+        meta_store->current_result->Print();
         
         std::string IDCol = before;
         int pos_end = IDCol.find_last_of(" ");
@@ -154,10 +157,10 @@ class Storage{
         if(metaToFile != 0){
               //meta_store->getSingleToFile(id[i], fileextension_meta);
                 std::ofstream o;
-                o.open("metadata." + fileextension_meta); 
+                o.open("metadata" + fileextension_meta); 
                 o << meta_store->current_result->ToString();
                 o.close();
-                std::cout << "\033[32mMetadata written to metadata." + fileextension_meta << "\033[0m" << std::endl;
+                std::cout << "\033[32mMetadata written to metadata" + fileextension_meta << "\033[0m" << std::endl;
           }else{
               //meta_store->getSingle(id[i]);
               meta_store->current_result->Print();

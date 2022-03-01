@@ -34,7 +34,7 @@ void RocksStore::insertFromFile(std::string file, std::string path){
     database->Put( WriteOptions(), id, content);
 }
 
-void RocksStore::create(std::string p_directory, int recursive){
+void RocksStore::create(std::string p_directory, int recursive, int pathdepth, int useext){
 
     std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
 
@@ -51,8 +51,40 @@ void RocksStore::create(std::string p_directory, int recursive){
     }else{
         for (const auto & entry : fs::recursive_directory_iterator(p_directory)){
           if (!entry.is_directory()){
-            pdb_files.push_back(get_stem(entry.path()));
-            pdb_file_names.push_back(entry.path().filename().string());
+           // pdb_files.push_back(get_stem(entry.path()));
+            std::stringstream s;
+            s << entry;
+            pdb_file_names.push_back(s.str());
+            pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
+
+            
+            if (pathdepth==0){
+                pdb_files.push_back(get_stem(entry.path()));
+            }else{
+                std::string test=s.str();
+                std::string finals=s.str();
+                size_t split = 0;
+                for (size_t i=0; i<pathdepth+1;i++){
+                  split = test.find_last_of("/");
+                  if (split == std::string::npos) {
+                    split=0;
+                    break;
+                    }
+                  test=test.substr(0,split);
+                  
+                }
+                
+              
+                if (useext == 0){
+                size_t split2 = finals.find_last_of(".");
+                pdb_files.push_back(finals.substr(split+1,split2-split-1));
+                }else{
+                pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                }
+                
+                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
+                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
+            }
           }
         }
     }
@@ -73,15 +105,16 @@ void RocksStore::create(std::string p_directory, int recursive){
     std::string path;
     for (uint32_t i=0; i<pdb_files.size(); i++){
     //path = "pdb/" + pdb_files[i] + ".pdb";
-        path = p_directory + "/" + pdb_file_names[i];
+       if (recursive == 0) path = p_directory + "/" + pdb_file_names[i];
+       else path = pdb_file_names[i];
       std::ifstream ifs(path);
       content.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>() ) );
       database->Put( WriteOptions(), pdb_files[i], content);
+      std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
     }
     
     //pdb->FlushWAL(true); //TODO enable if we set manual_wal_flush
     std::cout << "...Finished creating key value store.\n";
-
     return;
 }
 
@@ -122,17 +155,23 @@ void RocksStore::getSingleToFile(std::string pdbid, std::string p_fileextension)
         std::cerr << "\033[31mNo asset found for ID " << pdbid << "\033[0m" << std::endl;
         return;
     }
+    
+    std::string id = pdbid;
+    size_t split = id.find_last_of("/");
+    if (split != std::string::npos){
+        id=id.substr(split+1,id.size());
+    }
     std::ofstream o; //ofstream is the class for fstream package
-    o.open(pdbid + "." + p_fileextension); //open is the method of ofstream
+    o.open(id + p_fileextension); //open is the method of ofstream
     o << content; // << operator which is used to print the file informations in the screen
     o.close();
     
-    std::cout << "\033[32mAsset " + pdbid + " written to file " + pdbid + "." + p_fileextension << "\033[0m" << std::endl;
+    std::cout << "\033[32mAsset " + pdbid + " written to file " + pdbid + p_fileextension << "\033[0m" << std::endl;
 
     return;
 }
 
-void RocksStore::createportable(std::string directory, int recursive){
+void RocksStore::createportable(std::string directory, int recursive, int pathdepth, int useext){
     std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
 
      Options options;
@@ -149,8 +188,40 @@ void RocksStore::createportable(std::string directory, int recursive){
     }else{
         for (const auto & entry : fs::recursive_directory_iterator(directory)){
           if (!entry.is_directory()){
-            pdb_files.push_back(get_stem(entry.path()));
-            pdb_file_names.push_back(entry.path().filename().string());
+            //pdb_files.push_back(get_stem(entry.path()));
+            std::stringstream s;
+            s << entry;
+            pdb_file_names.push_back(s.str());
+            pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
+
+            
+            if (pathdepth==0){
+                pdb_files.push_back(get_stem(entry.path()));
+            }else{
+                std::string test=s.str();
+                std::string finals=s.str();
+                size_t split = 0;
+                for (size_t i=0; i<pathdepth+1;i++){
+                  split = test.find_last_of("/");
+                  if (split == std::string::npos) {
+                    split=0;
+                    break;
+                    }
+                  test=test.substr(0,split);
+                  
+                }
+                
+                if (useext == 0){
+                size_t split2 = finals.find_last_of(".");
+                pdb_files.push_back(finals.substr(split+1,split2-split-1));
+                }else{
+                pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                }
+                
+                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
+                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
+            }
+            
           }
         }
     }
@@ -177,15 +248,24 @@ void RocksStore::createportable(std::string directory, int recursive){
     std::string content;
     std::string path;
     Status s_write;
+    int tries=0;
     for (uint32_t i=0; i<pdb_files.size(); i++){
-      path = directory + "/" + pdb_file_names[i];
-    //path = directory + pdb_files[i] + ".pdb";
+       if (recursive == 0) path = directory + "/" + pdb_file_names[i];
+       else path = pdb_file_names[i];
       std::ifstream ifs(path);
       content.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>() ) );
-      s_write = sst_file_writer.Put(pdb_files[i], content);
-        if (s_write.ok() == 0){
-        std::cerr << "\033[31mSomething went wrong when adding assets.\033[0m" << std::endl;
-        return;
+        s_write = sst_file_writer.Put(pdb_files[i], content);
+        std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
+          if (s_write.ok() == 0){
+          std::cerr << "\033[31mSomething went wrong when adding assets. Reopen file writer and try again.\033[0m" << std::endl;
+          tries++;
+          sst_file_writer.Finish(); //I'm pretty sure I can avoid these failures by seeting the right options, but I don't know which options.
+          sst_file_writer.Open(portablefile);
+          i--;
+          if (tries > 2) {
+            std::cerr << "\033[31mTried it 4 times; giving up now :( \033[0m" << std::endl;
+            return;
+          }else{tries=0;}
         }
     }
     

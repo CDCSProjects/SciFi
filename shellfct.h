@@ -29,10 +29,12 @@ namespace SciStore {
       std::string ext;
       std::cout << "Please provide the file extension for assets (currently '" << st->afe << "'): ";
       std::cin >> ext;
-      st->afe=ext;
+      if (ext != "none") st->afe=ext;
+      else st->afe="";
       std::cout << "Please provide the file extension for meta data (currently '" << st->mfe << "'): ";
       std::cin >> ext;
-      st->mfe=ext;
+      if (ext != "none") st->mfe=ext;
+      else st->mfe="";
   }
   
   static void getfrommeta(Storage<> * st){
@@ -59,7 +61,15 @@ namespace SciStore {
       char port;
       std::cout << "Create/add to portable sst file? y/n: ";
       std::cin >> port;
-      st->load_assets_from_directory(dir, port == 'y' ? 1 : 0, rec=='y' ? 1 : 0);
+      int depth;
+      if (rec=='y'){
+        std::cout << "How many directories do you want to keep as part of the key? (0-9, type 0 if you are not sure, only works if you have this many subdirectories): ";
+        std::cin >> depth;
+        }else depth=0;
+      char ext;
+      std::cout << "Include file extension in key? y/n: ";
+      std::cin >> ext;
+      st->load_assets_from_directory(dir, port == 'y' ? 1 : 0, rec=='y' ? 1 : 0, depth, ext=='y' ? 1 : 0);
   }
 
 }

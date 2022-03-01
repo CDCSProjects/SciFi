@@ -17,10 +17,10 @@ class AssetStore{
         void close(){;}
         virtual void insert(std::string key, std::string value) = 0;
         virtual void insertFromFile(std::string file,  std::string path) = 0;
-        virtual void create(std::string directory, int recursive) = 0;
+        virtual void create(std::string directory, int recursive, int depth , int ext) = 0;
         virtual void getSingle(std::string pdbid) = 0; //This should open the database, get a single value, and close the database again
         virtual void getSingleToFile(std::string pdbid, std::string fileextension) = 0; //This should open the database, get a single value, and close the database again
-        virtual void createportable(std::string directory, int recursive) = 0;
+        virtual void createportable(std::string directory, int recursive, int pathdepth, int ext) = 0;
         virtual void import(std::string sstfile) = 0;
         //copied from cppreference
         std::string get_stem(const fs::path &p) { return (p.stem().string()); }
