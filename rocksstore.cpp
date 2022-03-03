@@ -176,27 +176,36 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
 
      Options options;
           
-     std::vector<std::string> pdb_files;
-     std::vector<std::string> pdb_file_names;
+     std::vector<filepaths> fpv;
+     //std::vector<std::string> pdb_files;
+     //std::vector<std::string> pdb_file_names;
+     filepaths fp;
      
 
     if (recursive == 0){
         for (const auto & entry : fs::directory_iterator(directory)){
-          pdb_files.push_back(get_stem(entry.path()));
-          pdb_file_names.push_back(entry.path().filename().string());
+          //pdb_files.push_back(get_stem(entry.path()));
+          //pdb_file_names.push_back(entry.path().filename().string());
+          fp.files=get_stem(entry.path());
+          fp.file_names=entry.path().filename().string();
         }
     }else{
         for (const auto & entry : fs::recursive_directory_iterator(directory)){
           if (!entry.is_directory()){
-            //pdb_files.push_back(get_stem(entry.path()));
             std::stringstream s;
             s << entry;
-            pdb_file_names.push_back(s.str());
-            pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
-
+            
+            //pdb_file_names.push_back(s.str());
+            //pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
+            
+            fp.file_names=s.str();
+            std::cout << fp.file_names << std::endl;
+            fp.file_names.erase(std::remove(fp.file_names.begin(), fp.file_names.end(), '"'), fp.file_names.end());
+            std::cout << fp.file_names << std::endl;
             
             if (pathdepth==0){
-                pdb_files.push_back(get_stem(entry.path()));
+                //pdb_files.push_back(get_stem(entry.path()));
+                fp.files=get_stem(entry.path());
             }else{
                 std::string test=s.str();
                 std::string finals=s.str();
@@ -213,24 +222,32 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
                 
                 if (useext == 0){
                 size_t split2 = finals.find_last_of(".");
-                pdb_files.push_back(finals.substr(split+1,split2-split-1));
+                //pdb_files.push_back(finals.substr(split+1,split2-split-1));
+                fp.files=finals.substr(split+1,split2-split-1);
                 }else{
-                pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                //pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                fp.files=finals.substr(split+1,finals.size()-split);
                 }
                 
-                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
-                pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
+                //pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
+                //pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
+                fp.files.erase(std::remove(fp.files.begin(), fp.files.end(), '"'), fp.files.end());
+                fp.files.erase(std::remove(fp.files.begin(), fp.files.end(), '\n'), fp.files.end());
             }
+            
+            fpv.push_back(fp);
             
           }
         }
+        
+        std::sort(fpv.begin(),fpv.end(),comparep);
     }
     
     
     //set options
     options.create_if_missing = true;
     options.keep_log_file_num = 1;
-    //options.error_if_exists = true; //Todo enable for release version 
+    
 
     
     SstFileWriter sst_file_writer(EnvOptions(), options, options.comparator);
@@ -248,25 +265,23 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
     std::string content;
     std::string path;
     Status s_write;
-    int tries=0;
-    for (uint32_t i=0; i<pdb_files.size(); i++){
-       if (recursive == 0) path = directory + "/" + pdb_file_names[i];
-       else path = pdb_file_names[i];
+
+    //for (uint32_t i=0; i<pdb_files.size(); i++){
+    for (uint32_t i=0; i<fpv.size(); i++){
+       if (recursive == 0) path = directory + "/" + fpv[i].file_names; //path = directory + "/" + pdb_file_names[i];
+       else path= fpv[i].file_names;//path = pdb_file_names[i];
       std::ifstream ifs(path);
       content.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>() ) );
-        s_write = sst_file_writer.Put(pdb_files[i], content);
-        std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
+        //s_write = sst_file_writer.Put(pdb_files[i], content);
+        s_write = sst_file_writer.Put(fpv[i].files, content);
+        //std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
+        std::cout << "Create asset with ID " << fpv[i].files << " from file " << path << std::endl;
           if (s_write.ok() == 0){
-          std::cerr << "\033[31mSomething went wrong when adding assets. Reopen file writer and try again.\033[0m" << std::endl;
-          tries++;
-          sst_file_writer.Finish(); //I'm pretty sure I can avoid these failures by seeting the right options, but I don't know which options.
-          sst_file_writer.Open(portablefile);
-          i--;
-          if (tries > 2) {
-            std::cerr << "\033[31mTried it 4 times; giving up now :( \033[0m" << std::endl;
+            std::cerr << "\033[31mSomething went wrong when adding assets. " << s_write.getState() << "Reopen file writer and try again. \033[0m" << std::endl;
             return;
-          }else{tries=0;}
-        }
+          //sst_file_writer.Finish(); //I'm pretty sure I can avoid these failures by setting the right options, but I don't know which options.
+          //sst_file_writer.Open(portablefile);
+          }
     }
     
     Status s_finish = sst_file_writer.Finish();
@@ -291,7 +306,9 @@ void RocksStore::import(std::string sstfile){
     options.create_if_missing = true;
     options.keep_log_file_num = 1;
     
-
+  
+ /*   IngestExternalFileOptions efo;
+    efo.write_global_seqno=false;*/
     Status s_import = database->IngestExternalFile({sstfile}, IngestExternalFileOptions());
     if (s_import.ok() == 0){
         std::cerr << "\033[31mSomething went wrong. Does the file " << sstfile << " exist?\033[0m" << std::endl;

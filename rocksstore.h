@@ -6,13 +6,22 @@
 #include <fstream>
 #include <filesystem>
 #include <assert.h>
+#include <algorithm>
 #include "rocksdb/include/rocksdb/db.h"
 #include "assetstore.h"
 #include "downloader.h"
 
 using namespace rocksdb;
 
+struct filepaths{
+     std::string files;
+     std::string file_names;
+};
+
+static bool comparep(filepaths fp1, filepaths fp2){return fp1.files<fp2.files;}
+
 namespace SciStore {
+
 class RocksStore : public AssetStore{
     public:
         RocksStore(std::string name);
@@ -31,5 +40,8 @@ class RocksStore : public AssetStore{
         Downloader * dl;
         
 };
+
+
+
 }
 #endif
