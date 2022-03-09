@@ -98,9 +98,9 @@ class Storage{
         std::cout << createquery << std::endl;
         
         meta_store->execQuery(createquery);
-        meta_store->current_result->Print();
+        meta_store->printResult();
         meta_store->execQuery("COPY metadata FROM '" + file + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")");
-        meta_store->current_result->Print();
+        meta_store->printResult();
         
         std::string IDCol = before;
         int pos_end = IDCol.find_last_of(" ");
@@ -155,15 +155,11 @@ class Storage{
         std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
         if(metaToFile != 0){
-              //meta_store->getSingleToFile(id[i], fileextension_meta);
-                std::ofstream o;
-                o.open("metadata" + fileextension_meta); 
-                o << meta_store->current_result->ToString();
-                o.close();
-                std::cout << "\033[32mMetadata written to metadata" + fileextension_meta << "\033[0m" << std::endl;
+
+                meta_store->writeResultToFile("metadata", fileextension_meta);
           }else{
-              //meta_store->getSingle(id[i]);
-              meta_store->current_result->Print();
+
+              meta_store->printResult();
           }
         for (int i=0; i<id.size();i++){
           if (assetToFile != 0){

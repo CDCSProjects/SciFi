@@ -19,6 +19,8 @@ class MetaStorage{
         virtual std::vector<std::string> getIDsByConstraint(std::string constraint) = 0;
         virtual void getSingle(std::string pdbid) = 0;
         virtual void getSingleToFile(std::string pdbid, std::string fileextension) = 0;
+        virtual void writeResultToFile(std::string filename, std::string fileextension) = 0;
+        virtual void printResult() = 0;
 
 };
 }

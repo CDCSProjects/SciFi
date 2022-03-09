@@ -1,12 +1,11 @@
 #include "asshell.h"
 
-
 namespace SciStore {
   static void addmetadata(Storage<> * st){
       std::string argument;
       std::cout << "Please provide a csv file: ";
       std::cin >> argument;
-      st->load_metadata_advanced(argument, 1, "RA_J2000_degree FLOAT, DEC_J2000_degree FLOAT, Type1 FLOAT, Txpe2 FLOAT, Source VARCHAR, filepath_literature VARCHAR, filepath_CDL VARCHAR, coord_str VARCHAR, included_LOFAR_FIRST BOOL, split_literature VARCHAR, split_CDL VARCHAR", 5);
+      st->load_metadata_advanced(argument, 1, "RA_J2000_degree FLOAT, DEC_J2000_degree FLOAT, Type1 FLOAT, Type2 FLOAT, Source VARCHAR, filepath_literature VARCHAR, filepath_CDL VARCHAR, coord_str VARCHAR, included_LOFAR_FIRST BOOL, split_literature VARCHAR, split_CDL VARCHAR", 5);
   }
   
   static void getallIDs(Storage<> * st){
@@ -28,3 +27,4 @@ int main(int argc, char *argv[]){
     delete as;
     return 0;
 }
+

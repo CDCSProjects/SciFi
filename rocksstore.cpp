@@ -199,9 +199,9 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
             //pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
             
             fp.file_names=s.str();
-            std::cout << fp.file_names << std::endl;
+
             fp.file_names.erase(std::remove(fp.file_names.begin(), fp.file_names.end(), '"'), fp.file_names.end());
-            std::cout << fp.file_names << std::endl;
+  
             
             if (pathdepth==0){
                 //pdb_files.push_back(get_stem(entry.path()));
@@ -277,8 +277,8 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
         //std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
         std::cout << "Create asset with ID " << fpv[i].files << " from file " << path << std::endl;
           if (s_write.ok() == 0){
-            std::cerr << "\033[31mSomething went wrong when adding assets. " << s_write.getState() << "Reopen file writer and try again. \033[0m" << std::endl;
-            return;
+            std::cerr << "\033[31mSomething went wrong when adding assets. " << s_write.getState() << " Continue with next asset.\033[0m" << std::endl;
+          //  return;
           //sst_file_writer.Finish(); //I'm pretty sure I can avoid these failures by setting the right options, but I don't know which options.
           //sst_file_writer.Open(portablefile);
           }

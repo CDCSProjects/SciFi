@@ -23,8 +23,20 @@ DuckStore::~DuckStore(){
     delete db;
 }
 
+void DuckStore::printResult(){
+    current_result->Print();
+}
+void DuckStore::writeResultToFile(std::string filename, std::string fileextension){
+    std::ofstream o;
+    o.open(filename + fileextension); 
+    o << current_result->ToString();
+    o.close();
+    std::cout << "\033[32mMetadata written to " << filename + fileextension << "\033[0m" << std::endl;
+}
+
 int DuckStore::createNewDB(){
-        return 0;
+    std::cout << "Not implemented\n";
+    return 0;
 }
 
 void DuckStore::execQuery(std::string p_query){
@@ -60,7 +72,7 @@ void DuckStore::getSingleToFile(std::string pdbid, std::string p_fileextension){
     o.open(id + "meta" + p_fileextension); 
     o << current_result->ToString();
     o.close();
-    std::cout << "\033[32mMetadata written to file meta" + p_fileextension << "\033[0m" << std::endl;
+    std::cout << "\033[32mMetadata written to file " << id << "meta" << p_fileextension << "\033[0m" << std::endl;
     return;
 }
 
@@ -96,7 +108,7 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
 }
 
 int DuckStore::loadDB(std::string name){
-
+    std::cout << "loadDB not implemented\n";
         return 0;
 }
 }
