@@ -25,6 +25,7 @@ class AssetStore{
         //copied from cppreference
         std::string get_stem(const fs::path &p) { return (p.stem().string()); }
         void create_file(const fs::path &p) { std::ofstream o{p}; }
+        void importsst(std::string sstfile) { return import(sstfile);} //We need this wrapper for our python API because apparently 'import' is a reserved keyword which cannot even be used as a function name
 };
 }
 #endif
