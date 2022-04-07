@@ -69,7 +69,10 @@ namespace SciStore {
       char ext;
       std::cout << "Include file extension in key? y/n: ";
       std::cin >> ext;
-      st->load_assets_from_directory(dir, port == 'y' ? 1 : 0, rec=='y' ? 1 : 0, depth, ext=='y' ? 1 : 0);
+      int prefix;
+      std::cout << "How long is the prefix of the file name you want to remove? (0 if there is no prefix)? : ";
+      std::cin >> prefix;
+      st->load_assets_from_directory(dir, port == 'y' ? 1 : 0, rec=='y' ? 1 : 0, depth, ext=='y' ? 1 : 0, prefix);
   }
 
 }

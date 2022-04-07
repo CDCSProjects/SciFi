@@ -15,13 +15,15 @@ namespace SciStore {
 
 int main(int argc, char *argv[]){
 
-    SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("galaxyasset","galaxymeta");
+    //SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("galaxyasset","galaxymeta");
+    SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("pdbasset","pdbmeta");
     SciStore::AsShell * as = new SciStore::AsShell(st);
     
+    st->load_assets_from_directory("/mnt/c/Users/ann__/Documents/pdb/pdb",0,1,0,0,3);
     as->register_function("addmeta",&SciStore::addmetadata,"Add metadata to store");
     as->register_function("getids",&SciStore::getallIDs,"Get all available IDs from the meta store");
     
-    as->run();
+   // as->run();
 
     delete st;
     delete as;

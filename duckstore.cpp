@@ -12,10 +12,11 @@ DuckStore::DuckStore(std::string p_name){
         db = new DuckDB(p_name);
 	    conn = new Connection(*db);
         execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
-        execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");/**/
+        execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
         std::string IDCol = current_result->ToString();
         idcolumn = IDCol.erase (0, IDCol.find_last_of(']') +1 );
         current_result->Fetch();
+        execQuery("CREATE TABLE IF NOT EXISTS filedata (key VARCHAR, collection VARCHAR DEFAULT(NULL), compressed BOOLEAN DEFAULT FALSE, path VARCHAR  DEFAULT '', fileextension VARCHAR DEFAULT '')");
      //   current_result=make_unique<QueryResult>();
 }
 

@@ -30,10 +30,19 @@ class Storage{
         return;
       }
 
-      void load_assets_from_directory(std::string dir, int portable =0, int recursive=0, int depth=0, int ext=0){
+      void load_assets_from_directory(std::string dir, int portable =0, int recursive=0, int depth=0, int ext=0, int prefix=0){
+        meta_store->execQuery("DROP TABLE IF EXISTS filedata"); //TODO Delete this line for release
+        meta_store->execQuery("CREATE TABLE IF NOT EXISTS filedata (key VARCHAR, collection VARCHAR DEFAULT(NULL), compressed BOOLEAN DEFAULT FALSE, path VARCHAR  DEFAULT '', fileextension VARCHAR DEFAULT '')");
         
-          if (portable==0)
-              asset_store->create(dir, recursive, depth, ext);
+        if (portable==0){
+              std::vector<filedata> fd = asset_store->create(dir, recursive, depth, ext, prefix);
+              std::cout << "Added " << fd.size() << " assets" << std::endl;
+              for (int i=0; i< fd.size(); i++){
+                meta_store->execQuery("INSERT INTO filedata values ('" + fd[i].key + "', " + fd[i].collection + " , " + (fd[i].compressed == true ? string("true") : string("false")) + ", '" + fd[i].path + "', '" + fd[i].fileextension + "')");
+                
+              }
+             // meta_store->execQueryAndPrint("SELECT * FROM filedata;");
+        }
           else asset_store->createportable(dir, recursive, depth, ext);
       }
       
@@ -189,12 +198,26 @@ class Storage{
       
       void import_asset_store(std::string file){
         asset_store->import(file);
+        return;
       }
+      
+      void testout();
       /*TODO 
         - Wrapper for loading assets and/or metadata from file or internet
         - Wrapper for adding metadata manually
         */
 };
+
+//We need this for the specialization of the Storage class for the python wrapper. In case of a new specialization, a new wrapper is necessary.
+class DefaultStorage : public Storage<SciStore::RocksStore, SciStore::DuckStore>{ 
+    public:
+        using Storage::Storage;
+        //DefaultStorage(std::string assetDBname, std::string metaDBname) : Storage<SciStore::RocksStore, SciStore::DuckStore>(assetDBname, metaDBname){return;};
+       // void iimport_asset_store(std::string file) {import_asset_store(file); return;}
+        
+};
+
+typedef Storage<SciStore::RocksStore, SciStore::DuckStore> DefStorage;
 }
 
 #endif

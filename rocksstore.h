@@ -4,9 +4,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <filesystem>
 #include <assert.h>
 #include <algorithm>
+#include <zlib.h>
+
 #include "rocksdb/include/rocksdb/db.h"
 #include "assetstore.h"
 #include "downloader.h"
@@ -27,7 +30,8 @@ class RocksStore : public AssetStore{
         RocksStore(std::string name);
         void open();
         void insert(std::string key, std::string value);
-        void create(std::string directory, int recursive=0, int depth =0, int useext=0);
+        void unzipAndCreate(std::string p_directory, int recursive=0, int pathdepth=0, int useext=0, int unzip=0);
+        std::vector<filedata> create(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
         void getSingle(std::string pdbid);
         void createportable(std::string directory, int recursive=0, int depth =0, int useext=0);
         void insertFromFile(std::string file,  std::string path="");

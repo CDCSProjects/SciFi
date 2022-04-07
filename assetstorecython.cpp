@@ -604,8 +604,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__duckcython
-#define __PYX_HAVE_API__duckcython
+#define __PYX_HAVE__assetstore
+#define __PYX_HAVE_API__assetstore
 /* Early includes */
 #include "ios"
 #include "new"
@@ -617,6 +617,7 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include <vector>
 #include "duckstore.h"
 #include "rocksstore.h"
+#include "storage.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -826,36 +827,64 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "stringsource",
-  "duckcython.pyx",
+  "assetstorecython.pyx",
 };
 
 /*--- Type declarations ---*/
-struct __pyx_obj_10duckcython_PyDuckStore;
-struct __pyx_obj_10duckcython_PyRocksStore;
+struct __pyx_obj_10assetstore_PyDuckStore;
+struct __pyx_obj_10assetstore_PyRocksStore;
+struct __pyx_obj_10assetstore_PyDefStorage;
+struct __pyx_obj_10assetstore_PyDefaultStorage;
 
-/* "duckcython.pyx":23
+/* "assetstorecython.pyx":23
  * #        unique_ptr[MaterializedQueryResult] current_result
  * 
  * cdef class PyDuckStore:             # <<<<<<<<<<<<<<
  *     cdef DuckStore *thisptr
  *     def __cinit__(self, name):
  */
-struct __pyx_obj_10duckcython_PyDuckStore {
+struct __pyx_obj_10assetstore_PyDuckStore {
   PyObject_HEAD
   SciStore::DuckStore *thisptr;
 };
 
 
-/* "duckcython.pyx":61
+/* "assetstorecython.pyx":61
  *         void remove(string)
  * 
  * cdef class PyRocksStore:             # <<<<<<<<<<<<<<
  *     cdef RocksStore *thisptr
  *     def __cinit__(self, name):
  */
-struct __pyx_obj_10duckcython_PyRocksStore {
+struct __pyx_obj_10assetstore_PyRocksStore {
   PyObject_HEAD
   SciStore::RocksStore *thisptr;
+};
+
+
+/* "assetstorecython.pyx":92
+ *         void testout()
+ * 
+ * cdef class PyDefStorage:             # <<<<<<<<<<<<<<
+ *     cdef DefaultStorage *thisptr
+ *     def __cinit__(self, s1, s2):
+ */
+struct __pyx_obj_10assetstore_PyDefStorage {
+  PyObject_HEAD
+  SciStore::DefaultStorage *thisptr;
+};
+
+
+/* "assetstorecython.pyx":113
+ *         U *metastore
+ * 
+ * cdef class PyDefaultStorage:             # <<<<<<<<<<<<<<
+ *     cdef Storage[RocksStore, DuckStore] *thisptr
+ *     def __cinit__(self, s1, s2):
+ */
+struct __pyx_obj_10assetstore_PyDefaultStorage {
+  PyObject_HEAD
+  SciStore::Storage<SciStore::RocksStore,SciStore::DuckStore>  *thisptr;
 };
 
 
@@ -991,6 +1020,54 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif
+
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
+/* PyObjectCallNoArg.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+#else
+#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
+#endif
+
 /* ListCompAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
 static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
@@ -1080,6 +1157,48 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
+/* CppExceptionConversion.proto */
+#ifndef __Pyx_CppExn2PyErr
+#include <new>
+#include <typeinfo>
+#include <stdexcept>
+#include <ios>
+static void __Pyx_CppExn2PyErr() {
+  try {
+    if (PyErr_Occurred())
+      ; // let the latest Python exn pass through and ignore the current one
+    else
+      throw;
+  } catch (const std::bad_alloc& exn) {
+    PyErr_SetString(PyExc_MemoryError, exn.what());
+  } catch (const std::bad_cast& exn) {
+    PyErr_SetString(PyExc_TypeError, exn.what());
+  } catch (const std::bad_typeid& exn) {
+    PyErr_SetString(PyExc_TypeError, exn.what());
+  } catch (const std::domain_error& exn) {
+    PyErr_SetString(PyExc_ValueError, exn.what());
+  } catch (const std::invalid_argument& exn) {
+    PyErr_SetString(PyExc_ValueError, exn.what());
+  } catch (const std::ios_base::failure& exn) {
+    PyErr_SetString(PyExc_IOError, exn.what());
+  } catch (const std::out_of_range& exn) {
+    PyErr_SetString(PyExc_IndexError, exn.what());
+  } catch (const std::overflow_error& exn) {
+    PyErr_SetString(PyExc_OverflowError, exn.what());
+  } catch (const std::range_error& exn) {
+    PyErr_SetString(PyExc_ArithmeticError, exn.what());
+  } catch (const std::underflow_error& exn) {
+    PyErr_SetString(PyExc_ArithmeticError, exn.what());
+  } catch (const std::exception& exn) {
+    PyErr_SetString(PyExc_RuntimeError, exn.what());
+  }
+  catch (...)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+  }
+}
+#endif
+
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
@@ -1122,9 +1241,11 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'libcpp.vector' */
 
-/* Module declarations from 'duckcython' */
-static PyTypeObject *__pyx_ptype_10duckcython_PyDuckStore = 0;
-static PyTypeObject *__pyx_ptype_10duckcython_PyRocksStore = 0;
+/* Module declarations from 'assetstore' */
+static PyTypeObject *__pyx_ptype_10assetstore_PyDuckStore = 0;
+static PyTypeObject *__pyx_ptype_10assetstore_PyRocksStore = 0;
+static PyTypeObject *__pyx_ptype_10assetstore_PyDefStorage = 0;
+static PyTypeObject *__pyx_ptype_10assetstore_PyDefaultStorage = 0;
 static std::string __pyx_convert_string_from_py_std__in_string(PyObject *); /*proto*/
 static CYTHON_INLINE PyObject *__pyx_convert_PyObject_string_to_py_std__in_string(std::string const &); /*proto*/
 static CYTHON_INLINE PyObject *__pyx_convert_PyUnicode_string_to_py_std__in_string(std::string const &); /*proto*/
@@ -1132,17 +1253,21 @@ static CYTHON_INLINE PyObject *__pyx_convert_PyStr_string_to_py_std__in_string(s
 static CYTHON_INLINE PyObject *__pyx_convert_PyBytes_string_to_py_std__in_string(std::string const &); /*proto*/
 static CYTHON_INLINE PyObject *__pyx_convert_PyByteArray_string_to_py_std__in_string(std::string const &); /*proto*/
 static PyObject *__pyx_convert_vector_to_py_std_3a__3a_string(const std::vector<std::string>  &); /*proto*/
-#define __Pyx_MODULE_NAME "duckcython"
-extern int __pyx_module_is_main_duckcython;
-int __pyx_module_is_main_duckcython = 0;
+#define __Pyx_MODULE_NAME "assetstore"
+extern int __pyx_module_is_main_assetstore;
+int __pyx_module_is_main_assetstore = 0;
 
-/* Implementation of 'duckcython' */
+/* Implementation of 'assetstore' */
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_range;
+static const char __pyx_k__7[] = "";
 static const char __pyx_k_i1[] = "i1";
 static const char __pyx_k_i2[] = "i2";
 static const char __pyx_k_i3[] = "i3";
 static const char __pyx_k_id[] = "id";
+static const char __pyx_k_s1[] = "s1";
+static const char __pyx_k_s2[] = "s2";
+static const char __pyx_k_dir[] = "dir";
 static const char __pyx_k_ext[] = "ext";
 static const char __pyx_k_key[] = "key";
 static const char __pyx_k_file[] = "file";
@@ -1153,21 +1278,30 @@ static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_reduce[] = "__reduce__";
+static const char __pyx_k_testout[] = "testout";
 static const char __pyx_k_filename[] = "filename";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_PyDuckStore[] = "PyDuckStore";
+static const char __pyx_k_PyDefStorage[] = "PyDefStorage";
 static const char __pyx_k_PyRocksStore[] = "PyRocksStore";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
+static const char __pyx_k_PyDefaultStorage[] = "PyDefaultStorage";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_import_asset_store[] = "import_asset_store";
+static const char __pyx_k_load_asset_from_file[] = "load_asset_from_file";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
+static PyObject *__pyx_n_s_PyDefStorage;
+static PyObject *__pyx_n_s_PyDefaultStorage;
 static PyObject *__pyx_n_s_PyDuckStore;
 static PyObject *__pyx_n_s_PyRocksStore;
 static PyObject *__pyx_n_s_TypeError;
+static PyObject *__pyx_kp_s__7;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_dir;
 static PyObject *__pyx_n_s_ext;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_filename;
@@ -1176,7 +1310,9 @@ static PyObject *__pyx_n_s_i1;
 static PyObject *__pyx_n_s_i2;
 static PyObject *__pyx_n_s_i3;
 static PyObject *__pyx_n_s_id;
+static PyObject *__pyx_n_s_import_asset_store;
 static PyObject *__pyx_n_s_key;
+static PyObject *__pyx_n_s_load_asset_from_file;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_name_2;
@@ -1186,44 +1322,66 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
+static PyObject *__pyx_n_s_s1;
+static PyObject *__pyx_n_s_s2;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_test;
-static int __pyx_pf_10duckcython_11PyDuckStore___cinit__(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
-static void __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_ext); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_constr); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_10duckcython_12PyRocksStore___cinit__(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
-static void __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_key, PyObject *__pyx_v_id); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_path); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_18importsst(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_20remove(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_10duckcython_PyDuckStore(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_10duckcython_PyRocksStore(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_n_s_testout;
+static int __pyx_pf_10assetstore_11PyDuckStore___cinit__(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
+static void __pyx_pf_10assetstore_11PyDuckStore_2__dealloc__(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_4execQueryAndPrint(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_6createNewDB(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_8loadDB(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_10execQuery(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_12getSingle(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_14getSingleToFile(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_16writeResultToFile(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_ext); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_18printResult(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_20getIDsByConstraint(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_constr); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_10assetstore_12PyRocksStore___cinit__(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
+static void __pyx_pf_10assetstore_12PyRocksStore_2__dealloc__(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_4open(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_6insert(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_key, PyObject *__pyx_v_id); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_8create(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_10getSingle(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_12createportable(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_14insertFromFile(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_path); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_16getSingleToFile(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_18importsst(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_20remove(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_10assetstore_12PyDefStorage___cinit__(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, PyObject *__pyx_v_s1, PyObject *__pyx_v_s2); /* proto */
+static void __pyx_pf_10assetstore_12PyDefStorage_2__dealloc__(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_4import_asset_store(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, PyObject *__pyx_v_file); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_6testout(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_10assetstore_16PyDefaultStorage___cinit__(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_s1, PyObject *__pyx_v_s2); /* proto */
+static void __pyx_pf_10assetstore_16PyDefaultStorage_2__dealloc__(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_4import_asset_store(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_file); /* proto */
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_6load_asset_from_file(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_dir); /* proto */
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_8testout(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_10assetstore_PyDuckStore(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_10assetstore_PyRocksStore(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_10assetstore_PyDefStorage(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_10assetstore_PyDefaultStorage(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__4;
+static PyObject *__pyx_tuple__5;
+static PyObject *__pyx_tuple__6;
+static PyObject *__pyx_tuple__8;
+static PyObject *__pyx_tuple__9;
 /* Late includes */
 
-/* "duckcython.pyx":25
+/* "assetstorecython.pyx":25
  * cdef class PyDuckStore:
  *     cdef DuckStore *thisptr
  *     def __cinit__(self, name):             # <<<<<<<<<<<<<<
@@ -1232,8 +1390,8 @@ static PyObject *__pyx_tuple__4;
  */
 
 /* Python wrapper */
-static int __pyx_pw_10duckcython_11PyDuckStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_10duckcython_11PyDuckStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_10assetstore_11PyDuckStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_10assetstore_11PyDuckStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_name = 0;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -1270,24 +1428,24 @@ static int __pyx_pw_10duckcython_11PyDuckStore_1__cinit__(PyObject *__pyx_v_self
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 25, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyDuckStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore___cinit__(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), __pyx_v_name);
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore___cinit__(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), __pyx_v_name);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_10duckcython_11PyDuckStore___cinit__(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name) {
+static int __pyx_pf_10assetstore_11PyDuckStore___cinit__(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "duckcython.pyx":26
+  /* "assetstorecython.pyx":26
  *     cdef DuckStore *thisptr
  *     def __cinit__(self, name):
  *         self.thisptr = new DuckStore(name)             # <<<<<<<<<<<<<<
@@ -1297,7 +1455,7 @@ static int __pyx_pf_10duckcython_11PyDuckStore___cinit__(struct __pyx_obj_10duck
   __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_name); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 26, __pyx_L1_error)
   __pyx_v_self->thisptr = new SciStore::DuckStore(__pyx_t_1);
 
-  /* "duckcython.pyx":25
+  /* "assetstorecython.pyx":25
  * cdef class PyDuckStore:
  *     cdef DuckStore *thisptr
  *     def __cinit__(self, name):             # <<<<<<<<<<<<<<
@@ -1309,14 +1467,14 @@ static int __pyx_pf_10duckcython_11PyDuckStore___cinit__(struct __pyx_obj_10duck
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_AddTraceback("duckcython.PyDuckStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "duckcython.pyx":27
+/* "assetstorecython.pyx":27
  *     def __cinit__(self, name):
  *         self.thisptr = new DuckStore(name)
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1325,21 +1483,21 @@ static int __pyx_pf_10duckcython_11PyDuckStore___cinit__(struct __pyx_obj_10duck
  */
 
 /* Python wrapper */
-static void __pyx_pw_10duckcython_11PyDuckStore_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_10duckcython_11PyDuckStore_3__dealloc__(PyObject *__pyx_v_self) {
+static void __pyx_pw_10assetstore_11PyDuckStore_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_10assetstore_11PyDuckStore_3__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self));
+  __pyx_pf_10assetstore_11PyDuckStore_2__dealloc__(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-static void __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self) {
+static void __pyx_pf_10assetstore_11PyDuckStore_2__dealloc__(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "duckcython.pyx":28
+  /* "assetstorecython.pyx":28
  *         self.thisptr = new DuckStore(name)
  *     def __dealloc__(self):
  *         del self.thisptr             # <<<<<<<<<<<<<<
@@ -1348,7 +1506,7 @@ static void __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(struct __pyx_obj_10
  */
   delete __pyx_v_self->thisptr;
 
-  /* "duckcython.pyx":27
+  /* "assetstorecython.pyx":27
  *     def __cinit__(self, name):
  *         self.thisptr = new DuckStore(name)
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1360,7 +1518,7 @@ static void __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(struct __pyx_obj_10
   __Pyx_RefNannyFinishContext();
 }
 
-/* "duckcython.pyx":29
+/* "assetstorecython.pyx":29
  *     def __dealloc__(self):
  *         del self.thisptr
  *     def execQueryAndPrint(self, query):             # <<<<<<<<<<<<<<
@@ -1369,26 +1527,26 @@ static void __pyx_pf_10duckcython_11PyDuckStore_2__dealloc__(struct __pyx_obj_10
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_5execQueryAndPrint(PyObject *__pyx_v_self, PyObject *__pyx_v_query); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_5execQueryAndPrint(PyObject *__pyx_v_self, PyObject *__pyx_v_query) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_5execQueryAndPrint(PyObject *__pyx_v_self, PyObject *__pyx_v_query); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_5execQueryAndPrint(PyObject *__pyx_v_self, PyObject *__pyx_v_query) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("execQueryAndPrint (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_query));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_4execQueryAndPrint(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_query));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_4execQueryAndPrint(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("execQueryAndPrint", 0);
 
-  /* "duckcython.pyx":30
+  /* "assetstorecython.pyx":30
  *         del self.thisptr
  *     def execQueryAndPrint(self, query):
  *         return self.thisptr.execQueryAndPrint(query)             # <<<<<<<<<<<<<<
@@ -1403,7 +1561,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct _
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":29
+  /* "assetstorecython.pyx":29
  *     def __dealloc__(self):
  *         del self.thisptr
  *     def execQueryAndPrint(self, query):             # <<<<<<<<<<<<<<
@@ -1414,7 +1572,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct _
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.execQueryAndPrint", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.execQueryAndPrint", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1422,7 +1580,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct _
   return __pyx_r;
 }
 
-/* "duckcython.pyx":31
+/* "assetstorecython.pyx":31
  *     def execQueryAndPrint(self, query):
  *         return self.thisptr.execQueryAndPrint(query)
  *     def createNewDB(self):             # <<<<<<<<<<<<<<
@@ -1431,25 +1589,25 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_4execQueryAndPrint(struct _
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_7createNewDB(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_7createNewDB(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_7createNewDB(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_7createNewDB(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("createNewDB (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_6createNewDB(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_6createNewDB(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_6createNewDB(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("createNewDB", 0);
 
-  /* "duckcython.pyx":32
+  /* "assetstorecython.pyx":32
  *         return self.thisptr.execQueryAndPrint(query)
  *     def createNewDB(self):
  *         return self.thisptr.createNewDB()             # <<<<<<<<<<<<<<
@@ -1463,7 +1621,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_o
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":31
+  /* "assetstorecython.pyx":31
  *     def execQueryAndPrint(self, query):
  *         return self.thisptr.execQueryAndPrint(query)
  *     def createNewDB(self):             # <<<<<<<<<<<<<<
@@ -1474,7 +1632,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_o
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.createNewDB", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.createNewDB", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1482,7 +1640,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_o
   return __pyx_r;
 }
 
-/* "duckcython.pyx":33
+/* "assetstorecython.pyx":33
  *     def createNewDB(self):
  *         return self.thisptr.createNewDB()
  *     def loadDB(self, name):             # <<<<<<<<<<<<<<
@@ -1491,26 +1649,26 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_6createNewDB(struct __pyx_o
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_9loadDB(PyObject *__pyx_v_self, PyObject *__pyx_v_name); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_9loadDB(PyObject *__pyx_v_self, PyObject *__pyx_v_name) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_9loadDB(PyObject *__pyx_v_self, PyObject *__pyx_v_name); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_9loadDB(PyObject *__pyx_v_self, PyObject *__pyx_v_name) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("loadDB (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_8loadDB(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_name));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_8loadDB(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_name));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_8loadDB(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_name) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("loadDB", 0);
 
-  /* "duckcython.pyx":34
+  /* "assetstorecython.pyx":34
  *         return self.thisptr.createNewDB()
  *     def loadDB(self, name):
  *         return self.thisptr.loadDB(name)             # <<<<<<<<<<<<<<
@@ -1525,7 +1683,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":33
+  /* "assetstorecython.pyx":33
  *     def createNewDB(self):
  *         return self.thisptr.createNewDB()
  *     def loadDB(self, name):             # <<<<<<<<<<<<<<
@@ -1536,7 +1694,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.loadDB", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.loadDB", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1544,7 +1702,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10
   return __pyx_r;
 }
 
-/* "duckcython.pyx":35
+/* "assetstorecython.pyx":35
  *     def loadDB(self, name):
  *         return self.thisptr.loadDB(name)
  *     def execQuery(self, query):             # <<<<<<<<<<<<<<
@@ -1553,26 +1711,26 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_8loadDB(struct __pyx_obj_10
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_11execQuery(PyObject *__pyx_v_self, PyObject *__pyx_v_query); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_11execQuery(PyObject *__pyx_v_self, PyObject *__pyx_v_query) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_11execQuery(PyObject *__pyx_v_self, PyObject *__pyx_v_query); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_11execQuery(PyObject *__pyx_v_self, PyObject *__pyx_v_query) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("execQuery (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_10execQuery(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_query));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_10execQuery(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_query));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_10execQuery(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_query) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("execQuery", 0);
 
-  /* "duckcython.pyx":36
+  /* "assetstorecython.pyx":36
  *         return self.thisptr.loadDB(name)
  *     def execQuery(self, query):
  *         return self.thisptr.execQuery(query)             # <<<<<<<<<<<<<<
@@ -1587,7 +1745,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_ob
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":35
+  /* "assetstorecython.pyx":35
  *     def loadDB(self, name):
  *         return self.thisptr.loadDB(name)
  *     def execQuery(self, query):             # <<<<<<<<<<<<<<
@@ -1598,7 +1756,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_ob
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.execQuery", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.execQuery", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1606,7 +1764,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "duckcython.pyx":37
+/* "assetstorecython.pyx":37
  *     def execQuery(self, query):
  *         return self.thisptr.execQuery(query)
  *     def getSingle(self, id):             # <<<<<<<<<<<<<<
@@ -1615,26 +1773,26 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_10execQuery(struct __pyx_ob
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_13getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_13getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_13getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_13getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("getSingle (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_12getSingle(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_12getSingle(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_12getSingle(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("getSingle", 0);
 
-  /* "duckcython.pyx":38
+  /* "assetstorecython.pyx":38
  *         return self.thisptr.execQuery(query)
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)             # <<<<<<<<<<<<<<
@@ -1649,7 +1807,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_ob
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":37
+  /* "assetstorecython.pyx":37
  *     def execQuery(self, query):
  *         return self.thisptr.execQuery(query)
  *     def getSingle(self, id):             # <<<<<<<<<<<<<<
@@ -1660,7 +1818,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_ob
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.getSingle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.getSingle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1668,7 +1826,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "duckcython.pyx":39
+/* "assetstorecython.pyx":39
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)
  *     def getSingleToFile(self, id, ext):             # <<<<<<<<<<<<<<
@@ -1677,8 +1835,8 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_12getSingle(struct __pyx_ob
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_15getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_15getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_15getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_15getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_id = 0;
   PyObject *__pyx_v_ext = 0;
   PyObject *__pyx_r = 0;
@@ -1726,18 +1884,18 @@ static PyObject *__pyx_pw_10duckcython_11PyDuckStore_15getSingleToFile(PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("getSingleToFile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 39, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyDuckStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), __pyx_v_id, __pyx_v_ext);
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_14getSingleToFile(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), __pyx_v_id, __pyx_v_ext);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_14getSingleToFile(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -1745,7 +1903,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("getSingleToFile", 0);
 
-  /* "duckcython.pyx":40
+  /* "assetstorecython.pyx":40
  *         return self.thisptr.getSingle(id)
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)             # <<<<<<<<<<<<<<
@@ -1761,7 +1919,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":39
+  /* "assetstorecython.pyx":39
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)
  *     def getSingleToFile(self, id, ext):             # <<<<<<<<<<<<<<
@@ -1772,7 +1930,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1780,7 +1938,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __
   return __pyx_r;
 }
 
-/* "duckcython.pyx":41
+/* "assetstorecython.pyx":41
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def writeResultToFile(self, filename, ext):             # <<<<<<<<<<<<<<
@@ -1789,8 +1947,8 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_14getSingleToFile(struct __
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_17writeResultToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_17writeResultToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_17writeResultToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_17writeResultToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_filename = 0;
   PyObject *__pyx_v_ext = 0;
   PyObject *__pyx_r = 0;
@@ -1838,18 +1996,18 @@ static PyObject *__pyx_pw_10duckcython_11PyDuckStore_17writeResultToFile(PyObjec
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("writeResultToFile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 41, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyDuckStore.writeResultToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.writeResultToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), __pyx_v_filename, __pyx_v_ext);
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_16writeResultToFile(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), __pyx_v_filename, __pyx_v_ext);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_ext) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_16writeResultToFile(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_ext) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -1857,7 +2015,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct 
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("writeResultToFile", 0);
 
-  /* "duckcython.pyx":42
+  /* "assetstorecython.pyx":42
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def writeResultToFile(self, filename, ext):
  *         return self.thisptr.writeResultToFile(filename, ext)             # <<<<<<<<<<<<<<
@@ -1873,7 +2031,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct 
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":41
+  /* "assetstorecython.pyx":41
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def writeResultToFile(self, filename, ext):             # <<<<<<<<<<<<<<
@@ -1884,7 +2042,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.writeResultToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.writeResultToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1892,7 +2050,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct 
   return __pyx_r;
 }
 
-/* "duckcython.pyx":43
+/* "assetstorecython.pyx":43
  *     def writeResultToFile(self, filename, ext):
  *         return self.thisptr.writeResultToFile(filename, ext)
  *     def printResult(self):             # <<<<<<<<<<<<<<
@@ -1901,25 +2059,25 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_16writeResultToFile(struct 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_19printResult(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_19printResult(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_19printResult(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_19printResult(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("printResult (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_18printResult(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_18printResult(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_18printResult(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("printResult", 0);
 
-  /* "duckcython.pyx":44
+  /* "assetstorecython.pyx":44
  *         return self.thisptr.writeResultToFile(filename, ext)
  *     def printResult(self):
  *         return self.thisptr.printResult()             # <<<<<<<<<<<<<<
@@ -1933,7 +2091,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":43
+  /* "assetstorecython.pyx":43
  *     def writeResultToFile(self, filename, ext):
  *         return self.thisptr.writeResultToFile(filename, ext)
  *     def printResult(self):             # <<<<<<<<<<<<<<
@@ -1944,7 +2102,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.printResult", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.printResult", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1952,7 +2110,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_
   return __pyx_r;
 }
 
-/* "duckcython.pyx":45
+/* "assetstorecython.pyx":45
  *     def printResult(self):
  *         return self.thisptr.printResult()
  *     def getIDsByConstraint(self, constr):             # <<<<<<<<<<<<<<
@@ -1961,26 +2119,26 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_18printResult(struct __pyx_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_21getIDsByConstraint(PyObject *__pyx_v_self, PyObject *__pyx_v_constr); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_21getIDsByConstraint(PyObject *__pyx_v_self, PyObject *__pyx_v_constr) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_21getIDsByConstraint(PyObject *__pyx_v_self, PyObject *__pyx_v_constr); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_21getIDsByConstraint(PyObject *__pyx_v_self, PyObject *__pyx_v_constr) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("getIDsByConstraint (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_constr));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_20getIDsByConstraint(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v_constr));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_constr) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_20getIDsByConstraint(struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, PyObject *__pyx_v_constr) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("getIDsByConstraint", 0);
 
-  /* "duckcython.pyx":46
+  /* "assetstorecython.pyx":46
  *         return self.thisptr.printResult()
  *     def getIDsByConstraint(self, constr):
  *         return self.thisptr.getIDsByConstraint(constr)             # <<<<<<<<<<<<<<
@@ -1995,7 +2153,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(struct
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":45
+  /* "assetstorecython.pyx":45
  *     def printResult(self):
  *         return self.thisptr.printResult()
  *     def getIDsByConstraint(self, constr):             # <<<<<<<<<<<<<<
@@ -2006,7 +2164,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(struct
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.getIDsByConstraint", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.getIDsByConstraint", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2021,19 +2179,19 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_20getIDsByConstraint(struct
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_22__reduce_cython__(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_22__reduce_cython__(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2060,7 +2218,7 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_22__reduce_cython__(CYTHON_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -2075,19 +2233,19 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_22__reduce_cython__(CYTHON_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_10duckcython_11PyDuckStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_10assetstore_11PyDuckStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_11PyDuckStore_24__setstate_cython__(((struct __pyx_obj_10duckcython_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_10assetstore_11PyDuckStore_24__setstate_cython__(((struct __pyx_obj_10assetstore_PyDuckStore *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_11PyDuckStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyDuckStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_10assetstore_11PyDuckStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDuckStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2114,14 +2272,14 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_24__setstate_cython__(CYTHO
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyDuckStore.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyDuckStore.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "duckcython.pyx":63
+/* "assetstorecython.pyx":63
  * cdef class PyRocksStore:
  *     cdef RocksStore *thisptr
  *     def __cinit__(self, name):             # <<<<<<<<<<<<<<
@@ -2130,8 +2288,8 @@ static PyObject *__pyx_pf_10duckcython_11PyDuckStore_24__setstate_cython__(CYTHO
  */
 
 /* Python wrapper */
-static int __pyx_pw_10duckcython_12PyRocksStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_10duckcython_12PyRocksStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_10assetstore_12PyRocksStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_10assetstore_12PyRocksStore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_name = 0;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -2168,24 +2326,24 @@ static int __pyx_pw_10duckcython_12PyRocksStore_1__cinit__(PyObject *__pyx_v_sel
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 63, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore___cinit__(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_name);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore___cinit__(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_name);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_10duckcython_12PyRocksStore___cinit__(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name) {
+static int __pyx_pf_10assetstore_12PyRocksStore___cinit__(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "duckcython.pyx":64
+  /* "assetstorecython.pyx":64
  *     cdef RocksStore *thisptr
  *     def __cinit__(self, name):
  *         self.thisptr = new RocksStore(name)             # <<<<<<<<<<<<<<
@@ -2195,7 +2353,7 @@ static int __pyx_pf_10duckcython_12PyRocksStore___cinit__(struct __pyx_obj_10duc
   __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_name); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 64, __pyx_L1_error)
   __pyx_v_self->thisptr = new SciStore::RocksStore(__pyx_t_1);
 
-  /* "duckcython.pyx":63
+  /* "assetstorecython.pyx":63
  * cdef class PyRocksStore:
  *     cdef RocksStore *thisptr
  *     def __cinit__(self, name):             # <<<<<<<<<<<<<<
@@ -2207,14 +2365,14 @@ static int __pyx_pf_10duckcython_12PyRocksStore___cinit__(struct __pyx_obj_10duc
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "duckcython.pyx":65
+/* "assetstorecython.pyx":65
  *     def __cinit__(self, name):
  *         self.thisptr = new RocksStore(name)
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2223,21 +2381,21 @@ static int __pyx_pf_10duckcython_12PyRocksStore___cinit__(struct __pyx_obj_10duc
  */
 
 /* Python wrapper */
-static void __pyx_pw_10duckcython_12PyRocksStore_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_10duckcython_12PyRocksStore_3__dealloc__(PyObject *__pyx_v_self) {
+static void __pyx_pw_10assetstore_12PyRocksStore_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_10assetstore_12PyRocksStore_3__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self));
+  __pyx_pf_10assetstore_12PyRocksStore_2__dealloc__(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-static void __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self) {
+static void __pyx_pf_10assetstore_12PyRocksStore_2__dealloc__(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "duckcython.pyx":66
+  /* "assetstorecython.pyx":66
  *         self.thisptr = new RocksStore(name)
  *     def __dealloc__(self):
  *         del self.thisptr             # <<<<<<<<<<<<<<
@@ -2246,7 +2404,7 @@ static void __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(struct __pyx_obj_1
  */
   delete __pyx_v_self->thisptr;
 
-  /* "duckcython.pyx":65
+  /* "assetstorecython.pyx":65
  *     def __cinit__(self, name):
  *         self.thisptr = new RocksStore(name)
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2258,7 +2416,7 @@ static void __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(struct __pyx_obj_1
   __Pyx_RefNannyFinishContext();
 }
 
-/* "duckcython.pyx":67
+/* "assetstorecython.pyx":67
  *     def __dealloc__(self):
  *         del self.thisptr
  *     def open(self):             # <<<<<<<<<<<<<<
@@ -2267,25 +2425,25 @@ static void __pyx_pf_10duckcython_12PyRocksStore_2__dealloc__(struct __pyx_obj_1
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_5open(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_5open(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_5open(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_5open(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("open (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_4open(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_4open(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_4open(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("open", 0);
 
-  /* "duckcython.pyx":68
+  /* "assetstorecython.pyx":68
  *         del self.thisptr
  *     def open(self):
  *         return self.thisptr.open()             # <<<<<<<<<<<<<<
@@ -2299,7 +2457,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10d
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":67
+  /* "assetstorecython.pyx":67
  *     def __dealloc__(self):
  *         del self.thisptr
  *     def open(self):             # <<<<<<<<<<<<<<
@@ -2310,7 +2468,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10d
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.open", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.open", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2318,7 +2476,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10d
   return __pyx_r;
 }
 
-/* "duckcython.pyx":69
+/* "assetstorecython.pyx":69
  *     def open(self):
  *         return self.thisptr.open()
  *     def insert(self, key, id):             # <<<<<<<<<<<<<<
@@ -2327,8 +2485,8 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_4open(struct __pyx_obj_10d
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_7insert(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_7insert(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_7insert(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_7insert(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_key = 0;
   PyObject *__pyx_v_id = 0;
   PyObject *__pyx_r = 0;
@@ -2376,18 +2534,18 @@ static PyObject *__pyx_pw_10duckcython_12PyRocksStore_7insert(PyObject *__pyx_v_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("insert", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 69, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.insert", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.insert", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_6insert(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_key, __pyx_v_id);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_6insert(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_key, __pyx_v_id);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_key, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_6insert(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_key, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -2395,7 +2553,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_1
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("insert", 0);
 
-  /* "duckcython.pyx":70
+  /* "assetstorecython.pyx":70
  *         return self.thisptr.open()
  *     def insert(self, key, id):
  *         return self.thisptr.insert(key,id)             # <<<<<<<<<<<<<<
@@ -2411,7 +2569,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_1
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":69
+  /* "assetstorecython.pyx":69
  *     def open(self):
  *         return self.thisptr.open()
  *     def insert(self, key, id):             # <<<<<<<<<<<<<<
@@ -2422,7 +2580,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_1
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.insert", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.insert", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2430,7 +2588,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "duckcython.pyx":71
+/* "assetstorecython.pyx":71
  *     def insert(self, key, id):
  *         return self.thisptr.insert(key,id)
  *     def create(self, name, i1, i2, i3):             # <<<<<<<<<<<<<<
@@ -2439,8 +2597,8 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_6insert(struct __pyx_obj_1
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_9create(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_9create(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_9create(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_9create(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_name = 0;
   PyObject *__pyx_v_i1 = 0;
   PyObject *__pyx_v_i2 = 0;
@@ -2510,18 +2668,18 @@ static PyObject *__pyx_pw_10duckcython_12PyRocksStore_9create(PyObject *__pyx_v_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("create", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 71, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.create", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.create", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_8create(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_name, __pyx_v_i1, __pyx_v_i2, __pyx_v_i3);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_8create(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_name, __pyx_v_i1, __pyx_v_i2, __pyx_v_i3);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_8create(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -2531,7 +2689,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_1
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("create", 0);
 
-  /* "duckcython.pyx":72
+  /* "assetstorecython.pyx":72
  *         return self.thisptr.insert(key,id)
  *     def create(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)             # <<<<<<<<<<<<<<
@@ -2549,7 +2707,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_1
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":71
+  /* "assetstorecython.pyx":71
  *     def insert(self, key, id):
  *         return self.thisptr.insert(key,id)
  *     def create(self, name, i1, i2, i3):             # <<<<<<<<<<<<<<
@@ -2560,7 +2718,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_1
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.create", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.create", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2568,7 +2726,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "duckcython.pyx":73
+/* "assetstorecython.pyx":73
  *     def create(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def getSingle(self, id):             # <<<<<<<<<<<<<<
@@ -2577,26 +2735,26 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_8create(struct __pyx_obj_1
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_11getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_11getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_11getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_11getSingle(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("getSingle (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_10getSingle(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_10getSingle(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_10getSingle(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("getSingle", 0);
 
-  /* "duckcython.pyx":74
+  /* "assetstorecython.pyx":74
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)             # <<<<<<<<<<<<<<
@@ -2611,7 +2769,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_o
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":73
+  /* "assetstorecython.pyx":73
  *     def create(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def getSingle(self, id):             # <<<<<<<<<<<<<<
@@ -2622,7 +2780,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_o
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.getSingle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.getSingle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2630,7 +2788,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_o
   return __pyx_r;
 }
 
-/* "duckcython.pyx":75
+/* "assetstorecython.pyx":75
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)
  *     def createportable(self, name, i1, i2, i3):             # <<<<<<<<<<<<<<
@@ -2639,8 +2797,8 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_10getSingle(struct __pyx_o
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_13createportable(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_13createportable(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_13createportable(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_13createportable(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_name = 0;
   PyObject *__pyx_v_i1 = 0;
   PyObject *__pyx_v_i2 = 0;
@@ -2710,18 +2868,18 @@ static PyObject *__pyx_pw_10duckcython_12PyRocksStore_13createportable(PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("createportable", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 75, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.createportable", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.createportable", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_12createportable(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_name, __pyx_v_i1, __pyx_v_i2, __pyx_v_i3);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_12createportable(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_name, __pyx_v_i1, __pyx_v_i2, __pyx_v_i3);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_12createportable(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_i1, PyObject *__pyx_v_i2, PyObject *__pyx_v_i3) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -2731,7 +2889,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("createportable", 0);
 
-  /* "duckcython.pyx":76
+  /* "assetstorecython.pyx":76
  *         return self.thisptr.getSingle(id)
  *     def createportable(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)             # <<<<<<<<<<<<<<
@@ -2749,7 +2907,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":75
+  /* "assetstorecython.pyx":75
  *     def getSingle(self, id):
  *         return self.thisptr.getSingle(id)
  *     def createportable(self, name, i1, i2, i3):             # <<<<<<<<<<<<<<
@@ -2760,7 +2918,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.createportable", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.createportable", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2768,7 +2926,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __
   return __pyx_r;
 }
 
-/* "duckcython.pyx":77
+/* "assetstorecython.pyx":77
  *     def createportable(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def insertFromFile(self, file, path):             # <<<<<<<<<<<<<<
@@ -2777,8 +2935,8 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_12createportable(struct __
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_15insertFromFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_15insertFromFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_15insertFromFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_15insertFromFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_file = 0;
   PyObject *__pyx_v_path = 0;
   PyObject *__pyx_r = 0;
@@ -2826,18 +2984,18 @@ static PyObject *__pyx_pw_10duckcython_12PyRocksStore_15insertFromFile(PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("insertFromFile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 77, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.insertFromFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.insertFromFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_file, __pyx_v_path);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_14insertFromFile(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_file, __pyx_v_path);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_path) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_14insertFromFile(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_path) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -2845,7 +3003,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("insertFromFile", 0);
 
-  /* "duckcython.pyx":78
+  /* "assetstorecython.pyx":78
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def insertFromFile(self, file, path):
  *         return self.thisptr.insertFromFile(file, path)             # <<<<<<<<<<<<<<
@@ -2861,7 +3019,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":77
+  /* "assetstorecython.pyx":77
  *     def createportable(self, name, i1, i2, i3):
  *         return self.thisptr.create(name, i1, i2, i3)
  *     def insertFromFile(self, file, path):             # <<<<<<<<<<<<<<
@@ -2872,7 +3030,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.insertFromFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.insertFromFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2880,7 +3038,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __
   return __pyx_r;
 }
 
-/* "duckcython.pyx":79
+/* "assetstorecython.pyx":79
  *     def insertFromFile(self, file, path):
  *         return self.thisptr.insertFromFile(file, path)
  *     def getSingleToFile(self, id, ext):             # <<<<<<<<<<<<<<
@@ -2889,8 +3047,8 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_14insertFromFile(struct __
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_17getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_17getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_17getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_17getSingleToFile(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_id = 0;
   PyObject *__pyx_v_ext = 0;
   PyObject *__pyx_r = 0;
@@ -2938,18 +3096,18 @@ static PyObject *__pyx_pw_10duckcython_12PyRocksStore_17getSingleToFile(PyObject
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("getSingleToFile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 79, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("duckcython.PyRocksStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), __pyx_v_id, __pyx_v_ext);
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_16getSingleToFile(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), __pyx_v_id, __pyx_v_ext);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_16getSingleToFile(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id, PyObject *__pyx_v_ext) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -2957,7 +3115,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct _
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("getSingleToFile", 0);
 
-  /* "duckcython.pyx":80
+  /* "assetstorecython.pyx":80
  *         return self.thisptr.insertFromFile(file, path)
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)             # <<<<<<<<<<<<<<
@@ -2973,7 +3131,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct _
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":79
+  /* "assetstorecython.pyx":79
  *     def insertFromFile(self, file, path):
  *         return self.thisptr.insertFromFile(file, path)
  *     def getSingleToFile(self, id, ext):             # <<<<<<<<<<<<<<
@@ -2984,7 +3142,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct _
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.getSingleToFile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2992,7 +3150,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct _
   return __pyx_r;
 }
 
-/* "duckcython.pyx":81
+/* "assetstorecython.pyx":81
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def importsst(self, name):             # <<<<<<<<<<<<<<
@@ -3001,26 +3159,26 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_16getSingleToFile(struct _
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_19importsst(PyObject *__pyx_v_self, PyObject *__pyx_v_name); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_19importsst(PyObject *__pyx_v_self, PyObject *__pyx_v_name) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_19importsst(PyObject *__pyx_v_self, PyObject *__pyx_v_name); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_19importsst(PyObject *__pyx_v_self, PyObject *__pyx_v_name) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("importsst (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_18importsst(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_name));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_18importsst(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_name));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_18importsst(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_18importsst(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_name) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("importsst", 0);
 
-  /* "duckcython.pyx":82
+  /* "assetstorecython.pyx":82
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def importsst(self, name):
  *         return self.thisptr.importsst(name)             # <<<<<<<<<<<<<<
@@ -3035,7 +3193,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_18importsst(struct __pyx_o
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":81
+  /* "assetstorecython.pyx":81
  *     def getSingleToFile(self, id, ext):
  *         return self.thisptr.getSingleToFile(id, ext)
  *     def importsst(self, name):             # <<<<<<<<<<<<<<
@@ -3046,7 +3204,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_18importsst(struct __pyx_o
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.importsst", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.importsst", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3054,37 +3212,40 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_18importsst(struct __pyx_o
   return __pyx_r;
 }
 
-/* "duckcython.pyx":83
+/* "assetstorecython.pyx":83
  *     def importsst(self, name):
  *         return self.thisptr.importsst(name)
  *     def remove(self, id):             # <<<<<<<<<<<<<<
  *         return self.thisptr.remove(id)
+ * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_21remove(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_21remove(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_21remove(PyObject *__pyx_v_self, PyObject *__pyx_v_id); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_21remove(PyObject *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("remove (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_20remove(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_20remove(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v_id));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_20remove(struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_20remove(struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, PyObject *__pyx_v_id) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("remove", 0);
 
-  /* "duckcython.pyx":84
+  /* "assetstorecython.pyx":84
  *         return self.thisptr.importsst(name)
  *     def remove(self, id):
  *         return self.thisptr.remove(id)             # <<<<<<<<<<<<<<
+ * 
+ * cdef extern from "storage.h" namespace "SciStore":
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_id); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 84, __pyx_L1_error)
@@ -3094,17 +3255,18 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_20remove(struct __pyx_obj_
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "duckcython.pyx":83
+  /* "assetstorecython.pyx":83
  *     def importsst(self, name):
  *         return self.thisptr.importsst(name)
  *     def remove(self, id):             # <<<<<<<<<<<<<<
  *         return self.thisptr.remove(id)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.remove", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.remove", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3119,19 +3281,19 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_20remove(struct __pyx_obj_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_22__reduce_cython__(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_22__reduce_cython__(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3158,7 +3320,7 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_22__reduce_cython__(CYTHON
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -3173,19 +3335,19 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_22__reduce_cython__(CYTHON
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_10duckcython_12PyRocksStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyRocksStore_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_10duckcython_12PyRocksStore_24__setstate_cython__(((struct __pyx_obj_10duckcython_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_10assetstore_12PyRocksStore_24__setstate_cython__(((struct __pyx_obj_10assetstore_PyRocksStore *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10duckcython_12PyRocksStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10duckcython_PyRocksStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_10assetstore_12PyRocksStore_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyRocksStore *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3212,7 +3374,1004 @@ static PyObject *__pyx_pf_10duckcython_12PyRocksStore_24__setstate_cython__(CYTH
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("duckcython.PyRocksStore.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("assetstore.PyRocksStore.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":94
+ * cdef class PyDefStorage:
+ *     cdef DefaultStorage *thisptr
+ *     def __cinit__(self, s1, s2):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new DefaultStorage(s1, s2)
+ *     def __dealloc__(self):
+ */
+
+/* Python wrapper */
+static int __pyx_pw_10assetstore_12PyDefStorage_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_10assetstore_12PyDefStorage_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_s1 = 0;
+  PyObject *__pyx_v_s2 = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_s1,&__pyx_n_s_s2,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_s1)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_s2)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(1, 94, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 94, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_s1 = values[0];
+    __pyx_v_s2 = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 94, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("assetstore.PyDefStorage.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_10assetstore_12PyDefStorage___cinit__(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self), __pyx_v_s1, __pyx_v_s2);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_10assetstore_12PyDefStorage___cinit__(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, PyObject *__pyx_v_s1, PyObject *__pyx_v_s2) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  std::string __pyx_t_1;
+  std::string __pyx_t_2;
+  __Pyx_RefNannySetupContext("__cinit__", 0);
+
+  /* "assetstorecython.pyx":95
+ *     cdef DefaultStorage *thisptr
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new DefaultStorage(s1, s2)             # <<<<<<<<<<<<<<
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ */
+  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_s1); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 95, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_string_from_py_std__in_string(__pyx_v_s2); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 95, __pyx_L1_error)
+  __pyx_v_self->thisptr = new SciStore::DefaultStorage(__pyx_t_1, __pyx_t_2);
+
+  /* "assetstorecython.pyx":94
+ * cdef class PyDefStorage:
+ *     cdef DefaultStorage *thisptr
+ *     def __cinit__(self, s1, s2):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new DefaultStorage(s1, s2)
+ *     def __dealloc__(self):
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("assetstore.PyDefStorage.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":96
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new DefaultStorage(s1, s2)
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ */
+
+/* Python wrapper */
+static void __pyx_pw_10assetstore_12PyDefStorage_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_10assetstore_12PyDefStorage_3__dealloc__(PyObject *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
+  __pyx_pf_10assetstore_12PyDefStorage_2__dealloc__(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+static void __pyx_pf_10assetstore_12PyDefStorage_2__dealloc__(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__", 0);
+
+  /* "assetstorecython.pyx":97
+ *         self.thisptr = new DefaultStorage(s1, s2)
+ *     def __dealloc__(self):
+ *         del self.thisptr             # <<<<<<<<<<<<<<
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ */
+  delete __pyx_v_self->thisptr;
+
+  /* "assetstorecython.pyx":96
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new DefaultStorage(s1, s2)
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "assetstorecython.pyx":98
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def import_asset_store(self, file):             # <<<<<<<<<<<<<<
+ *         return self.import_asset_store(file)
+ *     def testout(self):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_5import_asset_store(PyObject *__pyx_v_self, PyObject *__pyx_v_file); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_5import_asset_store(PyObject *__pyx_v_self, PyObject *__pyx_v_file) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("import_asset_store (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_12PyDefStorage_4import_asset_store(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self), ((PyObject *)__pyx_v_file));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_4import_asset_store(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, PyObject *__pyx_v_file) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("import_asset_store", 0);
+
+  /* "assetstorecython.pyx":99
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)             # <<<<<<<<<<<<<<
+ *     def testout(self):
+ *         return self.testout()
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_import_asset_store); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 99, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_file) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_file);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 99, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "assetstorecython.pyx":98
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def import_asset_store(self, file):             # <<<<<<<<<<<<<<
+ *         return self.import_asset_store(file)
+ *     def testout(self):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("assetstore.PyDefStorage.import_asset_store", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":100
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ *     def testout(self):             # <<<<<<<<<<<<<<
+ *         return self.testout()
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_7testout(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_7testout(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("testout (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_12PyDefStorage_6testout(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_6testout(struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("testout", 0);
+
+  /* "assetstorecython.pyx":101
+ *         return self.import_asset_store(file)
+ *     def testout(self):
+ *         return self.testout()             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_testout); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "assetstorecython.pyx":100
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ *     def testout(self):             # <<<<<<<<<<<<<<
+ *         return self.testout()
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("assetstore.PyDefStorage.testout", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_12PyDefStorage_8__reduce_cython__(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(0, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("assetstore.PyDefStorage.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_10assetstore_12PyDefStorage_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_12PyDefStorage_10__setstate_cython__(((struct __pyx_obj_10assetstore_PyDefStorage *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_12PyDefStorage_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefStorage *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+
+  /* "(tree fragment)":4
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(0, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("assetstore.PyDefStorage.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":115
+ * cdef class PyDefaultStorage:
+ *     cdef Storage[RocksStore, DuckStore] *thisptr
+ *     def __cinit__(self, s1, s2):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+ *     def __dealloc__(self):
+ */
+
+/* Python wrapper */
+static int __pyx_pw_10assetstore_16PyDefaultStorage_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_10assetstore_16PyDefaultStorage_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_s1 = 0;
+  PyObject *__pyx_v_s2 = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_s1,&__pyx_n_s_s2,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_s1)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_s2)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(1, 115, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 115, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_s1 = values[0];
+    __pyx_v_s2 = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 115, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage___cinit__(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self), __pyx_v_s1, __pyx_v_s2);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_10assetstore_16PyDefaultStorage___cinit__(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_s1, PyObject *__pyx_v_s2) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  std::string __pyx_t_1;
+  std::string __pyx_t_2;
+  SciStore::Storage<SciStore::RocksStore,SciStore::DuckStore>  *__pyx_t_3;
+  __Pyx_RefNannySetupContext("__cinit__", 0);
+
+  /* "assetstorecython.pyx":116
+ *     cdef Storage[RocksStore, DuckStore] *thisptr
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)             # <<<<<<<<<<<<<<
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ */
+  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_s1); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 116, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_string_from_py_std__in_string(__pyx_v_s2); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 116, __pyx_L1_error)
+  try {
+    __pyx_t_3 = new SciStore::Storage<SciStore::RocksStore,SciStore::DuckStore> (__pyx_t_1, __pyx_t_2);
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 116, __pyx_L1_error)
+  }
+  __pyx_v_self->thisptr = __pyx_t_3;
+
+  /* "assetstorecython.pyx":115
+ * cdef class PyDefaultStorage:
+ *     cdef Storage[RocksStore, DuckStore] *thisptr
+ *     def __cinit__(self, s1, s2):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+ *     def __dealloc__(self):
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":117
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ */
+
+/* Python wrapper */
+static void __pyx_pw_10assetstore_16PyDefaultStorage_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_10assetstore_16PyDefaultStorage_3__dealloc__(PyObject *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
+  __pyx_pf_10assetstore_16PyDefaultStorage_2__dealloc__(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+static void __pyx_pf_10assetstore_16PyDefaultStorage_2__dealloc__(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__", 0);
+
+  /* "assetstorecython.pyx":118
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+ *     def __dealloc__(self):
+ *         del self.thisptr             # <<<<<<<<<<<<<<
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ */
+  delete __pyx_v_self->thisptr;
+
+  /* "assetstorecython.pyx":117
+ *     def __cinit__(self, s1, s2):
+ *         self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "assetstorecython.pyx":119
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def import_asset_store(self, file):             # <<<<<<<<<<<<<<
+ *         return self.import_asset_store(file)
+ *     def load_asset_from_file(self, file, dir = ""):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_5import_asset_store(PyObject *__pyx_v_self, PyObject *__pyx_v_file); /*proto*/
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_5import_asset_store(PyObject *__pyx_v_self, PyObject *__pyx_v_file) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("import_asset_store (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage_4import_asset_store(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self), ((PyObject *)__pyx_v_file));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_4import_asset_store(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_file) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("import_asset_store", 0);
+
+  /* "assetstorecython.pyx":120
+ *         del self.thisptr
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)             # <<<<<<<<<<<<<<
+ *     def load_asset_from_file(self, file, dir = ""):
+ *         return self.load_asset_from_file(file, dir)
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_import_asset_store); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 120, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_file) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_file);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 120, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "assetstorecython.pyx":119
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def import_asset_store(self, file):             # <<<<<<<<<<<<<<
+ *         return self.import_asset_store(file)
+ *     def load_asset_from_file(self, file, dir = ""):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.import_asset_store", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":121
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ *     def load_asset_from_file(self, file, dir = ""):             # <<<<<<<<<<<<<<
+ *         return self.load_asset_from_file(file, dir)
+ *     def testout(self):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_7load_asset_from_file(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_7load_asset_from_file(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_file = 0;
+  PyObject *__pyx_v_dir = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("load_asset_from_file (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_file,&__pyx_n_s_dir,0};
+    PyObject* values[2] = {0,0};
+    values[1] = ((PyObject *)__pyx_kp_s__7);
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_file)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dir);
+          if (value) { values[1] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "load_asset_from_file") < 0)) __PYX_ERR(1, 121, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_file = values[0];
+    __pyx_v_dir = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("load_asset_from_file", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 121, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.load_asset_from_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage_6load_asset_from_file(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self), __pyx_v_file, __pyx_v_dir);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_6load_asset_from_file(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, PyObject *__pyx_v_file, PyObject *__pyx_v_dir) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  __Pyx_RefNannySetupContext("load_asset_from_file", 0);
+
+  /* "assetstorecython.pyx":122
+ *         return self.import_asset_store(file)
+ *     def load_asset_from_file(self, file, dir = ""):
+ *         return self.load_asset_from_file(file, dir)             # <<<<<<<<<<<<<<
+ *     def testout(self):
+ *         return self.testout()
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_load_asset_from_file); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 122, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  __pyx_t_4 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_4 = 1;
+    }
+  }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_file, __pyx_v_dir};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 122, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_file, __pyx_v_dir};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 122, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+  } else
+  #endif
+  {
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 122, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_file);
+    __Pyx_GIVEREF(__pyx_v_file);
+    PyTuple_SET_ITEM(__pyx_t_5, 0+__pyx_t_4, __pyx_v_file);
+    __Pyx_INCREF(__pyx_v_dir);
+    __Pyx_GIVEREF(__pyx_v_dir);
+    PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_v_dir);
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 122, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "assetstorecython.pyx":121
+ *     def import_asset_store(self, file):
+ *         return self.import_asset_store(file)
+ *     def load_asset_from_file(self, file, dir = ""):             # <<<<<<<<<<<<<<
+ *         return self.load_asset_from_file(file, dir)
+ *     def testout(self):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.load_asset_from_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "assetstorecython.pyx":123
+ *     def load_asset_from_file(self, file, dir = ""):
+ *         return self.load_asset_from_file(file, dir)
+ *     def testout(self):             # <<<<<<<<<<<<<<
+ *         return self.testout()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_9testout(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_9testout(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("testout (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage_8testout(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_8testout(struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("testout", 0);
+
+  /* "assetstorecython.pyx":124
+ *         return self.load_asset_from_file(file, dir)
+ *     def testout(self):
+ *         return self.testout()             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_testout); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 124, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 124, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "assetstorecython.pyx":123
+ *     def load_asset_from_file(self, file, dir = ""):
+ *         return self.load_asset_from_file(file, dir)
+ *     def testout(self):             # <<<<<<<<<<<<<<
+ *         return self.testout()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.testout", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage_10__reduce_cython__(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(0, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_10assetstore_16PyDefaultStorage_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_10assetstore_16PyDefaultStorage_12__setstate_cython__(((struct __pyx_obj_10assetstore_PyDefaultStorage *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10assetstore_16PyDefaultStorage_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_10assetstore_PyDefaultStorage *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+
+  /* "(tree fragment)":4
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ */
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __PYX_ERR(0, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("assetstore.PyDefaultStorage.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -3577,7 +4736,7 @@ static PyObject *__pyx_convert_vector_to_py_std_3a__3a_string(const std::vector<
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_10duckcython_PyDuckStore(PyTypeObject *t, PyObject *a, PyObject *k) {
+static PyObject *__pyx_tp_new_10assetstore_PyDuckStore(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -3585,14 +4744,14 @@ static PyObject *__pyx_tp_new_10duckcython_PyDuckStore(PyTypeObject *t, PyObject
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  if (unlikely(__pyx_pw_10duckcython_11PyDuckStore_1__cinit__(o, a, k) < 0)) goto bad;
+  if (unlikely(__pyx_pw_10assetstore_11PyDuckStore_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_10duckcython_PyDuckStore(PyObject *o) {
+static void __pyx_tp_dealloc_10assetstore_PyDuckStore(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -3602,34 +4761,34 @@ static void __pyx_tp_dealloc_10duckcython_PyDuckStore(PyObject *o) {
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
     ++Py_REFCNT(o);
-    __pyx_pw_10duckcython_11PyDuckStore_3__dealloc__(o);
+    __pyx_pw_10assetstore_11PyDuckStore_3__dealloc__(o);
     --Py_REFCNT(o);
     PyErr_Restore(etype, eval, etb);
   }
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyMethodDef __pyx_methods_10duckcython_PyDuckStore[] = {
-  {"execQueryAndPrint", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_5execQueryAndPrint, METH_O, 0},
-  {"createNewDB", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_7createNewDB, METH_NOARGS, 0},
-  {"loadDB", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_9loadDB, METH_O, 0},
-  {"execQuery", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_11execQuery, METH_O, 0},
-  {"getSingle", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_13getSingle, METH_O, 0},
-  {"getSingleToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_11PyDuckStore_15getSingleToFile, METH_VARARGS|METH_KEYWORDS, 0},
-  {"writeResultToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_11PyDuckStore_17writeResultToFile, METH_VARARGS|METH_KEYWORDS, 0},
-  {"printResult", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_19printResult, METH_NOARGS, 0},
-  {"getIDsByConstraint", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_21getIDsByConstraint, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_23__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_10duckcython_11PyDuckStore_25__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_10assetstore_PyDuckStore[] = {
+  {"execQueryAndPrint", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_5execQueryAndPrint, METH_O, 0},
+  {"createNewDB", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_7createNewDB, METH_NOARGS, 0},
+  {"loadDB", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_9loadDB, METH_O, 0},
+  {"execQuery", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_11execQuery, METH_O, 0},
+  {"getSingle", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_13getSingle, METH_O, 0},
+  {"getSingleToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_11PyDuckStore_15getSingleToFile, METH_VARARGS|METH_KEYWORDS, 0},
+  {"writeResultToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_11PyDuckStore_17writeResultToFile, METH_VARARGS|METH_KEYWORDS, 0},
+  {"printResult", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_19printResult, METH_NOARGS, 0},
+  {"getIDsByConstraint", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_21getIDsByConstraint, METH_O, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_23__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_10assetstore_11PyDuckStore_25__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_10duckcython_PyDuckStore = {
+static PyTypeObject __pyx_type_10assetstore_PyDuckStore = {
   PyVarObject_HEAD_INIT(0, 0)
-  "duckcython.PyDuckStore", /*tp_name*/
-  sizeof(struct __pyx_obj_10duckcython_PyDuckStore), /*tp_basicsize*/
+  "assetstore.PyDuckStore", /*tp_name*/
+  sizeof(struct __pyx_obj_10assetstore_PyDuckStore), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_10duckcython_PyDuckStore, /*tp_dealloc*/
+  __pyx_tp_dealloc_10assetstore_PyDuckStore, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -3662,7 +4821,7 @@ static PyTypeObject __pyx_type_10duckcython_PyDuckStore = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_10duckcython_PyDuckStore, /*tp_methods*/
+  __pyx_methods_10assetstore_PyDuckStore, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -3672,7 +4831,7 @@ static PyTypeObject __pyx_type_10duckcython_PyDuckStore = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_10duckcython_PyDuckStore, /*tp_new*/
+  __pyx_tp_new_10assetstore_PyDuckStore, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -3693,7 +4852,7 @@ static PyTypeObject __pyx_type_10duckcython_PyDuckStore = {
   #endif
 };
 
-static PyObject *__pyx_tp_new_10duckcython_PyRocksStore(PyTypeObject *t, PyObject *a, PyObject *k) {
+static PyObject *__pyx_tp_new_10assetstore_PyRocksStore(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -3701,14 +4860,14 @@ static PyObject *__pyx_tp_new_10duckcython_PyRocksStore(PyTypeObject *t, PyObjec
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  if (unlikely(__pyx_pw_10duckcython_12PyRocksStore_1__cinit__(o, a, k) < 0)) goto bad;
+  if (unlikely(__pyx_pw_10assetstore_12PyRocksStore_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_10duckcython_PyRocksStore(PyObject *o) {
+static void __pyx_tp_dealloc_10assetstore_PyRocksStore(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -3718,34 +4877,34 @@ static void __pyx_tp_dealloc_10duckcython_PyRocksStore(PyObject *o) {
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
     ++Py_REFCNT(o);
-    __pyx_pw_10duckcython_12PyRocksStore_3__dealloc__(o);
+    __pyx_pw_10assetstore_12PyRocksStore_3__dealloc__(o);
     --Py_REFCNT(o);
     PyErr_Restore(etype, eval, etb);
   }
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyMethodDef __pyx_methods_10duckcython_PyRocksStore[] = {
-  {"open", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_5open, METH_NOARGS, 0},
-  {"insert", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_12PyRocksStore_7insert, METH_VARARGS|METH_KEYWORDS, 0},
-  {"create", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_12PyRocksStore_9create, METH_VARARGS|METH_KEYWORDS, 0},
-  {"getSingle", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_11getSingle, METH_O, 0},
-  {"createportable", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_12PyRocksStore_13createportable, METH_VARARGS|METH_KEYWORDS, 0},
-  {"insertFromFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_12PyRocksStore_15insertFromFile, METH_VARARGS|METH_KEYWORDS, 0},
-  {"getSingleToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10duckcython_12PyRocksStore_17getSingleToFile, METH_VARARGS|METH_KEYWORDS, 0},
-  {"importsst", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_19importsst, METH_O, 0},
-  {"remove", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_21remove, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_23__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_10duckcython_12PyRocksStore_25__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_10assetstore_PyRocksStore[] = {
+  {"open", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_5open, METH_NOARGS, 0},
+  {"insert", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_12PyRocksStore_7insert, METH_VARARGS|METH_KEYWORDS, 0},
+  {"create", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_12PyRocksStore_9create, METH_VARARGS|METH_KEYWORDS, 0},
+  {"getSingle", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_11getSingle, METH_O, 0},
+  {"createportable", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_12PyRocksStore_13createportable, METH_VARARGS|METH_KEYWORDS, 0},
+  {"insertFromFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_12PyRocksStore_15insertFromFile, METH_VARARGS|METH_KEYWORDS, 0},
+  {"getSingleToFile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_12PyRocksStore_17getSingleToFile, METH_VARARGS|METH_KEYWORDS, 0},
+  {"importsst", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_19importsst, METH_O, 0},
+  {"remove", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_21remove, METH_O, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_23__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_10assetstore_12PyRocksStore_25__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_10duckcython_PyRocksStore = {
+static PyTypeObject __pyx_type_10assetstore_PyRocksStore = {
   PyVarObject_HEAD_INIT(0, 0)
-  "duckcython.PyRocksStore", /*tp_name*/
-  sizeof(struct __pyx_obj_10duckcython_PyRocksStore), /*tp_basicsize*/
+  "assetstore.PyRocksStore", /*tp_name*/
+  sizeof(struct __pyx_obj_10assetstore_PyRocksStore), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_10duckcython_PyRocksStore, /*tp_dealloc*/
+  __pyx_tp_dealloc_10assetstore_PyRocksStore, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -3778,7 +4937,7 @@ static PyTypeObject __pyx_type_10duckcython_PyRocksStore = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_10duckcython_PyRocksStore, /*tp_methods*/
+  __pyx_methods_10assetstore_PyRocksStore, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -3788,7 +4947,226 @@ static PyTypeObject __pyx_type_10duckcython_PyRocksStore = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_10duckcython_PyRocksStore, /*tp_new*/
+  __pyx_tp_new_10assetstore_PyRocksStore, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1
+  0, /*tp_vectorcall*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
+  0, /*tp_print*/
+  #endif
+};
+
+static PyObject *__pyx_tp_new_10assetstore_PyDefStorage(PyTypeObject *t, PyObject *a, PyObject *k) {
+  PyObject *o;
+  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  if (unlikely(__pyx_pw_10assetstore_12PyDefStorage_1__cinit__(o, a, k) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static void __pyx_tp_dealloc_10assetstore_PyDefStorage(PyObject *o) {
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
+    if (PyObject_CallFinalizerFromDealloc(o)) return;
+  }
+  #endif
+  {
+    PyObject *etype, *eval, *etb;
+    PyErr_Fetch(&etype, &eval, &etb);
+    ++Py_REFCNT(o);
+    __pyx_pw_10assetstore_12PyDefStorage_3__dealloc__(o);
+    --Py_REFCNT(o);
+    PyErr_Restore(etype, eval, etb);
+  }
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static PyMethodDef __pyx_methods_10assetstore_PyDefStorage[] = {
+  {"import_asset_store", (PyCFunction)__pyx_pw_10assetstore_12PyDefStorage_5import_asset_store, METH_O, 0},
+  {"testout", (PyCFunction)__pyx_pw_10assetstore_12PyDefStorage_7testout, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_10assetstore_12PyDefStorage_9__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_10assetstore_12PyDefStorage_11__setstate_cython__, METH_O, 0},
+  {0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_10assetstore_PyDefStorage = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "assetstore.PyDefStorage", /*tp_name*/
+  sizeof(struct __pyx_obj_10assetstore_PyDefStorage), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_10assetstore_PyDefStorage, /*tp_dealloc*/
+  #if PY_VERSION_HEX < 0x030800b4
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4
+  0, /*tp_vectorcall_offset*/
+  #endif
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_10assetstore_PyDefStorage, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_10assetstore_PyDefStorage, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1
+  0, /*tp_vectorcall*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
+  0, /*tp_print*/
+  #endif
+};
+
+static PyObject *__pyx_tp_new_10assetstore_PyDefaultStorage(PyTypeObject *t, PyObject *a, PyObject *k) {
+  PyObject *o;
+  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  if (unlikely(__pyx_pw_10assetstore_16PyDefaultStorage_1__cinit__(o, a, k) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static void __pyx_tp_dealloc_10assetstore_PyDefaultStorage(PyObject *o) {
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
+    if (PyObject_CallFinalizerFromDealloc(o)) return;
+  }
+  #endif
+  {
+    PyObject *etype, *eval, *etb;
+    PyErr_Fetch(&etype, &eval, &etb);
+    ++Py_REFCNT(o);
+    __pyx_pw_10assetstore_16PyDefaultStorage_3__dealloc__(o);
+    --Py_REFCNT(o);
+    PyErr_Restore(etype, eval, etb);
+  }
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static PyMethodDef __pyx_methods_10assetstore_PyDefaultStorage[] = {
+  {"import_asset_store", (PyCFunction)__pyx_pw_10assetstore_16PyDefaultStorage_5import_asset_store, METH_O, 0},
+  {"load_asset_from_file", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10assetstore_16PyDefaultStorage_7load_asset_from_file, METH_VARARGS|METH_KEYWORDS, 0},
+  {"testout", (PyCFunction)__pyx_pw_10assetstore_16PyDefaultStorage_9testout, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_10assetstore_16PyDefaultStorage_11__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_10assetstore_16PyDefaultStorage_13__setstate_cython__, METH_O, 0},
+  {0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_10assetstore_PyDefaultStorage = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "assetstore.PyDefaultStorage", /*tp_name*/
+  sizeof(struct __pyx_obj_10assetstore_PyDefaultStorage), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_10assetstore_PyDefaultStorage, /*tp_dealloc*/
+  #if PY_VERSION_HEX < 0x030800b4
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4
+  0, /*tp_vectorcall_offset*/
+  #endif
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_10assetstore_PyDefaultStorage, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_10assetstore_PyDefaultStorage, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -3816,17 +5194,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_duckcython(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_assetstore(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_duckcython},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_assetstore},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "duckcython",
+    "assetstore",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -3855,10 +5233,14 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_s_PyDefStorage, __pyx_k_PyDefStorage, sizeof(__pyx_k_PyDefStorage), 0, 0, 1, 1},
+  {&__pyx_n_s_PyDefaultStorage, __pyx_k_PyDefaultStorage, sizeof(__pyx_k_PyDefaultStorage), 0, 0, 1, 1},
   {&__pyx_n_s_PyDuckStore, __pyx_k_PyDuckStore, sizeof(__pyx_k_PyDuckStore), 0, 0, 1, 1},
   {&__pyx_n_s_PyRocksStore, __pyx_k_PyRocksStore, sizeof(__pyx_k_PyRocksStore), 0, 0, 1, 1},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
+  {&__pyx_kp_s__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 0, 1, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_dir, __pyx_k_dir, sizeof(__pyx_k_dir), 0, 0, 1, 1},
   {&__pyx_n_s_ext, __pyx_k_ext, sizeof(__pyx_k_ext), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_filename, __pyx_k_filename, sizeof(__pyx_k_filename), 0, 0, 1, 1},
@@ -3867,7 +5249,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_i2, __pyx_k_i2, sizeof(__pyx_k_i2), 0, 0, 1, 1},
   {&__pyx_n_s_i3, __pyx_k_i3, sizeof(__pyx_k_i3), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
+  {&__pyx_n_s_import_asset_store, __pyx_k_import_asset_store, sizeof(__pyx_k_import_asset_store), 0, 0, 1, 1},
   {&__pyx_n_s_key, __pyx_k_key, sizeof(__pyx_k_key), 0, 0, 1, 1},
+  {&__pyx_n_s_load_asset_from_file, __pyx_k_load_asset_from_file, sizeof(__pyx_k_load_asset_from_file), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_name_2, __pyx_k_name_2, sizeof(__pyx_k_name_2), 0, 0, 1, 1},
@@ -3877,9 +5261,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
+  {&__pyx_n_s_s1, __pyx_k_s1, sizeof(__pyx_k_s1), 0, 0, 1, 1},
+  {&__pyx_n_s_s2, __pyx_k_s2, sizeof(__pyx_k_s2), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_testout, __pyx_k_testout, sizeof(__pyx_k_testout), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
@@ -3931,6 +5318,44 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__5);
+  __Pyx_GIVEREF(__pyx_tuple__5);
+
+  /* "(tree fragment)":4
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ */
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ */
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
+
+  /* "(tree fragment)":4
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ */
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3981,26 +5406,46 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_10duckcython_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_10assetstore_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_10duckcython_PyDuckStore.tp_print = 0;
+  __pyx_type_10assetstore_PyDuckStore.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10duckcython_PyDuckStore.tp_dictoffset && __pyx_type_10duckcython_PyDuckStore.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_10duckcython_PyDuckStore.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10assetstore_PyDuckStore.tp_dictoffset && __pyx_type_10assetstore_PyDuckStore.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_10assetstore_PyDuckStore.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyDuckStore, (PyObject *)&__pyx_type_10duckcython_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10duckcython_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
-  __pyx_ptype_10duckcython_PyDuckStore = &__pyx_type_10duckcython_PyDuckStore;
-  if (PyType_Ready(&__pyx_type_10duckcython_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyDuckStore, (PyObject *)&__pyx_type_10assetstore_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10assetstore_PyDuckStore) < 0) __PYX_ERR(1, 23, __pyx_L1_error)
+  __pyx_ptype_10assetstore_PyDuckStore = &__pyx_type_10assetstore_PyDuckStore;
+  if (PyType_Ready(&__pyx_type_10assetstore_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_10duckcython_PyRocksStore.tp_print = 0;
+  __pyx_type_10assetstore_PyRocksStore.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10duckcython_PyRocksStore.tp_dictoffset && __pyx_type_10duckcython_PyRocksStore.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_10duckcython_PyRocksStore.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10assetstore_PyRocksStore.tp_dictoffset && __pyx_type_10assetstore_PyRocksStore.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_10assetstore_PyRocksStore.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyRocksStore, (PyObject *)&__pyx_type_10duckcython_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10duckcython_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
-  __pyx_ptype_10duckcython_PyRocksStore = &__pyx_type_10duckcython_PyRocksStore;
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyRocksStore, (PyObject *)&__pyx_type_10assetstore_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10assetstore_PyRocksStore) < 0) __PYX_ERR(1, 61, __pyx_L1_error)
+  __pyx_ptype_10assetstore_PyRocksStore = &__pyx_type_10assetstore_PyRocksStore;
+  if (PyType_Ready(&__pyx_type_10assetstore_PyDefStorage) < 0) __PYX_ERR(1, 92, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_10assetstore_PyDefStorage.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10assetstore_PyDefStorage.tp_dictoffset && __pyx_type_10assetstore_PyDefStorage.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_10assetstore_PyDefStorage.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyDefStorage, (PyObject *)&__pyx_type_10assetstore_PyDefStorage) < 0) __PYX_ERR(1, 92, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10assetstore_PyDefStorage) < 0) __PYX_ERR(1, 92, __pyx_L1_error)
+  __pyx_ptype_10assetstore_PyDefStorage = &__pyx_type_10assetstore_PyDefStorage;
+  if (PyType_Ready(&__pyx_type_10assetstore_PyDefaultStorage) < 0) __PYX_ERR(1, 113, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_10assetstore_PyDefaultStorage.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10assetstore_PyDefaultStorage.tp_dictoffset && __pyx_type_10assetstore_PyDefaultStorage.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_10assetstore_PyDefaultStorage.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PyDefaultStorage, (PyObject *)&__pyx_type_10assetstore_PyDefaultStorage) < 0) __PYX_ERR(1, 113, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10assetstore_PyDefaultStorage) < 0) __PYX_ERR(1, 113, __pyx_L1_error)
+  __pyx_ptype_10assetstore_PyDefaultStorage = &__pyx_type_10assetstore_PyDefaultStorage;
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -4049,11 +5494,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initduckcython(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initduckcython(void)
+__Pyx_PyMODINIT_FUNC initassetstore(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initassetstore(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_duckcython(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_duckcython(void)
+__Pyx_PyMODINIT_FUNC PyInit_assetstore(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_assetstore(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -4120,7 +5565,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_duckcython(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_assetstore(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -4129,7 +5574,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_duckcython(PyObject *__pyx_pyinit_
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'duckcython' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'assetstore' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -4144,7 +5589,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_duckcython(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_assetstore(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -4183,7 +5628,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("duckcython", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("assetstore", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -4201,14 +5646,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_duckcython) {
+  if (__pyx_module_is_main_assetstore) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name_2, __pyx_n_s_main) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(1, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "duckcython")) {
-      if (unlikely(PyDict_SetItemString(modules, "duckcython", __pyx_m) < 0)) __PYX_ERR(1, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "assetstore")) {
+      if (unlikely(PyDict_SetItemString(modules, "assetstore", __pyx_m) < 0)) __PYX_ERR(1, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4229,7 +5674,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
 
-  /* "duckcython.pyx":1
+  /* "assetstorecython.pyx":1
  * from cython.operator cimport dereference as deref             # <<<<<<<<<<<<<<
  * from libcpp.memory cimport unique_ptr
  * from libcpp.string cimport string
@@ -4254,11 +5699,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init duckcython", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init assetstore", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init duckcython");
+    PyErr_SetString(PyExc_ImportError, "init assetstore");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4659,6 +6104,259 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject 
 bad:
     Py_XDECREF(owned_instance);
     return;
+}
+#endif
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
+}
+#endif
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
+    return result;
+}
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (PyCFunction_GET_FLAGS(func) & METH_FASTCALL) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+#endif
+
+/* PyObjectCallNoArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
+#else
+    if (likely(PyCFunction_Check(func)))
+#endif
+    {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
 }
 #endif
 

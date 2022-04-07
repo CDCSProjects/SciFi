@@ -34,7 +34,59 @@ void RocksStore::insertFromFile(std::string file, std::string path){
     database->Put( WriteOptions(), id, content);
 }
 
-void RocksStore::create(std::string p_directory, int recursive, int pathdepth, int useext){
+void RocksStore::unzipAndCreate(std::string p_directory, int recursive, int pathdepth, int useext, int unzip){
+    unsigned char unzipBuffer[8192];
+    unsigned int unzippedBytes;
+    std::vector<unsigned char> unzippedData;
+    
+    if (unzip==0){
+        create( p_directory, recursive, pathdepth, useext);
+        return;
+    }
+    
+    
+    if (recursive==0){
+       fs::create_directories(p_directory+"/unzipped");
+       for (const auto & entry : fs::directory_iterator(p_directory)){
+        if (!entry.is_directory()){
+            gzFile inFileZ = gzopen(entry.path().string().c_str(), "rb");
+          
+            std::cout << "file " << entry.path().string().c_str() << std::endl;
+          
+            std::ofstream ofs;
+
+            ofs.open( p_directory+"/unzipped/"+get_stem(entry.path()), std::ofstream::out | std::ofstream::app );
+            unzippedData.clear();
+            
+            while (true) {
+                      //gzseek(inFileZ, offset, SEEK_SET);
+                      unzippedBytes = gzread(inFileZ, unzipBuffer, 8192);
+                      
+                      //std::cout << "offset: " << offset << std::endl;
+                    
+                      if (unzippedBytes > 0) {
+                            unzippedData.insert(unzippedData.end(), unzipBuffer, unzipBuffer + unzippedBytes);
+                      } else {
+                        //int z_errnum = 0;
+			            // std::cout << "gzerror: " << gzerror(inFileZ, &z_errnum) << std::endl;
+                          break;
+                      }
+
+              }
+                
+                
+                ofs.write( std::string((const char*) unzippedData.data(),unzippedData.size()).c_str(), unzippedData.size() );
+                ofs.close();
+                gzclose(inFileZ);
+        }
+
+    }
+        create(p_directory+"/unzipped", recursive, pathdepth, useext);
+        fs::remove_all(p_directory+"unzipped");
+    }
+}
+
+std::vector<filedata> RocksStore::create(std::string p_directory, int recursive, int pathdepth, int useext, int removeprefixchar){
 
     std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
 
@@ -42,25 +94,42 @@ void RocksStore::create(std::string p_directory, int recursive, int pathdepth, i
           
      std::vector<std::string> pdb_files;
      std::vector<std::string> pdb_file_names;
+     std::vector<filedata> fileinfo;
 
     if (recursive==0){
        for (const auto & entry : fs::directory_iterator(p_directory)){
-          pdb_files.push_back(get_stem(entry.path()));
+          std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
+          filedata fi;
+          if (useext){
+            pdb_files.push_back(entry.path().string().substr(removeprefixchar));
+            }
+          else{
+            pdb_files.push_back(get_stem(entry.path()).substr(removeprefixchar));
+            fi.fileextension = ext;
+            }
           pdb_file_names.push_back(entry.path().filename().string());
+          fi.key = pdb_files.back();
+          if (ext == ".gz" ) fi.compressed=true;
+          fileinfo.push_back(fi);
       }
     }else{
         for (const auto & entry : fs::recursive_directory_iterator(p_directory)){
           if (!entry.is_directory()){
-           // pdb_files.push_back(get_stem(entry.path()));
+            
+            std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
+
+
+            filedata fi;
+            
             std::stringstream s;
             s << entry;
             pdb_file_names.push_back(s.str());
             pdb_file_names.back().erase(std::remove(pdb_file_names.back().begin(), pdb_file_names.back().end(), '"'), pdb_file_names.back().end());
 
             
-            if (pathdepth==0){
+          /*  if (pathdepth==0){
                 pdb_files.push_back(get_stem(entry.path()));
-            }else{
+            }else{*/
                 std::string test=s.str();
                 std::string finals=s.str();
                 size_t split = 0;
@@ -74,17 +143,43 @@ void RocksStore::create(std::string p_directory, int recursive, int pathdepth, i
                   
                 }
                 
-              
+                fi.path=test.substr(1,s.str().find_last_of("/"));
+                
                 if (useext == 0){
-                size_t split2 = finals.find_last_of(".");
-                pdb_files.push_back(finals.substr(split+1,split2-split-1));
+
+                  size_t split2 = finals.find_last_of(".");
+                  size_t split2_begin = finals.find_first_of(".");
+                  size_t diff = split2-split2_begin;
+                  if (ext.compare(".gz") != 0 ){
+                      pdb_files.push_back(finals.substr(split+1,split2-split-1).substr(removeprefixchar));
+                      fi.fileextension = ext;
+
+                  }
+                  else{
+                      pdb_files.push_back(finals.substr(split+1,split2_begin-split-1).substr(removeprefixchar));  
+                      fi.fileextension = finals.substr(split2_begin,split2-split2_begin);
+                      fi.compressed=true;
+
+                  }
                 }else{
-                pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                    if (ext.compare(".gz") == 0 ){
+                        size_t split2 = finals.find_last_of(".");
+                        pdb_files.push_back(finals.substr(split+1,split2-split-1).substr(removeprefixchar));  
+                        fi.compressed=true;
+                    }else{
+                        pdb_files.push_back(finals.substr(split+1,finals.size()-split).substr(removeprefixchar));                    
+                    }
                 }
                 
+
                 pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
                 pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
-            }
+                
+
+                fi.key=pdb_files.back();
+                fileinfo.push_back(fi);
+                
+           // }
           }
         }
     }
@@ -115,7 +210,7 @@ void RocksStore::create(std::string p_directory, int recursive, int pathdepth, i
     
     //pdb->FlushWAL(true); //TODO enable if we set manual_wal_flush
     std::cout << "...Finished creating key value store.\n";
-    return;
+    return fileinfo;
 }
 
 void RocksStore::remove(std::string key){
