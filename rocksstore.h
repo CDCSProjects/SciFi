@@ -33,7 +33,7 @@ class RocksStore : public AssetStore{
         void unzipAndCreate(std::string p_directory, int recursive=0, int pathdepth=0, int useext=0, int unzip=0);
         std::vector<filedata> create(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
         void getSingle(std::string pdbid);
-        void createportable(std::string directory, int recursive=0, int depth =0, int useext=0);
+        std::vector<filedata> createportable(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
         void insertFromFile(std::string file,  std::string path="");
         void getSingleToFile(std::string pdbid, std::string fileextension);
         void import(std::string sstfile);

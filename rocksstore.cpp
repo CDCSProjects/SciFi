@@ -1,4 +1,5 @@
 #include "rocksstore.h"
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -266,7 +267,7 @@ void RocksStore::getSingleToFile(std::string pdbid, std::string p_fileextension)
     return;
 }
 
-void RocksStore::createportable(std::string directory, int recursive, int pathdepth, int useext){
+std::vector<filedata> RocksStore::createportable(std::string directory, int recursive, int pathdepth, int useext, int removeprefixchar){
     std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
 
      Options options;
@@ -276,17 +277,42 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
      //std::vector<std::string> pdb_file_names;
      filepaths fp;
      
+     std::vector<filedata> fileinfo;
 
-    if (recursive == 0){
+    if (recursive==0){
+       for (const auto & entry : fs::directory_iterator(directory)){
+          std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
+          filedata fi;
+          if (useext){
+            fp.files=(entry.path().string().substr(removeprefixchar));
+            }
+          else{
+            fp.files=(get_stem(entry.path()).substr(removeprefixchar));
+            fi.fileextension = ext;
+            }
+          fp.file_names=(entry.path().filename().string());
+          fi.key = fp.files;
+          if (ext == ".gz" ) fi.compressed=true;
+          fileinfo.push_back(fi);
+          fpv.push_back(fp);
+      }
+      
+   /* if (recursive == 0){
         for (const auto & entry : fs::directory_iterator(directory)){
           //pdb_files.push_back(get_stem(entry.path()));
           //pdb_file_names.push_back(entry.path().filename().string());
           fp.files=get_stem(entry.path());
           fp.file_names=entry.path().filename().string();
-        }
+        }*/
     }else{
         for (const auto & entry : fs::recursive_directory_iterator(directory)){
           if (!entry.is_directory()){
+          
+            std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
+
+
+            filedata fi;
+            
             std::stringstream s;
             s << entry;
             
@@ -298,10 +324,10 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
             fp.file_names.erase(std::remove(fp.file_names.begin(), fp.file_names.end(), '"'), fp.file_names.end());
   
             
-            if (pathdepth==0){
+           /* if (pathdepth==0){
                 //pdb_files.push_back(get_stem(entry.path()));
                 fp.files=get_stem(entry.path());
-            }else{
+            }else{*/
                 std::string test=s.str();
                 std::string finals=s.str();
                 size_t split = 0;
@@ -315,27 +341,60 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
                   
                 }
                 
+                fi.path=test.substr(1,s.str().find_last_of("/"));
+                
                 if (useext == 0){
-                size_t split2 = finals.find_last_of(".");
-                //pdb_files.push_back(finals.substr(split+1,split2-split-1));
-                fp.files=finals.substr(split+1,split2-split-1);
+                    size_t split2 = finals.find_last_of(".");
+                    //pdb_files.push_back(finals.substr(split+1,split2-split-1));
+                   // fp.files=finals.substr(split+1,split2-split-1);
+                    size_t split2_begin = finals.find_first_of(".");
+                  size_t diff = split2-split2_begin;
+                  if (ext.compare(".gz") != 0 ){
+                      fp.files=(finals.substr(split+1,split2-split-1).substr(removeprefixchar));
+                      fi.fileextension = ext;
+
+                  }
+                  else{
+                      fp.files=(finals.substr(split+1,split2_begin-split-1).substr(removeprefixchar));  
+                      fi.fileextension = finals.substr(split2_begin,split2-split2_begin);
+                      fi.compressed=true;
+
+                  }
                 }else{
-                //pdb_files.push_back(finals.substr(split+1,finals.size()-split));
-                fp.files=finals.substr(split+1,finals.size()-split);
+                    //pdb_files.push_back(finals.substr(split+1,finals.size()-split));
+                    //fp.files=finals.substr(split+1,finals.size()-split);
+                    
+                      if (ext.compare(".gz") == 0 ){
+                        size_t split2 = finals.find_last_of(".");
+                        fp.files=(finals.substr(split+1,split2-split-1).substr(removeprefixchar));  
+                        fi.compressed=true;
+                    }else{
+                        fp.files=(finals.substr(split+1,finals.size()-split).substr(removeprefixchar));                    
+                    }
                 }
                 
                 //pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '"'), pdb_files.back().end());
                 //pdb_files.back().erase(std::remove(pdb_files.back().begin(), pdb_files.back().end(), '\n'), pdb_files.back().end());
                 fp.files.erase(std::remove(fp.files.begin(), fp.files.end(), '"'), fp.files.end());
                 fp.files.erase(std::remove(fp.files.begin(), fp.files.end(), '\n'), fp.files.end());
-            }
+                
+                fi.key=fp.files;
+                fileinfo.push_back(fi);
+           // }
             
             fpv.push_back(fp);
             
           }
         }
-        
+         auto start = std::chrono::steady_clock::now();
+   
+
         std::sort(fpv.begin(),fpv.end(),comparep);
+        
+        auto end = std::chrono::steady_clock::now();
+       
+        auto time_min=std::chrono::duration_cast<std::chrono::minutes>(end-start).count();
+        std::cout << "Sorting done. Elapsed time: " << time_min << " minutes\n";
     }
     
     
@@ -349,7 +408,7 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
     Status s = sst_file_writer.Open(portablefile);
     if (s.ok() == 0){
         std::cerr << "\033[31mFileWriter could not open.\033[0m" << std::endl;
-        return;
+        return fileinfo;
     }
    
    /*insert data
@@ -382,12 +441,12 @@ void RocksStore::createportable(std::string directory, int recursive, int pathde
     Status s_finish = sst_file_writer.Finish();
         if (s_finish.ok() == 0){
         std::cerr << "\033[31mFileWriter could not finish.\033[0m" << std::endl;
-        return;
+        return fileinfo;
     }
 
     std::cout << "...Finished creating key value store.\n";
 
-    return;
+    return fileinfo;
 }
 
 

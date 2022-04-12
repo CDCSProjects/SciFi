@@ -43,7 +43,14 @@ class Storage{
               }
              // meta_store->execQueryAndPrint("SELECT * FROM filedata;");
         }
-          else asset_store->createportable(dir, recursive, depth, ext);
+        else {
+          std::vector<filedata> fd = asset_store->createportable(dir, recursive, depth, ext, prefix);
+          std::cout << "Added " << fd.size() << " assets" << std::endl;
+              for (int i=0; i< fd.size(); i++){
+                meta_store->execQuery("INSERT INTO filedata values ('" + fd[i].key + "', " + fd[i].collection + " , " + (fd[i].compressed == true ? string("true") : string("false")) + ", '" + fd[i].path + "', '" + fd[i].fileextension + "')");
+                
+              }
+          }
       }
       
       void load_asset_from_remote(std::string address){

@@ -30,7 +30,7 @@ class AssetStore{
         virtual std::vector<filedata> create(std::string directory, int recursive, int depth , int ext, int removeprefixchar) = 0;
         virtual void getSingle(std::string pdbid) = 0; //This should open the database, get a single value, and close the database again
         virtual void getSingleToFile(std::string pdbid, std::string fileextension) = 0; //This should open the database, get a single value, and close the database again
-        virtual void createportable(std::string directory, int recursive, int pathdepth, int ext) = 0;
+        virtual std::vector<filedata> createportable(std::string directory, int recursive, int pathdepth, int ext, int removeprefixchar=0) = 0;
         virtual void import(std::string sstfile) = 0;
         //copied from cppreference
         std::string get_stem(const fs::path &p) { return (p.stem().string()); }

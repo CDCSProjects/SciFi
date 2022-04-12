@@ -1,4 +1,5 @@
 #include "asshell.h"
+#include <chrono>
 
 namespace SciStore {
   static void addmetadata(Storage<> * st){
@@ -16,14 +17,19 @@ namespace SciStore {
 int main(int argc, char *argv[]){
 
     //SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("galaxyasset","galaxymeta");
-    SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("pdbasset","pdbmeta");
+    SciStore::Storage<> * st = new SciStore::Storage<SciStore::RocksStore, SciStore::DuckStore>("pdbassetportable","pdbmetaportable");
     SciStore::AsShell * as = new SciStore::AsShell(st);
     
-    st->load_assets_from_directory("/mnt/c/Users/ann__/Documents/pdb/pdb",0,1,0,0,3);
+    auto start = std::chrono::steady_clock::now();
+    st->load_assets_from_directory("/mnt/c/Users/ann__/Documents/pdb/pdb",1,1,0,0,3);
+    auto end = std::chrono::steady_clock::now();
+    auto time=std::chrono::duration_cast<std::chrono::hours>(end-start).count();
+    auto time_min=std::chrono::duration_cast<std::chrono::minutes>(end-start).count();
+    std::cout << "Import done. Elapsed time: " << time << "hours or " << time_min << " minutes\n";
     as->register_function("addmeta",&SciStore::addmetadata,"Add metadata to store");
     as->register_function("getids",&SciStore::getallIDs,"Get all available IDs from the meta store");
     
-   // as->run();
+    //as->run();
 
     delete st;
     delete as;
