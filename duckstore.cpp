@@ -3,40 +3,38 @@
 namespace SciStore {
 
 DuckStore::DuckStore(){
-        db = new DuckDB(nullptr);
-	    conn = new Connection(*db);
-  //      current_result=make_unique<QueryResult>();
+    init();
 }
 
 DuckStore::DuckStore(std::string p_name){
+    init(p_name); //Call the init function once before starting to execute any queries
+}
+
+void DuckStore::openAndConnect(){
+        db = new DuckDB(nullptr);
+	    conn = new Connection(*db);
+}
+
+void DuckStore::openAndConnect(std::string p_name){
         db = new DuckDB(p_name);
 	    conn = new Connection(*db);
-        execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
-        execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
-        std::string IDCol = current_result->ToString();
-        idcolumn = IDCol.erase (0, IDCol.find_last_of(']') +1 );
-        current_result->Fetch();
-        execQuery("CREATE TABLE IF NOT EXISTS filedata (key VARCHAR, collection VARCHAR DEFAULT(NULL), compressed BOOLEAN DEFAULT FALSE, path VARCHAR  DEFAULT '', fileextension VARCHAR DEFAULT '')");
-     //   current_result=make_unique<QueryResult>();
 }
 
 DuckStore::~DuckStore(){
     delete db;
 }
 
+std::string DuckStore::getResultAsString(){
+    return current_result->ToString();
+}
+
 void DuckStore::printResult(){
     current_result->Print();
 }
-void DuckStore::writeResultToFile(std::string filename, std::string fileextension){
-    std::ofstream o;
-    o.open(filename + fileextension); 
-    o << current_result->ToString();
-    o.close();
-    std::cout << "\033[32mMetadata written to " << filename + fileextension << "\033[0m" << std::endl;
-}
+
 
 int DuckStore::createNewDB(){
-    std::cout << "Not implemented\n";
+    std::cout << "Not implemented and not needed atm\n";
     return 0;
 }
 
@@ -52,30 +50,6 @@ void DuckStore::execQueryAndPrint(std::string p_query){
         return ;
 }
 
-void DuckStore::getSingle(std::string pdbid){
-    std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
-    execQuery(query);
-    std::cerr << current_result->ToString();
-    return;
-}
-
-void DuckStore::getSingleToFile(std::string pdbid, std::string p_fileextension){
-    std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
-    execQuery(query);
-    
-    std::string id = pdbid;
-    size_t split = id.find_last_of("/");
-    if (split != std::string::npos){
-        id=id.substr(split+1,id.size());
-    }
-    
-    std::ofstream o;
-    o.open(id + "meta" + p_fileextension); 
-    o << current_result->ToString();
-    o.close();
-    std::cout << "\033[32mMetadata written to file " << id << "meta" << p_fileextension << "\033[0m" << std::endl;
-    return;
-}
 
 std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
 
@@ -85,6 +59,7 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     
     std::vector<std::string> idlist;
     
+    //iterating all resuts did not work correctly when this was written, hence this ugly string magic
     for (int i=0; i<current_result->collection.ChunkCount();i++){
         std::string ch =  current_result->collection.GetChunk(i).ToString();
         

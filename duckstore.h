@@ -17,12 +17,12 @@ class DuckStore : public MetaStorage{
         int loadDB(std::string p_name);
         void execQuery(std::string p_query);
         void execQueryAndPrint(std::string p_query);
-        void getSingle(std::string pdbid);
-        void getSingleToFile(std::string pdbid, std::string fileextension);
-        void writeResultToFile(std::string filename, std::string fileextension);
         void printResult();
+        void openAndConnect();
+        void openAndConnect(std::string name);
+        std::string getResultAsString();
         std::vector<std::string> getIDsByConstraint(std::string constraint);
-        std::string idcolumn = "rowid";
+
     protected:
         DuckDB * db;
         Connection * conn;

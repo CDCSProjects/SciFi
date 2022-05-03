@@ -22,11 +22,18 @@ AsShell::AsShell(){
 }
 
 void AsShell::print_welcome_msg(){
-        std::cout << "\033[33m ___  ___ \n";
+     /*   std::cout << "\033[33m ___  ___ \n";
         std::cout << "/   \\/ __|\n";
-        std::cout << "| - |\\__ \\\tWelcome to the AssetStore!\n";
-        std::cout << "|_|_||___/    ";
-        std::cout << "\033[0m\n\n";
+        std::cout << "| - |\\__ \\\tWelcome to SciFi!\n";
+        std::cout << "|_|_||___/    ";*/
+        std::cout << "\033[33m ______     ______     __     ______   __ \n";   
+        std::cout << "/\\  ___\\   /\\  ___\\   /\\ \\   /\\  ___\\ /\\ \\  \n"; 
+        std::cout << "\\ \\___  \\  \\ \\ \\____  \\ \\ \\  \\ \\  __\\ \\ \\ \\  \n";
+        std::cout << " \\/\\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\_\\    \\ \\_\\ \n";
+        std::cout << "  \\/_____/   \\/_____/   \\/_/   \\/_/     \\/_/ \n\n";
+        std::cout << "\t\tWelcome to SciFi!\n";
+
+        std::cout << "\033[0m\n";
         std::cout << "q - Quit\n";
         std::cout << "h - Print help\n";
 }
@@ -45,7 +52,7 @@ int AsShell::run(){
             
         while(1){
 
-            std::cout << "AssetStore> ";
+            std::cout << "SciFi> ";
             std::string task;
             std::cin >> task;
             std::string argument;
