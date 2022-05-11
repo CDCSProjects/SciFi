@@ -152,12 +152,13 @@ class Storage{
           remove (id.c_str()); 
       };
       
-      void get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::cout << "\033[36mReturning asset and metadata \033[0m\n";
+        std::string result="";
         if (assetToFile != 0){
             asset_store->getSingleToFile(id, fileextension);
         }else{
-            asset_store->getSingle(id);
+            result=asset_store->getSingle(id);
         }
         if(metaToFile != 0){
             meta_store->getSingleToFile(id, fileextension_meta);
@@ -165,9 +166,12 @@ class Storage{
             meta_store->getSingle(id);
         }
         std::cout << "________________" << std::endl << std::endl;
+        
+        return result;
       };
       
-      void get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+        std::vector<std::string> result;
         std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
         if(metaToFile != 0){
@@ -181,18 +185,22 @@ class Storage{
           if (assetToFile != 0){
               asset_store->getSingleToFile(id[i], fileextension);
           }else{
-              asset_store->getSingle(id[i]);
+              result.push_back(asset_store->getSingle(id[i]));
+              
           }
 
         }
         std::cout << "________________" << std::endl << std::endl;
+        return result;
       };
       
-     void get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+     std::vector<std::string> get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+        std::vector<std::string> result;
         std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
         std::string query = "SELECT * FROM metadata where " + constraint;
         meta_store->execQuery(query);
-        get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        return result;
         
       };
       
