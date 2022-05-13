@@ -25,6 +25,16 @@ namespace SciStore {
       st->get(key,1,st->afe,0,st->mfe);
   }
   
+    static void importcsv(Storage<> * st){
+      std::string filename;
+      std::cout << "Please provide the filename: ";
+      std::cin >> filename;
+      std::string col;
+      std::cout << "which column contains the key (provide the name): ";
+      std::cin >> col;
+      st->load_metadata_from_file(filename,col);
+  }
+  
   static void changeext(Storage<> * st){
       std::string ext;
       std::cout << "Please provide the file extension for assets (currently '" << st->afe << "'): ";

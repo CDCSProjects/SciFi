@@ -71,8 +71,8 @@ class Storage{
        * @param IDCol The name of the column with the unique identifier 
        */
       void load_metadata_from_file(std::string file, std::string IDCol){
-          meta_store->execQuery("DROP TABLE IF EXISTS metadata");
-          meta_store->execQuery("CREATE TABLE IF NOT EXISTS metadata AS SELECT * FROM read_csv_auto(" + file + ");");
+          meta_store->execQueryAndPrint("DROP TABLE IF EXISTS metadata");
+          meta_store->execQueryAndPrint("CREATE TABLE IF NOT EXISTS metadata AS SELECT * FROM '" + file + "';");
           meta_store->execQuery("DROP TABLE IF EXISTS metainfo;");
           meta_store->execQuery("CREATE TABLE metainfo (tablename VARCHAR, idcolname VARCHAR)");
           meta_store->execQuery("INSERT INTO metainfo VALUES ('metadata', '" + IDCol + "')");

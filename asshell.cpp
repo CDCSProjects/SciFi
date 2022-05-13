@@ -13,6 +13,7 @@ void AsShell::initialize_functions(){
     register_function("ext",&changeext,"Change the extensions for output files");
     register_function("scandir", &createfromlocal, "Add new assets by scanning a directory");
     register_function("import",&importsst,"Import a portable sst file into your local AssetStore");
+    register_function("importmeta",&importcsv,"Import metadata from a csv file");
 }
 
 
@@ -56,6 +57,8 @@ int AsShell::run(){
             std::string task;
             std::cin >> task;
             std::string argument;
+            
+            if (std::cin.eof()) { std::cout << "Bye!" << std::endl; break;}
              
             if (task == "q"){    
                   std::cout << "Bye!\n"; 
@@ -72,6 +75,7 @@ int AsShell::run(){
             }
             
         }
+        return 0;
 }
 }
 

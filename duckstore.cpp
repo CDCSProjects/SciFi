@@ -39,12 +39,14 @@ int DuckStore::createNewDB(){
 }
 
 void DuckStore::execQuery(std::string p_query){
+
         current_result = conn->Query(p_query);
        // std::cout << "column count current_result: " << current_result->ColumnCount()  << " \n";
         return ;
 }
    
 void DuckStore::execQueryAndPrint(std::string p_query){
+        std::cout << p_query << std::endl;
         current_result = conn->Query(p_query);
         current_result->Print();
         return ;

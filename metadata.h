@@ -15,7 +15,7 @@ class MetaStorage{
         ~MetaStorage() {};
         
         virtual int createNewDB() = 0;
-        virtual int loadDB(std::string p_name) = 0;
+        int loadDB(std::string p_name) {return 0;}
         virtual void execQueryAndPrint(std::string p_query) = 0;
         virtual void printResult() = 0;
         virtual std::vector<std::string> getIDsByConstraint(std::string constraint) = 0;
