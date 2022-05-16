@@ -172,8 +172,8 @@ class Storage{
       
       std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::vector<std::string> result;
-        std::cout << "\033[36mReturning assets and metadata \033[0m\n";
-        if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
+        //std::cout << "\033[36mReturning assets and metadata \033[0m\n";
+        //if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
         if(metaToFile != 0){
 
                 meta_store->writeResultToFile("metadata", fileextension_meta);
@@ -190,21 +190,32 @@ class Storage{
           }
 
         }
-        std::cout << "________________" << std::endl << std::endl;
+        //std::cout << "________________" << std::endl << std::endl;
         return result;
       };
       
      std::vector<std::string> get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::vector<std::string> result;
         std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
-        std::string query = "SELECT * FROM metadata where " + constraint;
+        constraint = (constraint == "all") ? "" : (" WHERE " + constraint);
+        std::string query = "SELECT * FROM metadata " + constraint;
         meta_store->execQuery(query);
         result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
         return result;
         
       };
-      
-      void remove_asset(std::string id, int remove_metadata=0){
+
+     std::vector<std::string> get_all_assets(int assetToFile = 0, std::string fileextension = "",
+                    int metaToFile = 0, std::string fileextension_meta = "") {
+       std::vector<std::string> ids = meta_store->getIDsByFileData();
+
+       std::vector<std::string> result;
+       result =
+           get(ids, assetToFile, fileextension, metaToFile, fileextension_meta);
+       return result;
+     };
+
+     void remove_asset(std::string id, int remove_metadata=0){
         asset_store->remove(id);
         if (remove_metadata!=0){
             meta_store->execQuery("DELETE FROM metadata WHERE " + meta_store->idcolumn + " = " + id);

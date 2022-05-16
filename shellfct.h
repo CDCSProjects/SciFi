@@ -60,7 +60,11 @@ namespace SciStore {
       }
       st->get_by_constraint(con,1,st->afe,1,st->mfe);
   }
-  
+
+  static void getallAssest(Storage<> * st){
+      st->get_all_assets(1,st->afe,1,st->mfe);
+  }
+
   static void createfromlocal(Storage<> * st){
       std::string dir;
       std::cout << "Please provide the directory: ";
