@@ -10,6 +10,7 @@ void AsShell::register_function(std::string option, ShellFunctionPtr func, std::
 void AsShell::initialize_functions(){
     register_function("get",&getasset,"Get the asset and metadata for a key");
     register_function("getm", &getfrommeta, "Get the asset for metadata constraints");
+    register_function("listall", &getallAssest, "Get all asset keys");
     register_function("ext",&changeext,"Change the extensions for output files");
     register_function("scandir", &createfromlocal, "Add new assets by scanning a directory");
     register_function("import",&importsst,"Import a portable sst file into your local AssetStore");

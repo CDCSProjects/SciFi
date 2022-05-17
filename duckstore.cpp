@@ -54,8 +54,8 @@ void DuckStore::execQueryAndPrint(std::string p_query){
 
 
 std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
-
-    std::string query = "SELECT " + idcolumn + " FROM metadata WHERE " + constraint;
+    constraint = (constraint == "all") ? "" : " WHERE " + constraint;
+    std::string query = "SELECT " + idcolumn + " FROM metadata" + constraint;
     std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
     execQuery(query);
     
@@ -82,6 +82,35 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     if (idlist.size() == 0) std::cout << "\033[31mnone\033[0m\n";
     std::cout << std::endl;
         
+    return idlist;
+}
+
+std::vector<std::string> DuckStore::getIDsByFileData(){
+    std::string query = "SELECT key FROM filedata" ;
+    execQuery(query);
+
+    std::vector<std::string> idlist;
+
+    //iterating all resuts did not work correctly when this was written, hence this ugly string magic
+    for (int i=0; i<current_result->collection.ChunkCount();i++){
+        std::string ch =  current_result->collection.GetChunk(i).ToString();
+
+        ch.erase(0, std::min(ch.find_last_of('[') + 1, ch.size() - 1));
+        ch.erase (ch.find_last_not_of(']') - 1 , std::string::npos );
+
+        std::string id;
+        std::istringstream chstream(ch);
+        while(std::getline(chstream, id, ',')) {
+          id.erase(0, 1); //erase leading space
+          idlist.push_back(id);
+        }
+    }
+
+
+    //for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
+
+    //std::cout << std::endl;
+
     return idlist;
 }
 
