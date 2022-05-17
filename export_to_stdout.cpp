@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
   for (int i = 0; i < res.size(); i++) {
     std::cout << res[i];
   }
-  //std::cerr << res.size() << std::endl;
+  std::cerr << res.size() << std::endl;
   //std::cout << res[0];
 
   return 0;
