@@ -34,7 +34,7 @@ void MetaStorage::init(std::string p_name){
 
 void MetaStorage::writeResultToFile(std::string filename, std::string fileextension){
     std::ofstream o;
-    o.open(filename + fileextension); 
+    o.open(resultfolder + "/" + filename + fileextension); 
     o << getResultAsString();
     o.close();
     std::cout << "\033[32mMetadata written to " << filename + fileextension << "\033[0m" << std::endl;
@@ -58,7 +58,7 @@ void MetaStorage::getSingleToFile(std::string pdbid, std::string p_fileextension
     }
     
     std::ofstream o;
-    o.open(id + "meta" + p_fileextension); 
+    o.open(resultfolder + "/" + id + "meta" + p_fileextension); 
     o << getResultAsString();
     o.close();
     std::cout << "\033[32mMetadata written to file " << id << "meta" << p_fileextension << "\033[0m" << std::endl;

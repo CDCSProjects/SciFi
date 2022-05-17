@@ -10,10 +10,27 @@ namespace SciStore {
 template<typename A = RocksStore, typename M = DuckStore>
 class Storage{
     public:
-      Storage(std::string assetDBname, std::string metaDBname){
+      Storage(std::string assetDBname, std::string metaDBname, std::string resultsfolder="results", int temporarydevice=0){
           asset_store = new A(assetDBname);
           asset_store->open();
           meta_store = new M(metaDBname);
+          
+          if (!fs::exists("/dev/shm") & temporarydevice!=0){
+            std::cout << "Temporary file system in user space is not supported by your operating system.\nCreating folder on disc.\n";
+            temporarydevice=0;
+          }
+          
+          if (!fs::exists(resultsfolder)){
+            if (temporarydevice==0){
+                fs::create_directory(resultsfolder);
+            }else{
+                if (!fs::exists("/dev/shm/"+resultsfolder)) fs::create_directory("/dev/shm/"+resultsfolder);
+                fs::create_directory_symlink("/dev/shm/"+resultsfolder,resultsfolder);
+            }
+          }
+          
+          meta_store->resultfolder=resultsfolder;
+          asset_store->resultfolder=resultsfolder;
       };
       
       ~Storage(){

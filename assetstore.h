@@ -67,6 +67,7 @@ class AssetStore{
         Downloader * dl;
         std::string db_name="default";
         std::string portablefile = "myassetstore.sst";
+        std::string resultfolder = "";
 };
 
 

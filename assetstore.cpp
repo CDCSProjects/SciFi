@@ -210,7 +210,7 @@ void AssetStore::getSingleToFile(std::string pdbid, std::string p_fileextension)
         id=id.substr(split+1,id.size());
     }
     std::ofstream o; //ofstream is the class for fstream package
-    o.open(id + p_fileextension); //open is the method of ofstream
+    o.open(resultfolder + "/" + id + p_fileextension); //open is the method of ofstream
     o << content; // << operator which is used to print the file informations in the screen
     o.close();
     

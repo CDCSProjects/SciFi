@@ -31,6 +31,7 @@ class MetaStorage{
         void init(std::string p_name);
         
         std::string idcolumn = "rowid";
+        std::string resultfolder = "";
 
 };
 }
