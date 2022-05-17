@@ -191,10 +191,10 @@ class Storage{
         std::vector<std::string> result;
         //std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         //if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
-        if(metaToFile != 0){
+        if(metaToFile = 1){
 
                 meta_store->writeResultToFile("metadata", fileextension_meta);
-          }else{
+        if (metatofile =0){
 
               meta_store->printResult();
           }
