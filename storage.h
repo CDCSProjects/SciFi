@@ -207,17 +207,22 @@ class Storage{
 
                 meta_store->writeResultToFile("metadata", fileextension_meta);
                 }
-        if (metatofile == 0){
+        if (metaToFile == 0){
 
               meta_store->printResult();
           }
         for (int i=0; i<id.size();i++){
-          if (assetToFile != 0){
-              asset_store->getSingleToFile(id[i], fileextension);
-          }else{
+          if (assetToFile == 0){
               result.push_back(asset_store->getSingle(id[i]));
-              
           }
+          else if (assetToFile == 1){
+              asset_store->getSingleToFile(id[i], fileextension);
+          }
+          else{
+
+
+          }
+
 
         }
         //std::cout << "________________" << std::endl << std::endl;
