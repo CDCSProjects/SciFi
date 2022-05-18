@@ -16,22 +16,24 @@
 
 echo "export_to_ram, from_disc, from_ramfs, from_pipe" > times.csv
 
-for i in {1..1}
+time_start=$(date +%s.%6N)
+for i in $(seq 10)
 do
 
 rm *.mp4
 
 time1=$(date +%s.%6N)
-./scifi_export_to_ram testdb_video all 
+#./scifi_export_to_ram testdb_video all 
 time2=$(date +%s.%6N)
   
-ffmpeg -f image2 -framerate 30 -benchmark -i testfiles/images/out%06d.png -c:v libx264 -vf format=yuv420p -movflags +faststart outdisc.mp4
+
+#ffmpeg -f image2 -framerate 30 -benchmark -i testfiles/images/out%06d.png -c:v libx264 -vf format=yuv420p -movflags +faststart outdisc.mp4
 time3=$(date +%s.%6N)
 
-ffmpeg -f image2 -framerate 30 -benchmark -i pictures/out%06d.png -c:v libx264 -vf format=yuv420p -movflags +faststart outram.mp4
+#ffmpeg -f image2 -framerate 30 -benchmark -i pictures/out%06d.png -c:v libx264 -vf format=yuv420p -movflags +faststart outram.mp4
 time4=$(date +%s.%6N)
 
-./scifi_export_to_stdout testdb_video all | ffmpeg -f image2pipe -benchmark -framerate 30 -i - -c:v libx264 -vf format=yuv420p -movflags +faststart out.mp4
+#./scifi_export_to_stdout testdb_video all | ffmpeg -f image2pipe -benchmark -framerate 30 -i - -c:v libx264 -vf format=yuv420p -movflags +faststart out.mp4
 time5=$(date +%s.%6N)
 
 echo -n $(echo "$time2 - $time1" | bc) >> times.csv
@@ -44,3 +46,6 @@ echo -n $(echo "$time5 - $time4" | bc) >> times.csv
 echo "" >> times.csv
 
 done
+
+time_end=$(date +%s.%6N)
+echo $(echo "$time_end - $time_start" | bc) 
