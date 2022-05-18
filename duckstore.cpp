@@ -97,7 +97,7 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
 }
 
 std::vector<std::string> DuckStore::getIDsByFileData(){
-    std::string query = "SELECT " + idcolumn + " FROM filedata order by " + idcolumn;
+    std::string query = "SELECT key FROM filedata order by key ";
     execQuery(query);
 
     std::vector<std::string> idlist;
