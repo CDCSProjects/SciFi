@@ -3,7 +3,7 @@
 echo "unzip" > times_write.csv
 for i in $(seq 10)
 do
-	rm -r testpictures/images
+	rm -r testpictures/
 	time1=$(date +%s.%6N)
 	unzip -d testpictures pdb.zip
 	time2=$(date +%s.%6N)
