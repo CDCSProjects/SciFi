@@ -5,7 +5,7 @@ for i in $(seq 10)
 do
 	rm -r testpictures/images
 	time1=$(date +%s.%6N)
-	unzip -d testpictures galaxy_data/all.zip
+	unzip -d testpictures pdb.zip
 	time2=$(date +%s.%6N)
 	echo -n $(echo "$time2 - $time1" | bc) >> times_write.csv
 	echo -n ", " >> times_write.csv
@@ -17,7 +17,7 @@ for i in $(seq 10)
 do
 	rm -r pictures
 	time1=$(date +%s.%6N)
-	./scifi_export_to_ram galaxy all 
+	./scifi_export_to_ram pdb all 
 	time2=$(date +%s.%6N)
 	echo -n $(echo "$time2 - $time1" | bc) >> times_write.csv
 	echo -n ", " >> times_write.csv
@@ -29,7 +29,7 @@ for i in $(seq 10)
 do
 	rm -r picturesdisc
 	time1=$(date +%s.%6N)
-	./scifi_export_to_disc galaxy all
+	./scifi_export_to_disc pdb all
 	time2=$(date +%s.%6N)
 	echo -n $(echo "$time2 - $time1" | bc) >> times_write.csv
 	echo -n ", " >> times_write.csv
