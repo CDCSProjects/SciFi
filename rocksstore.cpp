@@ -33,7 +33,9 @@ void RocksStore::setOptions(){
 void RocksStore::remove(std::string key){
     Status s_get = database->Delete(WriteOptions(), key);
     assert(s_get.ok());
+    #ifdef OUTPUTSHELL
     std::cerr << "Deleted " << key << std::endl;
+    #endif
     
     return;
 }
@@ -44,7 +46,9 @@ std::string RocksStore::getSingle(std::string pdbid){
     Status s_get = database->Get( ReadOptions(), pdbid, &content);
 
     if (s_get.ok() == 0){
+        #ifdef OUTPUTSHELL
         std::cerr << "No asset found for ID " << pdbid << std::endl;
+        #endif
         return "";
     }
     //std::cerr << content << std::endl;
@@ -57,7 +61,9 @@ int RocksStore::writePortable(std::vector<filepaths> fpv,filepaths fp, std::stri
     SstFileWriter sst_file_writer(EnvOptions(), options, options.comparator);
     Status s = sst_file_writer.Open(portablefile);
     if (s.ok() == 0){
+        #ifdef OUTPUTSHELL
         std::cerr << "\033[31mFileWriter could not open.\033[0m" << std::endl;
+        #endif
         return 3;
     }
    
@@ -75,16 +81,22 @@ int RocksStore::writePortable(std::vector<filepaths> fpv,filepaths fp, std::stri
 
         s_write = sst_file_writer.Put(fpv[i].files, content);
 
+        #ifdef OUTPUTSHELL
         std::cout << "Create asset with ID " << fpv[i].files << " from file " << path << std::endl;
+        #endif
           if (s_write.ok() == 0){
+            #ifdef OUTPUTSHELL
             std::cerr << "\033[31mSomething went wrong when adding assets. " << s_write.getState() << " Continue with next asset.\033[0m" << std::endl;
+            #endif
 
           }
     }
     
     Status s_finish = sst_file_writer.Finish();
         if (s_finish.ok() == 0){
+        #ifdef OUTPUTSHELL
         std::cerr << "\033[31mFileWriter could not finish.\033[0m" << std::endl;
+        #endif
         return 3;
     }
     
@@ -93,8 +105,9 @@ int RocksStore::writePortable(std::vector<filepaths> fpv,filepaths fp, std::stri
 }
 
 void RocksStore::import(std::string sstfile){
-
+    #ifdef OUTPUTSHELL
     std::cout << "Starting to create key value store from sst file. This may take a while...\n";
+    #endif
     
     portablefile=sstfile;
   //  Options options;
@@ -107,11 +120,15 @@ void RocksStore::import(std::string sstfile){
     efo.write_global_seqno=false;*/
     Status s_import = database->IngestExternalFile({sstfile}, IngestExternalFileOptions());
     if (s_import.ok() == 0){
+        #ifdef OUTPUTSHELL
         std::cerr << "\033[31mSomething went wrong. Does the file " << sstfile << " exist?\033[0m" << std::endl;
+        #endif
         return;
     }
 
+    #ifdef OUTPUTSHELL
     std::cout << "...Finished importing sst file.\n";
+    #endif
     
     return;
 }

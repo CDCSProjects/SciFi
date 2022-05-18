@@ -37,13 +37,17 @@ void MetaStorage::writeResultToFile(std::string filename, std::string fileextens
     o.open(resultfolder + "/" + filename + fileextension); 
     o << getResultAsString();
     o.close();
+    #ifdef OUTPUTSHELL
     std::cout << "\033[32mMetadata written to " << filename + fileextension << "\033[0m" << std::endl;
+    #endif
 }
 
 void MetaStorage::getSingle(std::string pdbid){
     std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
     execQuery(query);
+    #ifdef OUTPUTSHELL
     std::cerr << getResultAsString();
+    #endif
     return;
 }
 
@@ -61,7 +65,9 @@ void MetaStorage::getSingleToFile(std::string pdbid, std::string p_fileextension
     o.open(resultfolder + "/" + id + "meta" + p_fileextension); 
     o << getResultAsString();
     o.close();
+    #ifdef OUTPUTSHELL
     std::cout << "\033[32mMetadata written to file " << id << "meta" << p_fileextension << "\033[0m" << std::endl;
+    #endif
     return;
 }
 

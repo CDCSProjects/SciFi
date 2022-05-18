@@ -34,7 +34,9 @@ void DuckStore::printResult(){
 
 
 int DuckStore::createNewDB(){
+    #ifdef OUTPUTSHELL
     std::cout << "Not implemented and not needed atm\n";
+    #endif
     return 0;
 }
 
@@ -46,7 +48,9 @@ void DuckStore::execQuery(std::string p_query){
 }
    
 void DuckStore::execQueryAndPrint(std::string p_query){
+        #ifdef OUTPUTSHELL
         std::cout << p_query << std::endl;
+        #endif
         current_result = conn->Query(p_query);
         current_result->Print();
         return ;
@@ -56,7 +60,9 @@ void DuckStore::execQueryAndPrint(std::string p_query){
 std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     constraint = (constraint == "all") ? "" : " WHERE " + constraint;
     std::string query = "SELECT " + idcolumn + " FROM metadata" + constraint;
+    #ifdef OUTPUTSHELL
     std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+    #endif
     execQuery(query);
     
     std::vector<std::string> idlist;
@@ -76,11 +82,13 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
         }
     }
     
+    #ifdef OUTPUTSHELL
     std::cout << "\033[36mFound IDs for constraint "  << constraint << ":\033[32m\n";
     for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
     std::cout << "\033[0m"; 
     if (idlist.size() == 0) std::cout << "\033[31mnone\033[0m\n";
     std::cout << std::endl;
+    #endif
         
     return idlist;
 }
@@ -115,7 +123,9 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
 }
 
 int DuckStore::loadDB(std::string name){
+#ifdef OUTPUTSHELL
     std::cout << "loadDB not implemented\n";
+    #endif
         return 0;
 }
 }
