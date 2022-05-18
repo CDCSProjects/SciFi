@@ -35,8 +35,10 @@ void AssetStore::unzipAndCreate(std::string p_directory, int recursive, int path
         if (!entry.is_directory()){
             gzFile inFileZ = gzopen(entry.path().string().c_str(), "rb");
           
+            #ifdef OUTPUTSHELL
             std::cout << "file " << entry.path().string().c_str() << std::endl;
-          
+            #endif
+            
             std::ofstream ofs;
 
             ofs.open( p_directory+"/unzipped/"+get_stem(entry.path()), std::ofstream::out | std::ofstream::app );
@@ -71,8 +73,9 @@ void AssetStore::unzipAndCreate(std::string p_directory, int recursive, int path
 }
 
 std::vector<filedata> AssetStore::create(std::string p_directory, int recursive, int pathdepth, int useext, int removeprefixchar){
+    #ifdef OUTPUTSHELL
    std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
-
+    #endif
     setOptions();
     // Options options;
           
@@ -181,11 +184,16 @@ std::vector<filedata> AssetStore::create(std::string p_directory, int recursive,
       content.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>() ) );
       insert(pdb_files[i], content);
       //database->Put( WriteOptions(), pdb_files[i], content);
+      #ifdef OUTPUTSHELL
       std::cout << "Create asset with ID " << pdb_files[i] << " from file " << path << std::endl;
+      #endif
     }
     
     //pdb->FlushWAL(true); //TODO enable if we set manual_wal_flush
+    #ifdef OUTPUTSHELL
     std::cout << "...Finished creating key value store.\n";
+    #endif
+    
     return fileinfo;
 }
 
@@ -214,13 +222,17 @@ void AssetStore::getSingleToFile(std::string pdbid, std::string p_fileextension)
     o << content; // << operator which is used to print the file informations in the screen
     o.close();
     
+    #ifdef OUTPUTSHELL
     std::cout << "\033[32mAsset " + pdbid + " written to file " + pdbid + p_fileextension << "\033[0m" << std::endl;
+    #endif
 
     return;
 }
 
 std::vector<filedata> AssetStore::createportable(std::string directory, int recursive, int pathdepth, int useext, int removeprefixchar){
+    #ifdef OUTPUTSHELL
     std::cout << "Starting to create key value store from pdb folder. This may take a while...\n";
+    #endif
 
      setOptions();
      
@@ -347,13 +359,16 @@ std::vector<filedata> AssetStore::createportable(std::string directory, int recu
         auto end = std::chrono::steady_clock::now();
        
         auto time_min=std::chrono::duration_cast<std::chrono::minutes>(end-start).count();
+        #ifdef OUTPUTSHELL
         std::cout << "Sorting done. Elapsed time: " << time_min << " minutes\n";
+        #endif
     }
     
     
     if( writePortable(fpv, fp, directory, recursive) > 0) {return fileinfo;}
-    
+    #ifdef OUTPUTSHELL
     std::cout << "...Finished creating key value store.\n";
+    #endif
 
     return fileinfo;
 }

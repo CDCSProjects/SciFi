@@ -16,7 +16,9 @@ class Storage{
           meta_store = new M(metaDBname);
           
           if (!fs::exists("/dev/shm") & temporarydevice!=0){
+            #ifdef OUTPUTSHELL
             std::cout << "Temporary file system in user space is not supported by your operating system.\nCreating folder on disc.\n";
+            #endif
             temporarydevice=0;
           }
           
@@ -53,7 +55,9 @@ class Storage{
         
         if (portable==0){
               std::vector<filedata> fd = asset_store->create(dir, recursive, depth, ext, prefix);
+              #ifdef OUTPUTSHELL
               std::cout << "Added " << fd.size() << " assets" << std::endl;
+              #endif
               for (int i=0; i< fd.size(); i++){
                 meta_store->execQuery("INSERT INTO filedata values ('" + fd[i].key + "', " + fd[i].collection + " , " + (fd[i].compressed == true ? string("true") : string("false")) + ", '" + fd[i].path + "', '" + fd[i].fileextension + "')");
                 
@@ -62,7 +66,9 @@ class Storage{
         }
         else {
           std::vector<filedata> fd = asset_store->createportable(dir, recursive, depth, ext, prefix);
+          #ifdef OUTPUTSHELL
           std::cout << "Added " << fd.size() << " assets" << std::endl;
+          #endif
               for (int i=0; i< fd.size(); i++){
                 meta_store->execQuery("INSERT INTO filedata values ('" + fd[i].key + "', " + fd[i].collection + " , " + (fd[i].compressed == true ? string("true") : string("false")) + ", '" + fd[i].path + "', '" + fd[i].fileextension + "')");
                 
@@ -128,7 +134,9 @@ class Storage{
             after = idmt.erase(0,pos);
         }
         createquery = before + " PRIMARY KEY" + after;
+        #ifdef OUTPUTSHELL
         std::cout << createquery << std::endl;
+        #endif
         
         meta_store->execQuery(createquery);
         meta_store->printResult();
@@ -170,7 +178,9 @@ class Storage{
       };
       
       std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+        #ifdef OUTPUTSHELL
         std::cout << "\033[36mReturning asset and metadata \033[0m\n";
+        #endif
         std::string result="";
         if (assetToFile != 0){
             asset_store->getSingleToFile(id, fileextension);
@@ -182,7 +192,9 @@ class Storage{
         }else{
             meta_store->getSingle(id);
         }
+        #ifdef OUTPUTSHELL
         std::cout << "________________" << std::endl << std::endl;
+        #endif
         
         return result;
       };
