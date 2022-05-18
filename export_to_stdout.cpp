@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
   SciStore::Storage<> * st = new SciStore::Storage<>(dbname + "_asset",dbname + "_meta");
 
   std::vector<std::string> res;
-  if (argv[2] == "all") {
+  if (strcmp(argv[2],"all")==0) {
     res = st->get_all_assets(0, "", 2);
   } else {
     res = st->get_by_constraint(argv[2], 0, "", 2);
