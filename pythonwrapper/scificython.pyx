@@ -3,7 +3,7 @@ from libcpp.memory cimport unique_ptr
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef extern from "duckstore.h" namespace "SciStore":
+cdef extern from "../backend/include/duckstore.h" namespace "SciStore":
     cdef cppclass DuckStore:
         DuckStore(string)
         int createNewDB()
@@ -15,7 +15,9 @@ cdef extern from "duckstore.h" namespace "SciStore":
         void writeResultToFile(string, string)
         void printResult()
         vector[string] getIDsByConstraint(string)
+        string getResultAsString()
         string idcolumn
+ #       void initDB(string)
 #        DuckDB * db
 #        Connection * conn
 #        unique_ptr[MaterializedQueryResult] current_result
@@ -44,14 +46,18 @@ cdef class PyDuckStore:
         return self.thisptr.printResult()
     def getIDsByConstraint(self, constr):
         return self.thisptr.getIDsByConstraint(constr)
+    def getResultAsString(self):
+        return self.thisptr.getResultAsString()
+  #  def initDB(self, name):
+ #       return self.thisptr.initDB(name)
     
-cdef extern from "rocksstore.h" namespace "SciStore":
+cdef extern from "../backend/include/rocksstore.h" namespace "SciStore":
     cdef cppclass RocksStore:
         RocksStore(string)
         void open()
         void insert(string, string)
         void create(string, int, int, int)
-        void getSingle(string)
+        string getSingle(string)
         void createportable(string, int, int, int)
         void insertFromFile(string, string)
         void getSingleToFile(string, string)
@@ -82,3 +88,43 @@ cdef class PyRocksStore:
         return self.thisptr.importsst(name)
     def remove(self, id):
         return self.thisptr.remove(id)
+
+##cdef extern from "storage.h" namespace "SciStore":
+    ##cdef cppclass DefaultStorage:
+        ##DefaultStorage (string, string)
+        ##void import_asset_store(string)
+        ##void testout()
+##    
+##cdef class PyDefStorage:
+    ##cdef DefaultStorage *thisptr
+    ##def __cinit__(self, s1, s2):
+        ##self.thisptr = new DefaultStorage(s1, s2)
+    ##def __dealloc__(self):
+        ##del self.thisptr
+    ##def import_asset_store(self, file):
+        ##return self.import_asset_store(file)
+    ##def testout(self):
+        ##return self.testout()
+##        
+##                
+##cdef extern from "storage.h" namespace "SciStore":
+    ##cdef cppclass Storage[T, U]:
+        ##Storage(string, string) except +
+        ##void import_asset_store(string)
+        ##void load_asset_from_file(string, string)
+        ##void testout()
+        ##T *assetstore
+        ##U *metastore
+##                
+##cdef class PyDefaultStorage:
+    ##cdef Storage[RocksStore, DuckStore] *thisptr
+    ##def __cinit__(self, s1, s2):
+        ##self.thisptr = new Storage[RocksStore, DuckStore](s1, s2)
+    ##def __dealloc__(self):
+        ##del self.thisptr
+    ##def import_asset_store(self, file):
+        ##return self.import_asset_store(file)
+    ##def load_asset_from_file(self, file, dir = ""):
+        ##return self.load_asset_from_file(file, dir)
+    ##def testout(self):
+        ##return self.testout()
