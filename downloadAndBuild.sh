@@ -19,3 +19,5 @@ find . -name \*.a -exec cp {} staticlibs \;
 # go back to main folder
 cd ..
 
+#build the simple example
+./build.sh
