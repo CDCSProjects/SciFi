@@ -1,5 +1,5 @@
 
-#include "asshell.h"
+#include <shell/include/asshell.h>
 namespace SciStore {
 
 void AsShell::register_function(std::string option, ShellFunctionPtr func, std::string helptext){

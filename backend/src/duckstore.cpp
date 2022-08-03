@@ -130,5 +130,14 @@ int DuckStore::loadDB(std::string name){
     std::cout << "loadDB not implemented\n";
     #endif
         return 0;
+
 }
+
+//!We only need this function for the python wrapper
+/*void DuckStore::initDB(std::string name){
+    execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
+    std::string IDCol = getResultAsString();
+    idcolumn = IDCol.erase (0, IDCol.find_last_of(']') +1 );
+    return;
+}*/
 }

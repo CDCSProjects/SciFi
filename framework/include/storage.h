@@ -7,9 +7,20 @@
 #include <backend/include/duckstore.h>
 
 namespace SciStore {
+
+/** Storage is the central class of the SciFi framework. It is highly recommended to only use this class to access the asset store.
+ * @tparam A The backend for the data storage. Defaults to RocksStore which uses RocksDB.
+ * @tparam M The backend for the meta storage. Defaults to DuckStore which uses DuckDB.
+ */
 template<typename A = RocksStore, typename M = DuckStore>
 class Storage{
     public:
+    /** Constructor of the storage class
+     * @param assetDBname The name of the data storage. If the name doesn't exist, a new storage will be created.
+     * @param metaDBname The name of the meta storage. If the name doesn't exist, a new storage will be created.
+     * @param resultsfolder The name of the folder where any results are written to. If it doesn not exist, a folder with the given name will be created. Defaults to "results". 
+     * @param temporarydevice Indicates whether results are written to disc or to a file system in main memory. This currently, this only works if your operating system provides a mounted /dev/shm. A symlink to your working directory will be created for easy access. We are working on a solution which uses FUSE to enable this feature for a wider range of systems without the need for root access.
+    */
       Storage(std::string assetDBname, std::string metaDBname, std::string resultsfolder="results", int temporarydevice=0){
           asset_store = new A(assetDBname);
           asset_store->open();
@@ -35,15 +46,19 @@ class Storage{
           asset_store->resultfolder=resultsfolder;
       };
       
+      /** Destructor of the storage class
+       */
       ~Storage(){
         delete meta_store;
       }
       
-      A* asset_store;
-      M* meta_store;
-      std::string afe = ".dat";
-      std::string mfe = ".txt";
+      A* asset_store; //!< A pointer to the data store
+      M* meta_store; //!< A pointer to the meta store
+      std::string afe = ".dat"; //!< File ending for returned assets @todo Use original file endings from filedata table in metastore
+      std::string mfe = ".txt"; //!< 
       
+      /**
+       */
       void load_asset_from_file(std::string file, std::string directory = ""){
         asset_store->insertFromFile(file, directory);
         return;

@@ -1,4 +1,4 @@
-#include "metadata.h"
+#include <framework/include/metadata.h>
 
 namespace SciStore {
 

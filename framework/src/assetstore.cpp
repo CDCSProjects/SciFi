@@ -1,4 +1,4 @@
-#include "assetstore.h"
+#include <framework/include/assetstore.h>
 
 namespace SciStore {
 

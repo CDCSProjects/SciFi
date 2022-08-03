@@ -23,6 +23,7 @@ class DuckStore : public MetaStorage{
         std::string getResultAsString();
         std::vector<std::string> getIDsByConstraint(std::string constraint);
         std::vector<std::string> getIDsByFileData();
+   //     void initDB(std::string name);
 
     protected:
         DuckDB * db;
