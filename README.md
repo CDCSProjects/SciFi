@@ -57,7 +57,7 @@ There is a cython-based python wrapper which allows a direct access of the DataS
 
 We tested SciFi using Ubuntu in different versions and on different laptops and a Jetson Nano. Please make sure that the packages *libcurlpp-dev* and *build-essential*, or their counterpart in whatever distribution you are using, are installed. We used g++ as our c++ compiler. If you intend to use another compiler, please change the call accordingly in the script *build.sh*.
 
-### Known issues
+### Known Issues
 
 **Linker or compiler errors to curl calls:** You are most likely missing the c++-development files for curl. While build-essential should be available on every machine which provides a compiler, the libcurlpp developer files are not always available, but can be downloaded and built in user space. Please visit http://www.curlpp.org/ for more information. 
  
@@ -73,7 +73,7 @@ We tested SciFi using Ubuntu in different versions and on different laptops and 
 
 **Note: The python wrapper does not support the central *Storage*-Interface. For this reason we do not advise to use it directly until a new version is released. This wrapper is mainly used for the extension if the Dataset class in PyTorch. We highly recommend to use that instead.**
 1. Change to the directory *pythonwrapper*
-2. Execute the following command to build a library in the current directory: *python setup.py build_ext --inplace*. 
+2. Execute the following command to build a library in the current directory: *python setup.py build_ext --inplace*. In case of a rocksdb-related linker error, refer to the section *Known Issues*.
 In case python3 is not set as your default python call, use *python setup.py build_ext --inplace*.
 3. Your library will have the name *scifi.cpython-38-\<architecture\>-linux-gnu.so*. You can now either install this library or use it directly from the same folder. The module is called *scifi*. It provides the classes *rocks* and *duck*. 
 
