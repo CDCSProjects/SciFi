@@ -6,11 +6,8 @@ from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
 setup(ext_modules=[Extension("scifi", 
-                             ["scificython.pyx", "./../backend/src/duckstore.cpp", "./../backend/src/rocksstore.cpp", "./../framework/src/metadata.cpp", "./../framework/src/assetstore.cpp"], language="c++", include_dirs = ['./../../duckdb-0.3.1/duckdb-0.3.1/src/include', './../rocksdb/include/', './..'],
-                    libraries = ['rocksdb', 'duckdb_static', 'duckdb_re2', 'fmt', 'hyperloglog' ,'imdb', 'miniz','pg_query', 'sqlite3', 'sqlite3_api_wrapper_static', 'test_helpers' ,'utf8proc', 'pthread' ,'dl', 'z','curl','curlpp'],
-                    library_dirs = ['./../../duckdb-0.3.1/duckdb-0.3.1/src','/mnt/c/Users/ann__/Documents/rocksdb/rocksdb/', '.'],
+                             ["scificython.pyx", "./../backend/src/duckstore.cpp", "./../backend/src/rocksstore.cpp", "./../framework/src/metadata.cpp", "./../framework/src/assetstore.cpp"], language="c++", include_dirs = ['./../duckdb/src/include', './../rocksdb/include/', './..'],
+                    libraries = ['rocksdb', 'duckdb_static', 'duckdb_re2', 'duckdb_fmt', 'duckdb_hyperloglog' ,'imdb', 'duckdb_miniz','duckdb_pg_query', 'duckdb_sqlite3', 'sqlite3_api_wrapper_static', 'test_helpers' ,'duckdb_utf8proc', 'parquet_extension', 'duckdb_fastpforlib', 'duckdb_mbedtls', 'pthread' ,'dl', 'z','curl','curlpp', 'snappy'],
+                    library_dirs = ['./../duckdb/staticlibs','./../rocksdb', '.'],
                     extra_compile_args = ['-std=c++17'])],
       cmdclass = {'build_ext': build_ext})
-      
-      #, "./../framework/src/storage.cpp", "./../framework/src/metadata.cpp"
-      #, './..framework/include', './../backend/include'
