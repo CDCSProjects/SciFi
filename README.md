@@ -37,7 +37,7 @@ We will provide an example dataset as soon as we have figured out the legal aspe
 
 Currently, we provide some simple examples for the usage of SciFi as a framework or as a shell. All examples can be found in the folder *examples*.
 
-There is a cython-based python wrapper which allows a direct access of the DataStore and the MetaStore. We are working on a wrapper which works with generic backends and which does not require a direct access. Our integration into PyTorch uses this wrapper to extend the Dataset class of Pytorch. This way, you can access all assets stored via SciFi while using PyTorch like you would access any other map-style dataset. **If you are experienced in PyTorch and/or Cython, and are looking for a master thesis topic at UHH or TUHH, drop us a message!**
+There is a cython-based python wrapper which allows a direct access of the DataStore and the MetaStore. We are working on a wrapper which works with generic backends and which does not require a direct access. Our integration into PyTorch uses this wrapper to extend the Dataset class of Pytorch. This way, you can access all assets stored via SciFi while using PyTorch, like you would access any other map-style dataset. **If you are experienced in PyTorch and/or Cython, and are looking for a bachelor or master thesis topic at UHH or TUHH, drop us a message!**
 
 ### Preliminary Roadmap
 - **19.09.22** Presentation of SciFi at "Machine Learning in Natural Sciences: from Quantum Physics to Nanoscience and Structural Biology" in Hamburg. You can find the abstract at https://www.conferences.uni-hamburg.de/event/256/contributions/728/
@@ -102,10 +102,8 @@ Note that the direct access via a key only uses the DataStore, while the *len* a
 
 All examples can be found in the *examples* folder.
 
-*SimpleStore.cpp* shows a minimal example to create a store and a shell, and to tun the shell
-
-*ASDemo.cpp* shows how to add functions to the shell and how to access the store directly + some time measurement. **NOTE** The source of the input files here is hard coded, change the path to something that exists on your drive.
-
-All other examples were used for our paper to demonstrate the speed of different operations, e.g. writing datasets to main memory.
+- *SimpleStore.cpp* shows a minimal example to create a store and a shell, and to tun the shell
+- *ASDemo.cpp* shows how to add functions to the shell and how to access the store directly + some time measurement. **NOTE** The source of the input files here is hard coded, change the path to something that exists on your drive.
+- All other examples were used for our paper to demonstrate the speed of different operations, e.g. writing datasets to main memory.
 
 
