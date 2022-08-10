@@ -16,11 +16,7 @@ class SciFiDataset(torch.utils.data.Dataset):
     #    self.duck.initDB(metaname.encode('utf-8'))
     
     def __getitem__(self, index):
-        #return self.rocks.getSingleToFile(index.encode('utf-8'), "".encode('utf-8'))
-        if index.startswith('meta:'):
-            self.duck.getIDsByConstraint(index[len('meta:'):].encode('utf-8'))
-        else:
-            return self.rocks.getSingle(index.encode('utf-8'))
+        return self.rocks.getSingle(index.encode('utf-8'))
         
     def __len__(self):
         #rockdb only returns an esimated number of keys. Thus, we use our automatically generated metadata to get the count
@@ -31,10 +27,15 @@ class SciFiDataset(torch.utils.data.Dataset):
     def getIDsByIndex(self,min,max):
         number= max-min
         self.duck.execQuery("Select key from filedata order by key limit ".encode('utf-8') + str(number).encode('utf-8') + " offset ".encode('utf-8') + str(min).encode('utf-8'))
+        res=self.duck.getResultAsString().decode("utf-8").rstrip()
         # Our result is a formatted string, let's make a list of keys out of this
-        res=(self.duck.getResultAsString().decode("utf-8").split(']',1)[1])
+        res=(res.split(']',1)[1])
         res=res.split("\t\n")
-        res[0]=res[0].replace('\n', '')
+        res[0]=res[0].replace("\n", '')
         res=list(filter(None,res))
+        return res
+        
+    def getIDsByMeta(self,meta):
+        res = [x.decode('utf-8') for x in self.duck.getIDsByConstraint(meta.encode('utf-8'))]
         return res
  
