@@ -246,10 +246,13 @@ class Storage{
       
      std::vector<std::string> get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::vector<std::string> result;
+
+        constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
+        
         std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
-        constraint = (constraint == "all") ? "" : (" WHERE " + constraint + " ORDER BY " + meta_store->idcolumn);
         std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
         meta_store->execQuery(query);
+
         result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
         return result;
         

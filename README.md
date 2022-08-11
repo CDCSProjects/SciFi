@@ -1,4 +1,5 @@
-# Welcome to SciFi, an embedded asset store primarily for scientific data
+# Welcome to SciFi
+## An embedded asset store designed for scientific data
 
 SciFi combines a relational database and a key-value store to store and query data (DataStore) and metadata (MetaStore) in an efficient way without requiring special user permissions or administration of the datatabase systems. The data is stored in a key-value store, which uses a folder on disc or in main memory. Within this folder, one or more \*.sst files are saved. This depends on the parameters you pass during the creation of the store. The metadata is stored in a \*.db or \*.parquet file. The identification between data and metadata is done via a unique key. The uniqueness of the key is enforced by design in the DataStore, and by defining it as UNIQUE PRIMARY attribute in the MetaStore. **Keys are case sensitive.**
 
@@ -17,6 +18,7 @@ Table of Contents
     * [Build the Python Wrapper](#build-the-python-wrapper)
     * [Use with PyTorch](#use-with-pytorch)
 * [Examples](#examples)
+* [Documentation](#documentation)
    
 ## Definitions
 
@@ -96,6 +98,8 @@ The definition of what the *len* function is supposed to do in the *Dataset* cla
 
 Since the keys in SciFi can contain arbitrary characters and are not limited to integers, the dataset can not be iterated naively as shown in some tutorial about map-style datasets. To solve this, we introduced the function *getIDsByIndex(lower,upper)*. This will return a list of all indexes within the range [lower, upper] sorted alphabetically. The resulting list can be used for iteration. We are working on sorting by arbitrary attributes and an iteration-style dataset.
 
+If you want to iterate over all assets with certain metadata, you may use the function *getIDsByMeta(metadataconstraint)*, where *metadataconstraint* is any constraint or combination of constraints, e.g. \"number>10\" or \"number>10 AND text like '%blubb%'\".
+
 Note that the direct access via a key only uses the DataStore, while the *len* and *getIDsByIndex* functions require the according MetaStore. This is because the DataStore can only provide an estimate of the number of its assets. An accurate result would require a more performance intensive count. 
 
 ## Examples
@@ -106,4 +110,6 @@ All examples can be found in the *examples* folder.
 - *ASDemo.cpp* shows how to add functions to the shell and how to access the store directly + some time measurement. **NOTE** The source of the input files here is hard coded, change the path to something that exists on your drive.
 - All other examples were used for our paper to demonstrate the speed of different operations, e.g. writing datasets to main memory.
 
+## Documentation
+Currently, the documentation consists of this readme, *some* code documentation in Doxygen style, and a user documentation which can be found in the file SciFiFirstSteps.pdf in the root folder of this repository. 
 

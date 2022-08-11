@@ -2,7 +2,7 @@
 from SciFiDataset import SciFiDataset
 
 #Create a dataset
-scifi_dataset = SciFiDataset(datasetname="My_Assetstore", metaname="Test_Metastore")
+scifi_dataset = SciFiDataset(datasetname="../My_Assetstore", metaname="../Test_Metastore")
 
 #Return an asset by its unique ID
 sample=scifi_dataset["a1"]

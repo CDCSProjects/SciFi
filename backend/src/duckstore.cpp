@@ -58,7 +58,7 @@ void DuckStore::execQueryAndPrint(std::string p_query){
 
 
 std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
-    constraint = (constraint == "all") ? "" : " WHERE " + constraint;
+    //constraint = (constraint == "all") ? "" : " WHERE " + constraint;
     std::string query = "SELECT " + idcolumn + " FROM metadata" + constraint;
 
     #ifdef OUTPUTSHELL
