@@ -44,7 +44,7 @@ There is a cython-based python wrapper which allows a direct access of the DataS
 ### Preliminary Roadmap
 - **19.09.22** Presentation of SciFi at "Machine Learning in Natural Sciences: from Quantum Physics to Nanoscience and Structural Biology" in Hamburg. You can find the abstract at https://www.conferences.uni-hamburg.de/event/256/contributions/728/
 - **Q4/22-Q1/23** Only documentation and small bug fixes due to parental leave, a thesis which needs to be finished, and the recruiting of a new colleague
-- **Starting Q2/23** Python wrapper working on generic backends and the central *Storage* class, publication of the architecture paper, performance optimization, implement feature requests 
+- **Starting Q2/23** Python wrapper working on generic backends and the central *Storage* class, publication of the architecture paper, performance optimization, implement feature requests, provide binaries for commonly used datasets starting with the protein databank (see https://www.rcsb.org/).
 
 ## Folder Structure
 
@@ -83,7 +83,7 @@ In case python3 is not set as your default python call, use *python setup.py bui
 
 You can access your SciFi data directly without writing the assets back to the file system or using the original files.
  
-Prerequisites: Make sure that the scifi module is available, i.e. you either installed the python wrapper it or the library file is in the same folder as your scipt. See above for instructions on how to build the wrapper.
+Prerequisites: Make sure that the SciFi module is available, i.e. you either installed the python wrapper, or the library file is in the same folder as your script. See above for instructions on how to build the wrapper.
 
 Change to the folder *pythonwrapper*. The file SciFiDataset.py contains the extension of the *Dataset* class. The file DatasetExample.py shows examples of how you can use it. At least two steps are necessary:
 1. Create a dataset:
