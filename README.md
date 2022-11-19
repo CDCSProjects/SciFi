@@ -35,7 +35,7 @@ To make sure that the documentation is not confusing, we will provide our defini
 ## State of Development
 
 SciFi is currently in an early version which provides basic functionality, e.g. creating a storage from an existing folder and filtering assets by their metadata. You are, of course, free and encouraged to use this as a framework for your own AssetStore which is tailored to your needs without the need to redevelop the basic structures. However, there might still be bugs and the build process might not be as smooth as expected.
-We will provide an example dataset as soon as we have figured out the legal aspect.
+We will provide a more realistic example dataset as soon as we have figured out the legal aspect.
 
 Currently, we provide some simple examples for the usage of SciFi as a framework or as a shell. All examples can be found in the folder *examples*.
 
