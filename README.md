@@ -69,7 +69,7 @@ We tested SciFi using Ubuntu in different versions and on different laptops and 
 
 ### Build a Binary
 
-*downloadAndBuild.sh* is a script for downloading and building the static libraries for rocksdb and duckdb, and for building a simple example shell which can be found in examples/SimpleStore.cpp. It has been tested with duckdb v0.4.1-dev1214 and rocksdb v. 7.5.0 on several notebooks. After a successful build, you will find a binary called *simple* in the root folder of SciFi. Run this binary to be greeted with a nice little shell.
+*downloadAndBuild.sh* is a script for downloading and building the static libraries for rocksdb and duckdb, and for building a simple example shell which can be found in examples/SimpleStore.cpp. It has been tested with duckdb v0.4.1-dev1214 and rocksdb v. 7.5.0 on several notebooks and a Jetson Nano. After a successful build, you will find a binary called *simple* in the root folder of SciFi. Run this binary to be greeted with a nice little shell.
 
 ### Build the Python Wrapper
 
