@@ -42,7 +42,8 @@ int DuckStore::createNewDB(){
 
 void DuckStore::execQuery(std::string p_query){
 
-        current_result = conn->Query(p_query);
+        current_result = conn->SendQuery(p_query);
+        current_result = ((StreamQueryResult &)*current_result).Materialize();
        // std::cout << "column count current_result: " << current_result->ColumnCount()  << " \n";
         return ;
 }
@@ -51,8 +52,8 @@ void DuckStore::execQueryAndPrint(std::string p_query){
         #ifdef OUTPUTSHELL
         std::cout << p_query << std::endl;
         #endif
-        current_result = conn->Query(p_query);
-        current_result->Print();
+        current_result = conn->SendQuery(p_query);
+        ((StreamQueryResult &)*current_result).Materialize()->Print();
         return ;
 }
 
@@ -68,9 +69,9 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     execQuery(query);
     
     std::vector<std::string> idlist;
-    
-    //iterating all resuts did not work correctly when this was written, hence this ugly string magic
-    for (int i=0; i<current_result->collection.ChunkCount();i++){
+
+    //iterating all results did not work correctly when this was written, hence this ugly string magic
+  /*  for (int i=0; i<current_result->collection.ChunkCount();i++){
         std::string ch =  current_result->collection.GetChunk(i).ToString();
         
         ch.erase(0, std::min(ch.find_last_of('[') + 1, ch.size() - 1));
@@ -82,16 +83,31 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
           id.erase(0, 1); //erase leading space
           idlist.push_back(id);
         }
-    }
+    }*/
     
+    //Interface for materialized results has been changed. We still need ugly string magic, though
+    
+    std::string ch = current_result->ToString();
+    std::cout << "START" << ch << "END";
+    ch.erase(0, std::min(ch.find_last_of(']') + 1, ch.size() - 1));
+   // ch.erase (ch.find_last_not_of(']') - 1 , std::string::npos );
 
-    #ifdef OUTPUTSHELL
+    std::string id;
+    std::istringstream chstream(ch);
+    while(std::getline(chstream, id, '\n')) {
+     //   id.erase(0, 1); //erase leading space
+        idlist.push_back(id);
+    }
+    idlist.erase(idlist.begin());//erase first element because it is empty
+        idlist.erase(idlist.end());//erase last element because it is empty
+
+    //#ifdef OUTPUTSHELL
     std::cout << "\033[36mFound IDs for constraint "  << constraint << ":\033[32m\n";
-    for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
+    for (int i=0; i<idlist.size(); i++) std::cout << idlist[i] << std::endl;
     std::cout << "\033[0m"; 
     if (idlist.size() == 0) std::cout << "\033[31mnone\033[0m\n";
     std::cout << std::endl;
-    #endif
+   // #endif
        
     return idlist;
 }
@@ -101,9 +117,10 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
     execQuery(query);
 
     std::vector<std::string> idlist;
+    
 
     //iterating all resuts did not work correctly when this was written, hence this ugly string magic
-    for (int i=0; i<current_result->collection.ChunkCount();i++){
+/*    for (int i=0; i<current_result->collection.ChunkCount();i++){
         std::string ch =  current_result->collection.GetChunk(i).ToString();
 
         ch.erase(0, std::min(ch.find_last_of('[') + 1, ch.size() - 1));
@@ -116,8 +133,22 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
           idlist.push_back(id);
         }
     }
+*/
+   //Interface for materialized results has been changed. We still need ugly string magic, though
 
+    std::string ch = current_result->ToString();
+    ch.erase(0, std::min(ch.find_last_of(']') + 1, ch.size() - 1));
+   // ch.erase (ch.find_last_not_of(']') - 1 , std::string::npos );
 
+    std::string id;
+    std::istringstream chstream(ch);
+    while(std::getline(chstream, id, '\n')) {
+       // id.erase(0, 1); //erase leading space
+        idlist.push_back(id);
+    }
+    
+    idlist.erase(idlist.begin());//erase first element because it is empty
+    idlist.erase(idlist.end());//erase last element because it is empty
     //for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
 
     //std::cout << std::endl;

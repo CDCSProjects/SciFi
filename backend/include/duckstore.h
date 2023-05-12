@@ -28,8 +28,8 @@ class DuckStore : public MetaStorage{
     protected:
         DuckDB * db;
         Connection * conn;
-        std::unique_ptr<MaterializedQueryResult> current_result;
-
+       // std::unique_ptr<MaterializedQueryResult> current_result;
+        duckdb::unique_ptr<QueryResult> current_result;
 };
 }
 #endif
