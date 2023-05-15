@@ -101,13 +101,13 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     idlist.erase(idlist.begin());//erase first element because it is empty
         idlist.erase(idlist.end());//erase last element because it is empty
 
-    //#ifdef OUTPUTSHELL
+    #ifdef OUTPUTSHELL
     std::cout << "\033[36mFound IDs for constraint "  << constraint << ":\033[32m\n";
     for (int i=0; i<idlist.size(); i++) std::cout << idlist[i] << std::endl;
     std::cout << "\033[0m"; 
     if (idlist.size() == 0) std::cout << "\033[31mnone\033[0m\n";
     std::cout << std::endl;
-   // #endif
+    #endif
        
     return idlist;
 }
@@ -149,8 +149,10 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
     
     idlist.erase(idlist.begin());//erase first element because it is empty
     idlist.erase(idlist.end());//erase last element because it is empty
+    
+    #ifdef OUTPUTSHELL
     for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
-
+    #endif
     //std::cout << std::endl;
 
     return idlist;

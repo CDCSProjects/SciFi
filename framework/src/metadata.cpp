@@ -28,10 +28,9 @@ void MetaStorage::init(std::string p_name){
         execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
         execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
         std::string IDCol = getResultAsString();
-    std::cout << "enter create\n";
-       // idcolumn = IDCol.erase (0, IDCol.find_last_of(']') +1 );
+
         idcolumn = crop_single_result(IDCol);
-    std::cout << "IDcolumn: " << idcolumn << std::endl;
+
         execQuery("CREATE TABLE IF NOT EXISTS filedata (key VARCHAR, collection VARCHAR DEFAULT(NULL), compressed BOOLEAN DEFAULT FALSE, path VARCHAR  DEFAULT '', fileextension VARCHAR DEFAULT '')");
 }
 
