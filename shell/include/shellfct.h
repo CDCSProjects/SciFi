@@ -62,7 +62,7 @@ namespace SciStore {
   }
 
   static void getallAssest(Storage<> * st){
-      std::vector<std::string> ids = st->get_all_assets(0,st->afe,0,st->mfe);
+      std::vector<std::string> ids = st->get_all_assets(0,st->afe,0,st->mfe,1);
       for (int i=0; i<ids.size();i++) std::cout << ids[i] << std::endl;
   }
 

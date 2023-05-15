@@ -259,9 +259,10 @@ class Storage{
       };
 
      std::vector<std::string> get_all_assets(int assetToFile = 0, std::string fileextension = "",
-       int metaToFile = 0, std::string fileextension_meta = "") {
+       int metaToFile = 0, std::string fileextension_meta = "", int ids_only = 0) {
        std::vector<std::string> ids = meta_store->getIDsByFileData();
-
+        if (ids_only != 0) return ids;
+        
        std::vector<std::string> result;
        result =
            get(ids, assetToFile, fileextension, metaToFile, fileextension_meta);

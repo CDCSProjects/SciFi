@@ -88,7 +88,7 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
     //Interface for materialized results has been changed. We still need ugly string magic, though
     
     std::string ch = current_result->ToString();
-    std::cout << "START" << ch << "END";
+   // std::cout << "START" << ch << "END";
     ch.erase(0, std::min(ch.find_last_of(']') + 1, ch.size() - 1));
    // ch.erase (ch.find_last_not_of(']') - 1 , std::string::npos );
 
@@ -143,17 +143,33 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
     std::string id;
     std::istringstream chstream(ch);
     while(std::getline(chstream, id, '\n')) {
-       // id.erase(0, 1); //erase leading space
+
         idlist.push_back(id);
     }
     
     idlist.erase(idlist.begin());//erase first element because it is empty
     idlist.erase(idlist.end());//erase last element because it is empty
-    //for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
+    for (int i=0; i<idlist.size(); i++) std::cout << idlist[i]  << std::endl;
 
     //std::cout << std::endl;
 
     return idlist;
+}
+
+std::string DuckStore::crop_single_result(std::string res){
+    res.erase (0, res.find_last_of(']') +1 );
+
+    std::istringstream resstream(res);
+    std::string r;
+
+    int i=0;
+    while(std::getline(resstream, r, '\n')) {
+
+        if (i>0) return r;
+        i++;
+    }
+
+    return r;
 }
 
 int DuckStore::loadDB(std::string name){
