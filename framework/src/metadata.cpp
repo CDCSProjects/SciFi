@@ -74,8 +74,13 @@ void MetaStorage::getSingleToFile(std::string pdbid, std::string p_fileextension
     return;
 }
 
+std::string MetaStorage::crop_result(std::string res){
+    return res;
+}
+
 std::string MetaStorage::crop_single_result(std::string res){
     return res;
 }
+
 
 }   

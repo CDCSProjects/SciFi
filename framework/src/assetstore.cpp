@@ -87,6 +87,9 @@ std::vector<filedata> AssetStore::create(std::string p_directory, int recursive,
        for (const auto & entry : fs::directory_iterator(p_directory)){
           std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
           filedata fi;
+          std::string p = entry.path().string();
+          std::stringstream s(p);
+          fi.path=p.substr(1,s.str().find_last_of("/"));
           if (useext){
             pdb_files.push_back(entry.path().string().substr(removeprefixchar));
             }

@@ -158,6 +158,48 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
     return idlist;
 }
 
+std::vector<std::string> DuckStore::crop_and_split_result(std::string res){
+    //crop result
+    res.erase (0, res.find_last_of(']') +1 );
+    //split result
+    std::istringstream resstream(res);
+    std::string r1;
+    std::string r2;
+    std::vector<std::string> resvec;
+
+    while(std::getline(resstream, r1, '\n')) {
+        std::istringstream r1stream(r1);
+        while(std::getline(r1stream, r2, '\t')) {
+            if (r2!=" ") resvec.push_back(r2);
+        }
+    }
+    return resvec;
+}
+
+std::vector<std::string> DuckStore::get_user_meta_column_names(){
+    std::string query = "select * from metadata limit 0";
+    execQuery(query);
+    std::istringstream resstream(getResultAsString());
+    std::string r;
+
+    int i=0;
+    std::getline(resstream, r, '\n');
+
+    std::istringstream rstream(r);
+    std::vector<std::string> res;
+    
+    while(std::getline(rstream, r, '\t')) {
+        if (r!=" ") res.push_back(r);
+    }
+    
+    return res;
+}
+
+std::string DuckStore::crop_result(std::string res){
+    res.erase (0, res.find_last_of(']') +1 );
+    return res;
+}
+
 std::string DuckStore::crop_single_result(std::string res){
     res.erase (0, res.find_last_of(']') +1 );
 
