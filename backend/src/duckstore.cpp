@@ -13,6 +13,7 @@ DuckStore::DuckStore(std::string p_name){
 void DuckStore::openAndConnect(){
         db = new DuckDB(nullptr);
 	    conn = new Connection(*db);
+        execQuery("PRAGMA enable_checkpoint_on_shutdown");
 }
 
 void DuckStore::openAndConnect(std::string p_name){
@@ -21,6 +22,8 @@ void DuckStore::openAndConnect(std::string p_name){
 }
 
 DuckStore::~DuckStore(){
+    execQuery("PRAGMA force_checkpoint;");
+    execQuery("PRAGMA CHECKPOINT;");
     delete db;
 }
 

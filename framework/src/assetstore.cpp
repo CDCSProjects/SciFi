@@ -87,9 +87,10 @@ std::vector<filedata> AssetStore::create(std::string p_directory, int recursive,
        for (const auto & entry : fs::directory_iterator(p_directory)){
           std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
           filedata fi;
-          std::string p = entry.path().string();
-          std::stringstream s(p);
-          fi.path=p.substr(1,s.str().find_last_of("/"));
+          fi.path = entry.path().string();
+          //std::string p = entry.path().string();
+          //std::stringstream s(p);
+          //fi.path=p.substr(1,s.str().find_last_of("/"));
           if (useext){
             pdb_files.push_back(entry.path().string().substr(removeprefixchar));
             }
@@ -110,6 +111,7 @@ std::vector<filedata> AssetStore::create(std::string p_directory, int recursive,
 
 
             filedata fi;
+            fi.path = entry.path().string();
             
             std::stringstream s;
             s << entry;
@@ -251,6 +253,8 @@ std::vector<filedata> AssetStore::createportable(std::string directory, int recu
        for (const auto & entry : fs::directory_iterator(directory)){
           std::string ext=entry.path().string().substr(entry.path().string().find_last_of("."));
           filedata fi;
+          fi.path = entry.path().string();
+          
           if (useext){
             fp.files=(entry.path().string().substr(removeprefixchar));
             }
@@ -280,7 +284,7 @@ std::vector<filedata> AssetStore::createportable(std::string directory, int recu
 
 
             filedata fi;
-            
+            fi.path = entry.path().string();
             std::stringstream s;
             s << entry;
             
@@ -309,7 +313,7 @@ std::vector<filedata> AssetStore::createportable(std::string directory, int recu
                   
                 }
                 
-                fi.path=test.substr(1,s.str().find_last_of("/"));
+                //fi.path=test.substr(1,s.str().find_last_of("/"));
                 
                 if (useext == 0){
                     size_t split2 = finals.find_last_of(".");

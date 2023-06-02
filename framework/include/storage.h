@@ -57,6 +57,10 @@ class Storage{
       std::string afe = ".dat"; //!< File ending for returned assets @todo Use original file endings from filedata table in metastore
       std::string mfe = ".txt"; //!< 
       
+      void open_meta_store(std::string metaDBname, std::string resultsfolder="results"){
+        meta_store = new M(metaDBname);
+        meta_store->resultfolder=resultsfolder;
+      }
       /**
        */
       void load_asset_from_file(std::string file, std::string directory = ""){
@@ -115,6 +119,7 @@ class Storage{
           meta_store->execQuery("CREATE TABLE metainfo (tablename VARCHAR, idcolname VARCHAR)");
           meta_store->execQuery("INSERT INTO metainfo VALUES ('metadata', '" + IDCol + "')");
           meta_store->idcolumn=IDCol;
+         // meta_store->execQuery("CHECKPOINT");
       }
       
       void load_metadata_from_remote(std::string address, std::string IDCol){
