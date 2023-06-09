@@ -74,13 +74,21 @@ void MetaStorage::getSingleToFile(std::string pdbid, std::string p_fileextension
     return;
 }
 
-std::string MetaStorage::crop_result(std::string res){
-    return res;
+bool MetaStorage::get_isNumeric(std::string col_id){
+    std::string query = "SELECT count(numeric_scale) from information_schema.columns where column_name='" + col_id +"'";
+    execQuery(query);
+    if (crop_single_result(getResultAsString()) == "0") return false;
+    else return true;
 }
 
-std::string MetaStorage::crop_single_result(std::string res){
-    return res;
+bool MetaStorage::get_isText(std::string col_id){
+    std::string query = "SELECT data_type from information_schema.columns where column_name='" + col_id +"'";
+    execQuery(query);
+    if (crop_single_result(getResultAsString()).rfind("VARCHAR", 0) == 0) return true;
+    if (crop_single_result(getResultAsString()) == "TEXT") return true;
+    return false;
 }
 
+//TODO get_isBoolean
 
 }   
