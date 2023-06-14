@@ -263,6 +263,17 @@ class Storage{
         
       };
 
+     std::vector<std::string> get_IDs_by_constraint(std::string constraint){
+        std::vector<std::string> result;
+
+        constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
+        
+        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
+
+        return ids;
+        
+      };
+      
      std::vector<std::string> get_all_assets(int assetToFile = 0, std::string fileextension = "",
        int metaToFile = 0, std::string fileextension_meta = "", int ids_only = 0) {
        std::vector<std::string> ids = meta_store->getIDsByFileData();
