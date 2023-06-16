@@ -274,6 +274,39 @@ class Storage{
         
       };
       
+      //stores filters as view
+      void store_filter(std::string constraint, std::string filtername){
+        
+        //save the name of the view
+        std::string query="INSERT INTO filter VALUES (" + filtername + ")";
+        meta_store->execQuery(query);
+        
+        //create a new view
+        constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
+        std::string query2="CREATE VIEW " + filtername + " AS SELECT " + meta_store->idcolumn + " FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        meta_store->execQuery(query2);
+      }
+      
+      std::vector<std::string> apply_filter(std::string filtername, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+
+        std::string query = "SELECT * FROM " + filtername;
+        meta_store->execQuery(query);
+     
+        std::vector<std::string> ids = crop_and_split_result(meta_store->getResultAsString());
+        std::vector<std::string> result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        return result;
+        
+      }
+      
+        void remove_filter( std::string filtername){
+        
+          std::string query="DROP VIEW " + filtername + ")";
+          meta_store->execQuery(query);
+          
+          std::string query2="DELETE FROM filter WHERE filtername = '" + filtername + "'";
+          meta_store->execQuery(query2);
+        }
+      
      std::vector<std::string> get_all_assets(int assetToFile = 0, std::string fileextension = "",
        int metaToFile = 0, std::string fileextension_meta = "", int ids_only = 0) {
        std::vector<std::string> ids = meta_store->getIDsByFileData();

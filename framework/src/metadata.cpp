@@ -13,6 +13,7 @@ MetaStorage::MetaStorage(std::string p_name){
 void MetaStorage::init(){
         openAndConnect();
         execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
+        execQuery("CREATE TABLE IF NOT EXISTS filter (filtername VARCHAR)");
         execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
         std::string IDCol = getResultAsString();
 
@@ -26,6 +27,7 @@ void MetaStorage::init(std::string p_name){
         openAndConnect(p_name);
    
         execQuery("CREATE TABLE IF NOT EXISTS metainfo (tablename VARCHAR, idcolname VARCHAR)");
+        execQuery("CREATE TABLE IF NOT EXISTS filter (filtername VARCHAR)");
         execQuery("SELECT idcolname FROM metainfo WHERE tablename = 'metadata'");
         std::string IDCol = getResultAsString();
 
