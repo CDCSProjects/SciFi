@@ -213,6 +213,7 @@ class Storage{
             meta_store->getSingle(id);
         }
         #ifdef OUTPUTSHELL
+        std::cout << meta_store->getResultAsString() << std::endl;
         std::cout << "________________" << std::endl << std::endl;
         #endif
         
@@ -342,11 +343,67 @@ class Storage{
         asset_store->import(file);
         return;
       }
+      /**
+       * Redefines the columns for the use meta data.
+       * NOTE!!!! This deletes all existing entries.
+       * @param coldef A comma seperated list of name-type tuples, e.g.: "my_name VARCHAR, my_value FLOAT" creates two columns called my_name and my_float which are of a text type and a floating point number type.
+       * @param IDname The index of the column which contains the unique ID
+       */
+      void define_user_meta_cols(std::string coldef, int IDColumn = 0){
+        
+        meta_store->execQuery("DROP TABLE IF EXISTS metadata");
+        std::string createquery = "CREATE TABLE metadata("+ coldef + ")";
+        
+        std::string before = "";
+        std::string after = createquery;
+        std::string idmt = "";
+        for (int i=0; i<IDColumn+1;i++){
+            int pos=after.find_first_of(",",1);
+            if (pos==string::npos){
+                pos = after.size()-1;
+            }
+            idmt=after;
+            before.append(after.erase(pos,after.size()-1));
+            after = idmt.erase(0,pos);
+        }
+        createquery = before + " PRIMARY KEY" + after;
+        #ifdef OUTPUTSHELL
+        std::cout << createquery << std::endl;
+        #endif
+        
+        std::string IDCol = before;
+        int pos_end = IDCol.find_last_of(" ");
+        
+        while (IDCol.at(pos_end) == ' '){
+            IDCol=IDCol.erase(pos_end, IDCol.size()-1);
+            pos_end--;
+        }
+        
+        
+        int pos_start1=IDCol.find_last_of(","); 
+        int pos_start2=IDCol.find_last_of("(");
+        int pos_start=0;
+        if (pos_start1 > pos_start2) pos_start=pos_start1;
+        else pos_start=pos_start2;
+        IDCol.erase(0,pos_start+1);
+        
+        meta_store->idcolumn=IDCol;
+        meta_store->execQuery(createquery);
+        meta_store->execQuery("INSERT INTO metainfo VALUES ('metadata', '" + IDCol + "')");
+      }
+      
+      /**
+       * Inserts a new row into the use metadata table. Do not use this to bulk insert data, it will be slow. Use load_metadata_advanced or load_metadata_from_file instead.
+       * @param values A comma separated list of all values of the tuple to be inserted
+      */
+      void insert_new_meta_row(std::string values){
+         meta_store->execQuery("INSERT INTO metadata VALUES (" + values + ")"); 
+      }
       
       void testout();
       /*TODO 
         - Wrapper for loading assets and/or metadata from file or internet
-        - Wrapper for adding metadata manually
+        - More intuitive way of inserting new meta data
         */
 };
 
