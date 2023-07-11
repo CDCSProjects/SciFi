@@ -163,7 +163,10 @@ std::vector<std::string> DuckStore::getIDsByFileData(){
 
 std::vector<std::string> DuckStore::crop_and_split_result(std::string res){
     //crop result
-    res.erase (0, res.find_last_of(']') +1 );
+    //res.erase (0, res.find_last_of(']') +1 );
+    for (int i=0; i<3; i++){
+        res.erase (0, res.find_first_of('\n')+1);
+    }
     //split result
     std::istringstream resstream(res);
     std::string r1;
