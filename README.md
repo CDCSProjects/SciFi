@@ -10,7 +10,7 @@ Table of Contents
 
 * [Definitions](#definitions)
 * [State of Development](#state-of-development)
-    * [Preliminary Roadmap](#preliminary-roadmap)
+    * [SciFi on Conferences](#scifi-on-conferences)
 * [Folder Structure](#folder-structure)
 * [Build and Run](#build-and-run)
     * [Known issues](#known-issues)
