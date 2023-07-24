@@ -41,10 +41,8 @@ Currently, we provide some simple examples for the usage of SciFi as a framework
 
 There is a cython-based python wrapper which allows a direct access of the DataStore and the MetaStore. We are working on a wrapper which works with generic backends and which does not require a direct access. Our integration into PyTorch uses this wrapper to extend the Dataset class of Pytorch. This way, you can access all assets stored via SciFi while using PyTorch, like you would access any other map-style dataset. **If you are experienced in PyTorch and/or Cython, and are looking for a bachelor or master thesis topic at UHH or TUHH, drop us a message!**
 
-### Preliminary Roadmap
+### SciFi on Conferences
 - **19.09.22** Presentation of SciFi at "Machine Learning in Natural Sciences: from Quantum Physics to Nanoscience and Structural Biology" in Hamburg. You can find the abstract at https://www.conferences.uni-hamburg.de/event/256/contributions/728/
-- **Q4/22-Q1/23** Only documentation and small bug fixes due to parental leave, a thesis which needs to be finished, and the recruiting of a new colleague
-- **Starting Q2/23** Python wrapper working on generic backends and the central *Storage* class, publication of the architecture paper, performance optimization, implement feature requests, provide binaries for commonly used datasets starting with the protein databank (see https://www.rcsb.org/).
 
 ## Folder Structure
 
@@ -76,7 +74,7 @@ We tested SciFi using Ubuntu in different versions and on different laptops and 
 **Note: The python wrapper does not support the central *Storage*-Interface. For this reason we do not advise to use it directly until a new version is released. This wrapper is mainly used for the extension if the Dataset class in PyTorch. We highly recommend to use that instead.**
 1. Change to the directory *pythonwrapper*
 2. Execute the following command to build a library in the current directory: *python setup.py build_ext --inplace*. In case of a rocksdb-related linker error, refer to the section *Known Issues*.
-In case python3 is not set as your default python call, use *python setup.py build_ext --inplace*.
+In case python3 is not set as your default python call, use *python3 setup.py build_ext --inplace*.
 3. Your library will have the name *scifi.cpython-38-\<architecture\>-linux-gnu.so*. You can now either install this library or use it directly from the same folder. The module is called *scifi*. It provides the classes *rocks* and *duck*. 
 
 ### Use with PyTorch 
