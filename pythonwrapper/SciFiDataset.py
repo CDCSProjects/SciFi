@@ -30,12 +30,12 @@ class SciFiDataset(torch.utils.data.Dataset):
         res=self.duck.getResultAsString().decode("utf-8").rstrip()
         # Our result is a formatted string, let's make a list of keys out of this
         res=(res.split(']',1)[1])
-        res=res.split("\t\n")
+        res=res.split("\n")
         res[0]=res[0].replace("\n", '')
         res=list(filter(None,res))
         return res
         
     def getIDsByMeta(self,meta):
-        res = [x.decode('utf-8') for x in self.duck.getIDsByConstraint(meta.encode('utf-8'))]
+        res = [x.decode('utf-8') for x in self.duck.getIDsByConstraint(" WHERE ".encode('utf-8') + meta.encode('utf-8'))]
         return res
  
