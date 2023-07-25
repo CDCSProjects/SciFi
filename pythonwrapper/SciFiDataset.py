@@ -38,4 +38,13 @@ class SciFiDataset(torch.utils.data.Dataset):
     def getIDsByMeta(self,meta):
         res = [x.decode('utf-8') for x in self.duck.getIDsByConstraint(" WHERE ".encode('utf-8') + meta.encode('utf-8'))]
         return res
+    
+    def getIDsFromFilter(self,filtername):
+        self.duck.execQuery("SELECT * FROM ".encode('utf-8') + filtername.encode('utf-8'))
+        res = self.duck.getResultAsString().decode("utf-8").rstrip()
+        res=(res.split(']',1)[1])
+        res=res.split("\n")
+        res[0]=res[0].replace("\n", '')
+        res=list(filter(None,res))
+        return res
  

@@ -2,6 +2,7 @@ from cython.operator cimport dereference as deref
 from libcpp.memory cimport unique_ptr
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+from libcpp cimport bool
 
 cdef extern from "../backend/include/duckstore.h" namespace "SciStore":
     cdef cppclass DuckStore:
@@ -17,6 +18,12 @@ cdef extern from "../backend/include/duckstore.h" namespace "SciStore":
         vector[string] getIDsByConstraint(string)
         string getResultAsString()
         string idcolumn
+        bool get_isNumeric(string)
+        bool get_isText(string)
+        string crop_single_result(string)
+        string crop_result(string)
+        vector[string] get_user_meta_column_names()
+        vector[string] crop_and_split_result(string)
  #       void initDB(string)
 #        DuckDB * db
 #        Connection * conn
@@ -48,6 +55,18 @@ cdef class PyDuckStore:
         return self.thisptr.getIDsByConstraint(constr)
     def getResultAsString(self):
         return self.thisptr.getResultAsString()
+    def get_isNumeric(self, col_id):
+        return self.thisptr.get_isNumeric(col_id)
+    def get_isText(self, col_id):
+        return self.thisptr.get_isText(col_id)    
+    def crop_single_result(self, res):
+        return self.thisptr.crop_single_result(res)
+    def crop_result(self, res):
+        return self.thisptr.crop_result(res)   
+    def get_user_meta_column_names(self):
+        return self.thisptr.get_user_meta_column_names() 
+    def crop_and_split_result(self, string):
+        return self.thisptr.crop_and_split_result(string)
   #  def initDB(self, name):
  #       return self.thisptr.initDB(name)
     
