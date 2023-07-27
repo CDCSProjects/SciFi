@@ -44,6 +44,7 @@ class AssetStore{
         AssetStore(std::string p_name){db_name=p_name;}
 
         virtual void open() = 0;
+        virtual void close() = 0;
         virtual void insert(std::string key, std::string value) = 0;
         virtual void remove(std::string key) = 0;
         virtual std::string getSingle(std::string pdbid) = 0;
@@ -54,7 +55,6 @@ class AssetStore{
         
         void create_file(const fs::path &p) { std::ofstream o{p}; }
         void importsst(std::string sstfile) { return import(sstfile);} //We need this wrapper for our python API because apparently 'import' is a reserved keyword which cannot even be used as a function name
-        void close(){;}
         void setOptions(){;}
       
         void init(std::string p_name);
@@ -63,7 +63,6 @@ class AssetStore{
         std::vector<filedata> create(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
         void getSingleToFile(std::string pdbid, std::string fileextension) ; 
         std::vector<filedata> createportable(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
-        
         Downloader * dl;
         std::string db_name="default";
         std::string portablefile = "myassetstore.sst";

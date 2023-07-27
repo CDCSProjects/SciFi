@@ -16,6 +16,7 @@ class RocksStore : public AssetStore{
     public:
         RocksStore(std::string name);
         void open();
+        void close();
         void insert(std::string key, std::string value);
         //void unzipAndCreate(std::string p_directory, int recursive=0, int pathdepth=0, int useext=0, int unzip=0);
         //std::vector<filedata> create(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);

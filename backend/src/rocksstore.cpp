@@ -132,6 +132,12 @@ void RocksStore::import(std::string sstfile){
     
     return;
 }
+
+void RocksStore::close(){
+    database->Close();
+    database = NULL;
+    return;
+}
 }
 
 
