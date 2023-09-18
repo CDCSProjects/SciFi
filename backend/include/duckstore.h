@@ -20,11 +20,13 @@ class DuckStore : public MetaStorage{
         void printResult();
         void openAndConnect();
         void openAndConnect(std::string name);
+        bool success;
         std::string getResultAsString();
-        std::vector<std::string> getIDsByConstraint(std::string constraint);
+        std::vector<std::string> format_getIDsByConstraint();
         std::vector<std::string> getIDsByFileData();
         std::string crop_single_result(std::string res);
         std::string crop_result(std::string res);
+        std::string get_read_csv_query(std::string tablename, std::string filename, bool data_only=false, int skiplines=0);
         std::vector<std::string> get_user_meta_column_names();
         std::vector<std::string> crop_and_split_result(std::string res);
    //     void initDB(std::string name);
@@ -33,7 +35,8 @@ class DuckStore : public MetaStorage{
         DuckDB * db;
         Connection * conn;
        // std::unique_ptr<MaterializedQueryResult> current_result;
-        duckdb::unique_ptr<QueryResult> current_result;
+        //duckdb::unique_ptr<QueryResult> current_result;
+        duckdb::unique_ptr<MaterializedQueryResult> current_result;
 };
 }
 #endif

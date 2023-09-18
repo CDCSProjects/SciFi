@@ -45,8 +45,14 @@ int DuckStore::createNewDB(){
 
 void DuckStore::execQuery(std::string p_query){
 
-        current_result = conn->SendQuery(p_query);
-        current_result = ((StreamQueryResult &)*current_result).Materialize();
+        //current_result = conn->SendQuery(p_query);
+        //current_result = ((StreamQueryResult &)*current_result).Materialize();
+        current_result = conn->Query(p_query);
+        if (current_result->HasError()) {
+            success=false;
+        }else {
+            success = true;
+        }
        // std::cout << "column count current_result: " << current_result->ColumnCount()  << " \n";
         return ;
 }
@@ -55,21 +61,28 @@ void DuckStore::execQueryAndPrint(std::string p_query){
         #ifdef OUTPUTSHELL
         std::cout << p_query << std::endl;
         #endif
-        current_result = conn->SendQuery(p_query);
-        ((StreamQueryResult &)*current_result).Materialize()->Print();
+        //current_result = conn->SendQuery(p_query);
+        //((StreamQueryResult &)*current_result).Materialize()->Print();
+        current_result = conn->Query(p_query);
+        if (current_result->HasError()) {
+            success=false;
+        }else {
+            success = true;
+        }
         return ;
 }
 
+std::string DuckStore::get_read_csv_query(std::string tablename, std::string filename, bool data_only, int skiplines){
+    if (data_only==true){
+        return "COPY "+ tablename + " FROM '" + filename + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")";
+    }else{
+        return "CREATE TABLE IF NOT EXISTS " + tablename + " metadata AS SELECT * FROM read_csv_auto('" + filename + "')";
+    }
+}
 
-std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
+std::vector<std::string> DuckStore::format_getIDsByConstraint(){
     //constraint = (constraint == "all") ? "" : " WHERE " + constraint;
-    std::string query = "SELECT " + idcolumn + " FROM metadata" + constraint;
 
-    #ifdef OUTPUTSHELL
-    std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
-    #endif
-
-    execQuery(query);
     
     std::vector<std::string> idlist;
 
@@ -105,7 +118,7 @@ std::vector<std::string> DuckStore::getIDsByConstraint(std::string constraint){
         idlist.erase(idlist.end());//erase last element because it is empty
 
     #ifdef OUTPUTSHELL
-    std::cout << "\033[36mFound IDs for constraint "  << constraint << ":\033[32m\n";
+    std::cout << "\033[36mFound IDs:\033[32m\n";
     for (int i=0; i<idlist.size(); i++) std::cout << idlist[i] << std::endl;
     std::cout << "\033[0m"; 
     if (idlist.size() == 0) std::cout << "\033[31mnone\033[0m\n";
