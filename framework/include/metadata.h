@@ -15,13 +15,13 @@ class MetaStorage{
         MetaStorage();
         ~MetaStorage() {};
         
-        void getSingle(std::string pdbid);
+        std::string getSingle(std::string pdbid);
         void getSingleToFile(std::string pdbid, std::string fileextension);
         void writeResultToFile(std::string filename, std::string fileextension);
         void init();
         std::vector<std::string> get_all_meta_tables();
         void init(std::string p_name);
-        std::vector<std::string> getIDsByConstraint(std::string constraint);
+        std::vector<std::string> getIDsByConstraint(std::string constraint, bool ids_only=true);
                 
         virtual int createNewDB() = 0;
         int loadDB(std::string p_name) {return 0;}
@@ -52,6 +52,8 @@ class MetaStorage{
         std::string idcolumn = "rowid";
         std::string resultfolder = "";
         bool success = true;
+    private:
+        std::string construct_meta_query(std::string pdbid);
 };
 }
 #endif

@@ -333,6 +333,7 @@ class Storage{
         std::vector<std::string> result;
         //std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         //if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
+        
         if(metaToFile == 1){
 
                 meta_store->writeResultToFile("metadata", fileextension_meta);
@@ -366,11 +367,12 @@ class Storage{
         
 
         
-        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
+        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint,false);
         //std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
         //meta_store->execQuery(query);
-
+        //meta_store->getIDsByConstraint(constraint,false);
         result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        
         return result;
         
       };
@@ -455,7 +457,7 @@ class Storage{
         return;
       }
       /**
-       * Redefines the columns for the use meta data.
+       * Redefines the columns for the central meta data table.
        * NOTE!!!! This deletes all existing entries.
        * @param coldef A comma seperated list of name-type tuples, e.g.: "my_name VARCHAR, my_value FLOAT" creates two columns called my_name and my_float which are of a text type and a floating point number type.
        * @param IDname The index of the column which contains the unique ID

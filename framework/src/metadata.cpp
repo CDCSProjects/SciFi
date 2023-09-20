@@ -47,17 +47,43 @@ void MetaStorage::writeResultToFile(std::string filename, std::string fileextens
     #endif
 }
 
-void MetaStorage::getSingle(std::string pdbid){
-    std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
+std::string MetaStorage::construct_meta_query(std::string pdbid){
+    std::string query = "SELECT * FROM ";// = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
+    std::vector<std::string> metatables = get_all_meta_tables();
+    for (int i=0; i< metatables.size()-1;i++) {
+        query.append(metatables[i] + ", ");
+    }
+    query.append(metatables[metatables.size()-1] + " WHERE ");
+    
+    for (int i=0; i< metatables.size()-1;i++) {
+        if ( metatables[i]!="metadata"){
+          execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + metatables[i] + "'");
+          std::string joincol=crop_single_result(getResultAsString());
+          //add the join condition
+          query.append(" AND metadata.");
+          query.append(joincol);
+          query.append("=");
+          query.append(metatables[i]);
+          query.append(".");
+          query.append(joincol);
+        }
+    }
+    query.append(" AND metadata." + idcolumn + " = '" + pdbid + "'");
+    return query;
+}
+
+std::string MetaStorage::getSingle(std::string pdbid){
+    std::string query = construct_meta_query(pdbid);
     execQuery(query);
     #ifdef OUTPUTSHELL
     std::cerr << "Query: " << query << std::endl;
     std::cerr << getResultAsString();
     #endif
+    return getResultAsString();
 }
 
 void MetaStorage::getSingleToFile(std::string pdbid, std::string p_fileextension){
-    std::string query = "SELECT * FROM metadata where " + idcolumn + " = '" + pdbid + "'";
+    std::string query = construct_meta_query(pdbid);
     execQuery(query);
     
     std::string id = pdbid;
@@ -97,7 +123,7 @@ bool MetaStorage::get_isText(std::string col_id){
     return false;
 }
 
-std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint){
+std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint, bool ids_only){
 
 
     std::vector<std::string> metatables = get_all_meta_tables();
@@ -157,13 +183,45 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint)
     jointables.append("metadata ");
     
     //Construct query    
-    std::string query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
-    #ifdef OUTPUTSHELL
-    std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
-    #endif
-    execQuery(query);
+    std::string query;
+    std::vector<std::string> ids;
+    if (ids_only){
+        query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        return format_getIDsByConstraint();
+    }
+    else{
+        query = "DROP TABLE res";
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        query = "CREATE TABLE res AS SELECT * FROM " + jointables + " " + constraint + " " + joincond;
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        //query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
+        query = "SELECT " + idcolumn + " FROM res";
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        ids = format_getIDsByConstraint();
+        query="SELECT * FROM res";
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        return ids;
+    }
+
+
     
-    return format_getIDsByConstraint();
+    
 }
 //TODO get_isBoolean
 
