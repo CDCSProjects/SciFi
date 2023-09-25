@@ -148,8 +148,8 @@ class Storage{
           
             meta_store->execQueryAndPrint("DROP TABLE IF EXISTS " + tablename );
             
-            meta_store->execQuery("CREATE TABLE " + tablename + " (" + columns + ")");
-            meta_store->execQuery("INSERT INTO metainfo VALUES ('"+ tablename +"', '" + foreign_key + "')");
+            meta_store->execQueryAndPrint("CREATE TABLE " + tablename + " (" + columns + ")");
+            meta_store->execQueryAndPrint("INSERT INTO metainfo VALUES ('"+ tablename +"', '" + foreign_key + "')");
       }
       
       /**

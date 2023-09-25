@@ -177,15 +177,16 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
         }
       }
       
+
       
     }
-    /////
     jointables.append("metadata ");
-    
+
     //Construct query    
     std::string query;
     std::vector<std::string> ids;
     if (ids_only){
+        
         query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
@@ -194,28 +195,74 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
         return format_getIDsByConstraint();
     }
     else{
+        query = "DROP TABLE IF EXISTS res";
+        execQuery(query);
         query = "DROP TABLE res";
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
         execQuery(query);
-        query = "CREATE TABLE res AS SELECT * FROM " + jointables + " " + constraint + " " + joincond;
+        
+        //insert all other meta tables which are not part of the query
+        std::string jointables2="";
+       // std::string joincond2="";
+        bool firstset=false;
+        for (int i=0; i<metatables.size(); i++){
+          if (metatables[i]!="metadata"){  
+            if (std::find(jointablesV.cbegin(), jointablesV.cend(), metatables[i])==jointablesV.cend()){
+                execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + metatables[i] + "'");
+                std::string joincol=crop_single_result(getResultAsString());
+                if (firstset) {
+                   jointables2.append(" FULL OUTER JOIN ");
+                }else{
+                    
+                    firstset=true;
+                }
+                jointables2.append(metatables[i] + " ON " + metatables[i] + "." + joincol + " = metadata." + joincol);
+                /*if (i>0) {joincond2.append(" ON " + metatables[i] + "." + joincol + " = metadata." + joincol);}
+                else{joincond2.append(" ON " + metatables[i] + "." + joincol + " = metadata." + joincol);}
+                if (i==metatables.size()-1){
+                  jointables2.append(metatables[i]);
+                  break;
+                }
+                if (i<metatables.size()-1) jointables2.append(metatables[i] + " OUTER JOIN ");
+                else jointables2.append(metatables[i] + " ");*/
+            }
+          }
+        }
+        execQuery(query);
+        //std::cout << "Size metatables: " << metatables.size() << ", size jointables:" << jointablesV.size() << std::endl;
+        if ((metatables.size()-jointablesV.size())>1){
+            query = "DROP VIEW IF EXISTS othermeta";
+            execQuery(query);
+            query = "CREATE VIEW othermeta AS SELECT * from metadata FULL OUTER JOIN " + jointables2;
+            execQuery(query);
+        }
+        execQuery("SELECT idcolname FROM metainfo WHERE tablename='metadata'");
+        std::string joincol=crop_single_result(getResultAsString());
+        if ((metatables.size()-jointablesV.size())>1){
+        query = "CREATE TABLE res AS SELECT * FROM " + jointables + " LEFT OUTER JOIN othermeta ON othermeta." + joincol + "=metadata." + joincol + " " + constraint + " " + joincond;
+        }else
+        query = "CREATE TABLE res AS SELECT * FROM " + jointables + constraint + " " + joincond;
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
-        execQuery(query);
+        execQueryAndPrint(query);
+                
         //query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
-        query = "SELECT " + idcolumn + " FROM res";
+        query = "SELECT " + idcolumn + " FROM res GROUP BY " + idcolumn;
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
         execQuery(query);
+        
         ids = format_getIDsByConstraint();
         query="SELECT * FROM res";
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
         execQuery(query);
+        
         return ids;
     }
 
