@@ -9,29 +9,41 @@
 
 namespace Test {
 
-struct Address {
-	int housenumber;
-	std::string street;
-	std::string city;		
-	Address(int no=0, std::string s="", std::string="");
-	void print_address();
-};
-
 struct Customer {
-	int customer_id;
-	Address shipping_address;
-	Customer(int no=0, std::string s="", std::string c="");
-	void show_data();
+    public:
+        int customer_id;
+        struct Address{
+            public:
+            int housenumber;
+	        std::string street;
+	        std::string city;
 
+	       Address(){};
+	       Address(int no, std::string s, std::string c){
+	            housenumber = no;
+                street = s;
+                city = c;
+	        }
+	        void print_address(){
+	            std::cout << "Address:\n";
+			    std::cout << street <<" "<< housenumber << "\n" << city << "\n";
+	        }
+
+        };
+        Address shipping_address;
+        Customer(int no, std::string s, std::string c);
+        void show_data();
+        Address get_shipping();
 };
 
-template <typename T> class Purchase{
+template <typename T>
+ class Purchase{
 	public:
 		T purchase;
 		int purchase_id;
 		float cost;
-		Customer customer;
-		Purchase(T p, Customer c);
+		Customer* customer;
+		Purchase(T p, Customer* c);
 		void get_purchase_overview();
 		Customer get_customer();
 };
@@ -40,7 +52,8 @@ class Product {
 	public:
 		int product_id;
 		float price;
-		Product(float p = 0.0);
+		Product();
+		Product(float p);
 		void overview();
 };
 
@@ -48,9 +61,11 @@ class Book: public Product{
 	public:
 		int isbn;
 		std::string author;
-		Book(int no=0, std::string name="", float p=0);
+		Book();
+		Book(int no, std::string name, float p);
 		void overview_book();
 };
+
 }
 
 #endif

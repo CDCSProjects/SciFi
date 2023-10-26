@@ -1,17 +1,11 @@
-# File : setup.py
+#!/usr/bin/env python3
+#cython: language_level=3
 
-from distutils.core import setup, Extension
-#name of module
-name = "Test_Wrapper"
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Distutils import build_ext
 
-#version of module
-version = "1.0"
-
-# specify the name of the extension and source files
-# required to compile this
-ext_modules = Extension(name='_Test_Wrapper',sources=["swig_testwrapper.i","testwrapper.cpp"])
-
-setup(name=name,
-	version=version,
-	ext_modules=[ext_modules])
-
+setup(ext_modules=[Extension("cython_wrapper",
+                             ["cython_testwrapper.pyx", "testwrapper.cpp"], language="c++",
+                    extra_compile_args = ['-std=c++17'])],
+      cmdclass = {'build_ext': build_ext})
