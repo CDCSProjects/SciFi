@@ -1,4 +1,6 @@
-key,  number,  text
-a1,  20,  blubb
-a2,  3,   bla
-b1,  100, blablubb
+key,  priority,  description
+wittenberger_heide,  20, A tree in Wittenberger Heide
+lighthouse,  3,   Unterfeuer Rissen
+ship,  100, A container ship on the river Elbe
+flag,    42, Official flag of Hamburg (source: Greentubing@wikipedia)
+wikipedia, 3, Introduction from wikipedia.org
