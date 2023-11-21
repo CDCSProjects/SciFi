@@ -76,7 +76,7 @@ std::string DuckStore::get_read_csv_query(std::string tablename, std::string fil
     if (data_only==true){
         return "COPY "+ tablename + " FROM '" + filename + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")";
     }else{
-        return "CREATE TABLE IF NOT EXISTS " + tablename + " metadata AS SELECT * FROM read_csv_auto('" + filename + "')";
+        return "CREATE TABLE IF NOT EXISTS " + tablename + " AS SELECT * FROM read_csv_auto('" + filename + "')";
     }
 }
 

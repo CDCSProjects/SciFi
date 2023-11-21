@@ -68,7 +68,13 @@ std::string MetaStorage::construct_meta_query(std::string pdbid){
           query.append(joincol);
         }
     }
-    query.append(" AND metadata." + idcolumn + " = '" + pdbid + "'");
+    if (metatables.size() > 1){
+        query.append(" AND metadata." + idcolumn + " = '" + pdbid + "'");
+    }
+    else{
+        query.append(" metadata." + idcolumn + " = '" + pdbid + "'");
+    }
+    
     return query;
 }
 
