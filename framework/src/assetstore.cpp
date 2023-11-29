@@ -9,8 +9,12 @@ void AssetStore::init(std::string p_name){
 
 void AssetStore::insertFromFile(std::string file,  std::string path){
     std::string id= file.erase (file.find_last_not_of('.') - 1 , std::string::npos );
-
-    path = path + "/" + file;
+    if (path != ""){
+        path = path + "/" + file;
+    }
+    else{
+        path = file;
+    }
     std::ifstream ifs(path);
         
     std::string content;
