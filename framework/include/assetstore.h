@@ -58,7 +58,7 @@ class AssetStore{
         void setOptions(){;}
       
         void init(std::string p_name);
-        void insertFromFile(std::string file,  std::string path);
+        void insertFromFile(std::string file,  std::string path ="");
         void unzipAndCreate(std::string p_directory, int recursive=0, int pathdepth=0, int useext=0, int unzip=0);
         std::vector<filedata> create(std::string directory, int recursive=0, int depth =0, int useext=0, int removeprefixchar=0);
         void getSingleToFile(std::string pdbid, std::string fileextension) ; 

@@ -185,7 +185,7 @@ class Storage{
           std::string id= address.erase (address.find_last_not_of('.') - 1 , address.size()-1 );
           id = id.erase(0,std::min(id.find_last_of('[') + 1, id.size() - 1));
           asset_store->dl->download(address, id);
-          load_metadata_from_file(id);
+          load_metadata_from_file(id, IDCol);
           remove (id.c_str()); 
       };
       
