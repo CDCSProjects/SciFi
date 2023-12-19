@@ -448,7 +448,7 @@ class Storage{
      void remove_asset(std::string id, int remove_metadata=0){
         asset_store->remove(id);
         if (remove_metadata!=0){
-            meta_store->execQuery("DELETE FROM metadata WHERE " + meta_store->idcolumn + " = " + id);
+            meta_store->execQuery("DELETE FROM metadata WHERE metadata." + meta_store->idcolumn + " = '" + id + "'");
         }
       };
       
