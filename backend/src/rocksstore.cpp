@@ -16,6 +16,8 @@ void RocksStore::open(){
     options.keep_log_file_num = 1;
     //open database
     Status s_open = DB::Open(options, db_name, &database);
+    if (!s_open.ok()) std::cerr << s_open.ToString() << std::endl;
+
     assert(s_open.ok());
     return;
 }

@@ -55,12 +55,13 @@ std::string MetaStorage::construct_meta_query(std::string pdbid){
     }
     query.append(metatables[metatables.size()-1] + " WHERE ");
     
-    for (int i=0; i< metatables.size()-1;i++) {
+    for (int i=0; i< metatables.size();i++) {
         if ( metatables[i]!="metadata"){
           execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + metatables[i] + "'");
           std::string joincol=crop_single_result(getResultAsString());
           //add the join condition
-          query.append(" AND metadata.");
+          if (i==1) query.append(" metadata."); //first table is always metadata
+          else query.append(" AND metadata.");
           query.append(joincol);
           query.append("=");
           query.append(metatables[i]);
@@ -155,7 +156,7 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
           //std::cout << "before: " << before << ", after: " << after << ", tab: " << tab << ", pos2: " << pos2 << ", pos3: " << pos3 << std::endl;
           
           
-          
+          int firsttab=0;
           //Check if tables in constraint string exist
          if (std::find(metatables.cbegin(), metatables.cend(), tab)!=metatables.cend()){
             if (tab!="metadata"){
@@ -168,7 +169,10 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
                   execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + tab + "'");
                   std::string joincol=crop_single_result(getResultAsString());
                   //add the join condition
-                  joincond.append(" AND metadata.");
+                  if (firsttab==0){
+                    joincond.append(" metadata.");
+                    firsttab++;}
+                    else joincond.append(" AND metadata.");
                   joincond.append(joincol);
                   joincond.append("=");
                   joincond.append(tab);
@@ -237,6 +241,9 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
           }
         }
         execQuery(query);
+         #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
         //std::cout << "Size metatables: " << metatables.size() << ", size jointables:" << jointablesV.size() << std::endl;
         if ((metatables.size()-jointablesV.size())>1){
             query = "DROP VIEW IF EXISTS othermeta";

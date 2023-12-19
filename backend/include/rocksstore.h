@@ -29,7 +29,7 @@ class RocksStore : public AssetStore{
         void setOptions();
         int writePortable(std::vector<filepaths> fpv,filepaths fp, std::string directory, int recursive);
     protected:
-        DB* database=NULL;
+        DB* database;
         Options options;
 
         
