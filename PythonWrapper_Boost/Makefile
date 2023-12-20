@@ -1,0 +1,8 @@
+boost:
+	g++ -std=c++20 -g -O2 -I/usr/include/python3.10 -I/home/katharina/SciFi/duckdb/src/include/  -I/home/katharina/SciFi/rocksdb/include/ -I/home/katharina/SciFi/ -I/home/katharina/SciFi/backend/include/ -I/home/katharina/SciFi/backend/src\
+/home/katharina/SciFi/examples/import_path.cpp  /home/katharina/SciFi/PythonWrapper_Boost/boost_scifi.cpp  /home/katharina/SciFi/framework/src/assetstore.cpp /home/katharina/SciFi/backend/src/duckstore.cpp /home/katharina/SciFi/framework/src/metadata.cpp /home/katharina/SciFi/backend/src/rocksstore.cpp /home/katharina/SciFi/framework/src/storage.cpp  /home/katharina/SciFi/duckdb/staticlibs/*.a  -L. -Wl,--no-undefined,-soname,-boost_scifi -fPIC  -shared -o boost_scifi.so\
+ -D TEMPLATE_ARGS=SciStore::RocksStore\,\ SciStore::DuckStore \
+ -L/home/katharina/SciFi/duckdb/src -L/home/katharina/SciFi/rocksdb/ -L/home/katharina/SciFi/duckdb/staticlibs -L/home/katharina/boost_1_82_0/libs/python  -L/home/katharina/SciFi/backend/src -L/home/katharina/SciFi/framework/ -L/home/katharina/SciFi/examples\
+ -lduckdb_static -lduckdb_re2 -lduckdb_fmt -lduckdb_hyperloglog -limdb -lduckdb_miniz -lduckdb_pg_query -lduckdb_sqlite3 -lsqlite3_api_wrapper_static -ltest_helpers -lduckdb_utf8proc -lrocksdb -lpthread -ldl -lz -lcurl -lcurlpp  -lduckdb_fastpforlib -lpython3.10 -lboost_python310 -ljemalloc_extension -lparquet_extension -lduckdb_mbedtls -lsnappy -lstdc++  -lduckdb_fsst
+
+
