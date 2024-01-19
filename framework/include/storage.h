@@ -306,7 +306,7 @@ class Storage{
           remove (id.c_str()); 
       };
       
-      std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="",int dumpmeta=0){
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mReturning asset and metadata \033[0m\n";
         #endif
@@ -316,6 +316,9 @@ class Storage{
         }else{
             result=asset_store->getSingle(id);
         }
+        
+        if (dumpmeta==1) return result;
+        
         if(metaToFile != 0){
             meta_store->getSingleToFile(id, fileextension_meta);
         }else{
@@ -329,19 +332,29 @@ class Storage{
         return result;
       };
       
-      std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="", bool join_metatables=true){
         std::vector<std::string> result;
         //std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         //if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
-        
-        if(metaToFile == 1){
+        if (join_metatables){  
+          if(metaToFile == 1){
 
-                meta_store->writeResultToFile("metadata", fileextension_meta);
-                }
-        if (metaToFile == 0){
+                  meta_store->writeResultToFile("metadata", fileextension_meta);
+                  }
+          if (metaToFile == 0){
 
-              meta_store->printResult();
-          }
+                meta_store->printResult();
+            }
+        }else{
+            if(metaToFile == 1){
+
+                  meta_store->writeResultMetaTablesToFile("metadata", fileextension_meta);
+                  }
+          if (metaToFile == 0){
+
+                meta_store->printResultMetaTables();
+            }
+        }
         for (int i=0; i<id.size();i++){
           if (assetToFile == 0){
               result.push_back(asset_store->getSingle(id[i]));
@@ -360,6 +373,7 @@ class Storage{
         return result;
       };
       
+       
      std::vector<std::string> get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::vector<std::string> result;
 
@@ -376,6 +390,26 @@ class Storage{
         return result;
         
       };
+      
+    std::vector<std::string> get_by_constraint_dont_join_metatables(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="", bool ids_only=false){
+        std::vector<std::string> result;
+
+        constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
+        
+      
+        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint,ids_only,false);
+        //std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        //meta_store->execQuery(query);
+        //meta_store->getIDsByConstraint(constraint,false);
+        if (ids_only) {return ids;}
+        
+        result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta,false);
+        
+        return result;
+        
+      };
+      
+    
 
      std::vector<std::string> get_IDs_by_constraint(std::string constraint){
         std::vector<std::string> result;
@@ -397,7 +431,8 @@ class Storage{
         
         //create a new view
         constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
-        std::string query2="CREATE VIEW " + filtername + " AS SELECT " + meta_store->idcolumn + " FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        //std::string query2="CREATE VIEW " + filtername + " AS SELECT " + meta_store->idcolumn + " FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        std::string query2="CREATE VIEW " + filtername + " AS " + meta_store->get_metaQuery_fromMetaData(constraint);
         meta_store->execQuery(query2);
       }
       
