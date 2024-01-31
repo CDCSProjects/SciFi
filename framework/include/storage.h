@@ -6,6 +6,14 @@
 #include <backend/include/rocksstore.h>
 #include <backend/include/duckstore.h>
 
+class PyString{
+public:
+    std::string cpp_string;
+    PyString(std::string c_string){
+        cpp_string=c_string;
+    }
+};
+
 namespace SciStore {
 
 /** Storage is the central class of the SciFi framework. It is highly recommended to only use this class to access the asset store.
@@ -15,6 +23,10 @@ namespace SciStore {
 template<typename A = RocksStore, typename M = DuckStore>
 class Storage{
     public:
+    
+        std::string m_asset_path = ""; //!<stores the path to the asset store as given in the constructor
+        std::string m_meta_path = ""; //!<stores the path to the meta store as given in the constructor
+    
     /** Constructor of the storage class
      * @param assetDBname The name of the data storage. If the name doesn't exist, a new storage will be created.
      * @param metaDBname The name of the meta storage. If the name doesn't exist, a new storage will be created.
@@ -44,6 +56,9 @@ class Storage{
           
           meta_store->resultfolder=resultsfolder;
           asset_store->resultfolder=resultsfolder;
+          
+          m_asset_path=assetDBname;
+          m_meta_path=metaDBname;
       };
       
       /** Destructor of the storage class
@@ -114,7 +129,11 @@ class Storage{
        */
       void load_metadata_from_file(std::string file, std::string IDCol){
           meta_store->execQueryAndPrint("DROP TABLE IF EXISTS metadata");
-          meta_store->execQueryAndPrint("CREATE TABLE IF NOT EXISTS metadata AS SELECT * FROM '" + file + "';");
+          //For some reason this doesn't work with the current version of duckdb. We will a wrapper for the csv_reader anyway in the close future
+          //meta_store->execQueryAndPrint("CREATE TABLE IF NOT EXISTS metadata AS SELECT * FROM '" + file + "';");
+          //This works, but we replaces it with a function of the framework implemented by the backend
+          //meta_store->execQueryAndPrint("CREATE TABLE IF NOT EXISTS metadata AS SELECT * FROM read_csv_auto('" + file + "');");
+          meta_store->execQueryAndPrint(meta_store->get_read_csv_query("metadata", file));
           meta_store->execQuery("DROP TABLE IF EXISTS metainfo;");
           meta_store->execQuery("CREATE TABLE metainfo (tablename VARCHAR, idcolname VARCHAR)");
           meta_store->execQuery("INSERT INTO metainfo VALUES ('metadata', '" + IDCol + "')");
@@ -122,11 +141,59 @@ class Storage{
          // meta_store->execQuery("CHECKPOINT");
       }
       
+      void add_meta_table(std::string tablename, std::string foreign_key, std::string columns){
+            meta_store->execQuery("select count(*) from metadata");
+            if (!(meta_store->success)) {
+                std::cerr << "Please create a central meta data table first before adding additional tables. Use one of the following functions: load_metadata_from_file, load_metadata_from_remote, load_metadata_advanced, create_empty_metadata_table\nMission abort!\n";
+                return;
+            }
+          
+            meta_store->execQuery("select count("+foreign_key+") from metadata");
+            if (!(meta_store->success)) {
+              std::cerr << foreign_key << " is not a column of the metadata table. Mission abort!\n";
+              return;
+            }
+          
+            meta_store->execQueryAndPrint("DROP TABLE IF EXISTS " + tablename );
+            
+            meta_store->execQueryAndPrint("CREATE TABLE " + tablename + " (" + columns + ")");
+            meta_store->execQueryAndPrint("INSERT INTO metainfo VALUES ('"+ tablename +"', '" + foreign_key + "')");
+      }
+      
+      /**
+       * Add a metadata table from a csv file, but define own column names and types
+       */
+      void add_meta_table_advanced(std::string tablename, std::string foreign_key, std::string file, int skiplines, std::string columns){
+      
+          meta_store->execQuery("select count(*) from metadata");
+          if (meta_store->success==false) {
+              std::cerr << "Please create a central meta data table first before adding additional tables. Use one of the following functions: load_metadata_from_file, load_metadata_from_remote, load_metadata_advanced\nMission abort!\n";
+              return;
+          }
+          
+          meta_store->execQuery("select count("+foreign_key+") from metadata");
+          if (meta_store->success == false) {
+              std::cerr << foreign_key << " is not a column of the metadata table. Mission abort!\n";
+              return;
+          }
+          
+          if (columns.find(foreign_key)==string::npos){
+                std::cerr << foreign_key << " is not in the list of provided columns. Mission abort!";
+                return;
+          }
+          meta_store->execQuery("DROP TABLE IF EXISTS " + tablename);
+          meta_store->execQuery("CREATE TABLE " + tablename + "("+ columns + ")");
+          meta_store->printResult();
+          meta_store->execQuery(meta_store->get_read_csv_query(tablename, file, true, skiplines));
+          meta_store->printResult();
+          meta_store->execQuery("INSERT INTO metainfo VALUES ('"+ tablename +"', '" + foreign_key + "')");
+      }
+      
       void load_metadata_from_remote(std::string address, std::string IDCol){
           std::string id= address.erase (address.find_last_not_of('.') - 1 , address.size()-1 );
           id = id.erase(0,std::min(id.find_last_of('[') + 1, id.size() - 1));
           asset_store->dl->download(address, id);
-          load_metadata_from_file(id);
+          load_metadata_from_file(id, IDCol);
           remove (id.c_str()); 
       };
       
@@ -134,7 +201,7 @@ class Storage{
        * If the meta-data file is not trivially readable by the metadata store, use this function to provide more information about your file.
        * @param file A file in CSV format
        * @param skiplines The number of lines to skip at the beginning of the file. This can be useful if the file contains any documentation or column headers.
-       * @param columns A comma separated list defining pairs of column/propert names and their type. Provide the name first, then the type, e.g. myID int, myProperty varchar.
+       * @param columns A comma separated list defining pairs of column/property names and their type. Provide the name first, then the type, e.g. myID int, myProperty varchar.
        * @param IDColumn Defines which column is the one with the unique identifier. This identifier is used to match the contents of the asset store. Note that this specificaion is zero-based. Contents of the ID column must be unique. Otherwise the metastore will throw a constraint error ('duplicated key').
        */
       void load_metadata_advanced(std::string file, int skiplines, std::string columns, int IDColumn=0){
@@ -160,7 +227,8 @@ class Storage{
         
         meta_store->execQuery(createquery);
         meta_store->printResult();
-        meta_store->execQuery("COPY metadata FROM '" + file + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")");
+       // meta_store->execQuery("COPY metadata FROM '" + file + "' (AUTO_DETECT TRUE, skip " + to_string(skiplines) + ")");
+        meta_store->execQuery(meta_store->get_read_csv_query("metadata", file, true, skiplines));
         meta_store->printResult();
         
         std::string IDCol = before;
@@ -189,6 +257,55 @@ class Storage{
         return;
       };
       
+      /**
+       * Create am empty central metadata table. Column names and types have to be provided, as well as the index of the column containing the primary key (=the unique identifier)
+       */
+      void create_empty_metadata_table(std::string columns, int IDColumn=0){
+        meta_store->execQuery("DROP TABLE IF EXISTS metadata");
+        std::string createquery = "CREATE TABLE metadata("+ columns + ")";
+        
+        std::string before = "";
+        std::string after = createquery;
+        std::string idmt = "";
+        for (int i=0; i<IDColumn+1;i++){
+            int pos=after.find_first_of(",",1);
+            if (pos==string::npos){
+                pos = after.size()-1;
+            }
+            idmt=after;
+            before.append(after.erase(pos,after.size()-1));
+            after = idmt.erase(0,pos);
+        }
+        createquery = before + " PRIMARY KEY" + after;
+        #ifdef OUTPUTSHELL
+        std::cout << createquery << std::endl;
+        #endif
+        
+        meta_store->execQuery(createquery);
+        meta_store->printResult();
+        
+        std::string IDCol = before;
+        int pos_end = IDCol.find_last_of(" ");
+        
+        while (IDCol.at(pos_end) == ' '){
+            IDCol=IDCol.erase(pos_end, IDCol.size()-1);
+            pos_end--;
+        }
+                
+        int pos_start1=IDCol.find_last_of(","); 
+        int pos_start2=IDCol.find_last_of("(");
+        int pos_start=0;
+        if (pos_start1 > pos_start2) pos_start=pos_start1;
+        else pos_start=pos_start2;
+        IDCol.erase(0,pos_start+1);
+        
+        meta_store->idcolumn=IDCol;
+        
+        meta_store->execQuery("DROP TABLE IF EXISTS metainfo;");
+        meta_store->execQuery("CREATE TABLE metainfo (tablename VARCHAR PRIMARY KEY, idcolname VARCHAR)");
+        meta_store->execQuery("INSERT INTO metainfo VALUES ('metadata', '" + IDCol + "')");
+      }
+      
       void load_metadata_advanced_from_remote(std::string address, int skiplines, std::string columns, int IDColumn=0){
           std::string id= address.erase (address.find_last_not_of('.') - 1 , address.size() );
           id = id.erase(0,std::min(id.find_last_of('[') + 1, id.size() - 1));
@@ -197,7 +314,7 @@ class Storage{
           remove (id.c_str()); 
       };
       
-      std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::string get(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="",int dumpmeta=0){
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mReturning asset and metadata \033[0m\n";
         #endif
@@ -207,6 +324,9 @@ class Storage{
         }else{
             result=asset_store->getSingle(id);
         }
+        
+        if (dumpmeta==1) return result;
+        
         if(metaToFile != 0){
             meta_store->getSingleToFile(id, fileextension_meta);
         }else{
@@ -220,18 +340,29 @@ class Storage{
         return result;
       };
       
-      std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
+      std::vector<std::string> get(std::vector<std::string> id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="", bool join_metatables=true){
         std::vector<std::string> result;
         //std::cout << "\033[36mReturning assets and metadata \033[0m\n";
         //if (id.size() == 0) std::cout << "\033[31mNothing to do\033[0m\n";
-        if(metaToFile == 1){
+        if (join_metatables){  
+          if(metaToFile == 1){
 
-                meta_store->writeResultToFile("metadata", fileextension_meta);
-                }
-        if (metaToFile == 0){
+                  meta_store->writeResultToFile("metadata", fileextension_meta);
+                  }
+          if (metaToFile == 0){
 
-              meta_store->printResult();
-          }
+                meta_store->printResult();
+            }
+        }else{
+            if(metaToFile == 1){
+
+                  meta_store->writeResultMetaTablesToFile("metadata", fileextension_meta);
+                  }
+          if (metaToFile == 0){
+
+                meta_store->printResultMetaTables();
+            }
+        }
         for (int i=0; i<id.size();i++){
           if (assetToFile == 0){
               result.push_back(asset_store->getSingle(id[i]));
@@ -250,19 +381,43 @@ class Storage{
         return result;
       };
       
+       
      std::vector<std::string> get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta=""){
         std::vector<std::string> result;
 
         constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
         
-        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint);
-        std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
-        meta_store->execQuery(query);
 
+        
+        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint,false);
+        //std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        //meta_store->execQuery(query);
+        //meta_store->getIDsByConstraint(constraint,false);
         result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        
         return result;
         
       };
+      
+    std::vector<std::string> get_by_constraint_dont_join_metatables(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="", bool ids_only=false){
+        std::vector<std::string> result;
+
+        constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
+        
+      
+        std::vector<std::string> ids = meta_store->getIDsByConstraint(constraint,ids_only,false);
+        //std::string query = "SELECT * FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        //meta_store->execQuery(query);
+        //meta_store->getIDsByConstraint(constraint,false);
+        if (ids_only) {return ids;}
+        
+        result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta,false);
+        
+        return result;
+        
+      };
+      
+    
 
      std::vector<std::string> get_IDs_by_constraint(std::string constraint){
         std::vector<std::string> result;
@@ -284,7 +439,8 @@ class Storage{
         
         //create a new view
         constraint = (constraint.compare(1,3,"all") == 0) ? " " : (" WHERE " + constraint);
-        std::string query2="CREATE VIEW " + filtername + " AS SELECT " + meta_store->idcolumn + " FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        //std::string query2="CREATE VIEW " + filtername + " AS SELECT " + meta_store->idcolumn + " FROM metadata " + constraint + " ORDER BY " + meta_store->idcolumn;
+        std::string query2="CREATE VIEW " + filtername + " AS " + meta_store->get_metaQuery_fromMetaData(constraint);
         meta_store->execQuery(query2);
       }
       
@@ -294,7 +450,7 @@ class Storage{
         meta_store->execQuery(query);
      
         std::vector<std::string> ids = meta_store->crop_and_split_result(meta_store->getResultAsString());
-        std::vector<std::string> result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
+        //std::vector<std::string> result=get(ids,assetToFile,fileextension,metaToFile,fileextension_meta);
         return ids;
         
       }
@@ -335,7 +491,7 @@ class Storage{
      void remove_asset(std::string id, int remove_metadata=0){
         asset_store->remove(id);
         if (remove_metadata!=0){
-            meta_store->execQuery("DELETE FROM metadata WHERE " + meta_store->idcolumn + " = " + id);
+            meta_store->execQuery("DELETE FROM metadata WHERE metadata." + meta_store->idcolumn + " = '" + id + "'");
         }
       };
       
@@ -344,7 +500,7 @@ class Storage{
         return;
       }
       /**
-       * Redefines the columns for the use meta data.
+       * Redefines the columns for the central meta data table.
        * NOTE!!!! This deletes all existing entries.
        * @param coldef A comma seperated list of name-type tuples, e.g.: "my_name VARCHAR, my_value FLOAT" creates two columns called my_name and my_float which are of a text type and a floating point number type.
        * @param IDname The index of the column which contains the unique ID
@@ -396,8 +552,8 @@ class Storage{
        * Inserts a new row into the use metadata table. Do not use this to bulk insert data, it will be slow. Use load_metadata_advanced or load_metadata_from_file instead.
        * @param values A comma separated list of all values of the tuple to be inserted
       */
-      void insert_new_meta_row(std::string values){
-         meta_store->execQuery("INSERT INTO metadata VALUES (" + values + ")"); 
+      void insert_new_meta_row(std::string values, std::string tablename="metadata"){
+         meta_store->execQuery("INSERT INTO "+tablename+" VALUES (" + values + ")"); 
       }
       
       void testout();
@@ -405,6 +561,55 @@ class Storage{
         - Wrapper for loading assets and/or metadata from file or internet
         - More intuitive way of inserting new meta data
         */
+
+    //adding code for using boost module in pytorch
+
+    int asset_count(){
+        meta_store->execQuery("SELECT COUNT(*) FROM filedata");
+        std::string count_string = meta_store->getResultAsString();
+#ifdef OUTPUTSHELL
+        std::cout << count_string << std::endl;
+#endif
+        std::string current = "";
+        for(int i = 0; i < count_string.size(); i++) {
+            if (count_string[i] == ']') {
+                current = "";
+                continue;
+            }
+            current += count_string[i];
+        }
+        int count=std::stoi(current);
+        return count;
+    }
+
+    PyString getitem(std::string index){
+        std::string result = asset_store->getSingle(index);
+        PyString pystring = PyString(result);
+        return(pystring);
+    }
+
+    std::string getIDsByIndex(std::string query){
+        meta_store->execQuery(query);
+        std::string ids = meta_store->getResultAsString();
+        return ids;
+    }
+
+    PyString wrapper_get_function(std::string id, int assetToFile = 0, std::string fileextension="", int metaToFile = 0, std::string fileextension_meta="", int dumpmeta=0)
+    {
+        std::string result;
+        result = get(id,assetToFile,fileextension,metaToFile,fileextension_meta);
+        PyString pystring = PyString(result);
+        return pystring;
+    }
+
+    PyString wrapper_get_by_constraint(std::string constraint, int assetToFile = 0, std::string fileextension="", int metaToFile=0, std::string fileextension_meta="")
+    {
+        std::string result;
+        result=get_by_constraint(constraint, assetToFile, fileextension, metaToFile, fileextension_meta);
+        PyString pystring=PyString(result);
+        return pystring;
+    }
+
 };
 
 //We need this for the specialization of the Storage class for the python wrapper. In case of a new specialization, a new wrapper is necessary.
