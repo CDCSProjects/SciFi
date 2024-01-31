@@ -130,9 +130,23 @@ bool MetaStorage::get_isText(std::string col_id){
     return false;
 }
 
-std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint, bool ids_only){
+bool MetaStorage::get_isNumeric_byAttr(std::string col_name, std::string table_name){
+    std::string query = "SELECT count(numeric_scale) from information_schema.columns where column_name='" + col_name +"' AND table_name="+"'"+table_name+"'";
+    execQuery(query);
+    if (crop_single_result(getResultAsString()) == "0") return false;
+    else return true;
+}
 
+bool MetaStorage::get_isText_byAttr(std::string col_name, std::string table_name){
+    std::string query = "SELECT data_type from information_schema.columns where column_name='" + col_name +"' AND table_name="+"'"+table_name+"'";
+    execQuery(query);
+    if (crop_single_result(getResultAsString()).rfind("VARCHAR", 0) == 0) return true;
+    if (crop_single_result(getResultAsString()) == "TEXT") return true;
+    return false;
+}
 
+std::string MetaStorage::get_metaQuery_fromMetaData(std::string constraint){
+    resultTablesMeta.clear();
     std::vector<std::string> metatables = get_all_meta_tables();
    // for (int i=0;i<metatables.size();i++) std::cout << "Metatable " << i << ": " << metatables[i] << std::endl;
     std::string jointables;
@@ -145,6 +159,7 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
       std::size_t pos = 0;
       std::string before = "";
       std::string after = constraint;
+      int firsttab=0;
       while (pos!=std::string::npos){
           pos = after.find_first_of('.');
           if (pos==std::string::npos) break;
@@ -156,7 +171,7 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
           //std::cout << "before: " << before << ", after: " << after << ", tab: " << tab << ", pos2: " << pos2 << ", pos3: " << pos3 << std::endl;
           
           
-          int firsttab=0;
+          
           //Check if tables in constraint string exist
          if (std::find(metatables.cbegin(), metatables.cend(), tab)!=metatables.cend()){
             if (tab!="metadata"){
@@ -169,7 +184,78 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
                   execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + tab + "'");
                   std::string joincol=crop_single_result(getResultAsString());
                   //add the join condition
-                  if (firsttab==0){
+//                  std::cout << "constraint size: " << constraint.size() << "\nConstraint:" << constraint << std::endl;
+                  if (firsttab==0 && constraint.size()<3){
+                    joincond.append(" metadata.");
+                    firsttab++;}
+                    else joincond.append(" AND metadata.");
+                  joincond.append(joincol);
+                  joincond.append("=");
+                  joincond.append(tab);
+                  joincond.append(".");
+                  joincond.append(joincol);
+                }
+            }
+        }else{
+            std::cerr << "Table '" << tab << "' does not exist. Quitting\n";
+            std::string empty;
+            return empty;
+        }
+      }
+      
+
+      
+    }
+    jointables.append("metadata ");
+
+    //Construct query    
+    std::string query;
+    query = "SELECT DISTINCT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
+    return query;
+}
+
+std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint, bool ids_only, bool join_meta_tables){
+
+    resultTablesMeta.clear();
+    std::vector<std::string> metatables = get_all_meta_tables();
+   // for (int i=0;i<metatables.size();i++) std::cout << "Metatable " << i << ": " << metatables[i] << std::endl;
+    std::string jointables;
+    std::string joincond;
+    std::vector<std::string> jointablesV;
+    //If there is more than just the metadata table, we need some joins
+    if (metatables.size()>1){
+     
+      //Scan constraint for tables
+      std::size_t pos = 0;
+      std::string before = "";
+      std::string after = constraint;
+      int firsttab=0;
+      while (pos!=std::string::npos){
+          pos = after.find_first_of('.');
+          if (pos==std::string::npos) break;
+          before = after.substr(0,pos);
+          after = after.substr((int)pos+1);
+          size_t pos2 = before.find_last_of(' ');
+          size_t pos3=(int)pos2+1;
+          std::string tab = before.substr(pos3);
+          //std::cout << "before: " << before << ", after: " << after << ", tab: " << tab << ", pos2: " << pos2 << ", pos3: " << pos3 << std::endl;
+          
+          
+          
+          //Check if tables in constraint string exist
+         if (std::find(metatables.cbegin(), metatables.cend(), tab)!=metatables.cend()){
+            if (tab!="metadata"){
+                //Only insert table if we haven't inserted it before
+                if (std::find(jointablesV.cbegin(), jointablesV.cend(), tab)==jointablesV.cend()){
+                  jointables.append(tab);
+                  jointables.append(", ");
+                  jointablesV.push_back(tab);
+                  //get the foreign key of the table
+                  execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + tab + "'");
+                  std::string joincol=crop_single_result(getResultAsString());
+                  //add the join condition
+//                  std::cout << "constraint size: " << constraint.size() << "\nConstraint:" << constraint << std::endl;
+                  if (firsttab==0 && constraint.size()<3){
                     joincond.append(" metadata.");
                     firsttab++;}
                     else joincond.append(" AND metadata.");
@@ -195,16 +281,18 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
     //Construct query    
     std::string query;
     std::vector<std::string> ids;
+    //Only return the IDs that match the query, not all the available metadata for these IDs
     if (ids_only){
         
-        query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
+        query = "SELECT DISTINCT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
         execQuery(query);
         return format_getIDsByConstraint();
     }
-    else{
+    //Query all available metadata by joining the available user-defined meta tables
+    else if (join_meta_tables){
         query = "DROP TABLE IF EXISTS res";
         execQuery(query);
         query = "DROP TABLE res";
@@ -260,7 +348,7 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
         #ifdef OUTPUTSHELL
         std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
         #endif
-        execQueryAndPrint(query);
+        execQuery(query);
                 
         //query = "SELECT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
         query = "SELECT " + idcolumn + " FROM res GROUP BY " + idcolumn;
@@ -278,10 +366,80 @@ std::vector<std::string> MetaStorage::getIDsByConstraint(std::string constraint,
         
         return ids;
     }
-
-
+    //Do not join the meta tables. The results are stored in a vector of string vectors (member: resultTablesMeta). The order is the same as in the result of get_all_meta_tables();
+    else{
     
-    
+        query = "SELECT DISTINCT metadata." + idcolumn + " FROM " + jointables + " " + constraint + " " + joincond;
+        #ifdef OUTPUTSHELL
+        std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+        #endif
+        execQuery(query);
+        ids = format_getIDsByConstraint(); //get all IDs
+
+        for (int i=0; i<ids.size(); i++){
+            std::vector<std::string> tempres;
+            //Get records from the main metadata table
+            execQuery("SELECT idcolname FROM metainfo WHERE tablename='metadata'");
+            std::string joincol=crop_single_result(getResultAsString());
+                      
+            query = "SELECT * FROM metadata WHERE " + joincol + " = '" + ids[i] + "'";
+            #ifdef OUTPUTSHELL
+            std::cout << "\033[36mMetastore full SQL query:\033[0m\n" << query << std::endl;
+            #endif
+            execQuery(query);
+            
+            tempres.push_back(getResultAsString());
+
+            //create a new table from metadata that only contains the record with our ID to speed up the other queries
+            execQuery("CREATE OR REPLACE TABLE tempmeta AS SELECT * FROM metadata WHERE " + joincol + "='" +ids[i]+"'");
+            //Get records from the other meta data tables
+            for (int j=0; j<metatables.size(); j++){
+              if (metatables[j]!="metadata"){  
+                    execQuery("SELECT idcolname FROM metainfo WHERE tablename='" + metatables[j] + "'");
+                    joincol=crop_single_result(getResultAsString());
+                    execQuery("SELECT * FROM " + metatables[j]  + " SEMI JOIN tempmeta ON " +" tempmeta." + joincol + "=" + metatables[j] + "." + joincol + " AND tempmeta." + joincol + "='"+ids[i]+"'");   
+                    std::string r= getResultAsString();
+                    tempres.push_back(r);
+                }
+            }
+            resultTablesMeta.push_back(tempres);
+        }
+    }
+    return ids;
+}
+
+void MetaStorage::writeResultMetaTablesToFile(std::string filename, std::string fileextension){
+    std::vector<std::string> metatables = get_all_meta_tables();
+    std::ofstream o;
+    o.open(resultfolder + "/" + filename + fileextension); 
+    for (int j=0; j < resultTablesMeta.size(); j++){
+        o << "Result " << j << ": " << std::endl;
+      for (int i=0; i< metatables.size();i++){
+        o << "Meta data Table " << metatables[i] << ": " << std::endl;
+      //  for (int k=0; k< resultTablesMeta[j][i].size();k++){
+            o << resultTablesMeta[j][i] << std::endl;
+       //   }
+          o << std::endl;
+    }
+    }
+    o.close();
+    #ifdef OUTPUTSHELL
+    std::cout << "\033[32mMetadata written to " << filename + fileextension << "\033[0m" << std::endl;
+    #endif
+}
+
+void MetaStorage::printResultMetaTables(){
+    std::vector<std::string> metatables = get_all_meta_tables();
+    for (int j=0; j < resultTablesMeta.size(); j++){
+        std::cout << "Result " << j << ": " << std::endl;
+      for (int i=0; i< metatables.size();i++){
+        std::cout << "Meta data Table " << metatables[i] << ": " << std::endl;
+        //for (int k=0; k< resultTablesMeta[j][i].size();k++){
+            std::cout << resultTablesMeta[j][i] <<std::endl;
+         // }
+          std::cout << std::endl;
+    }
+    }
 }
 //TODO get_isBoolean
 
