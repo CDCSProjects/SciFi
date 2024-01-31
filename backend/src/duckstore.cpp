@@ -188,15 +188,19 @@ std::vector<std::string> DuckStore::crop_and_split_result(std::string res){
 
     while(std::getline(resstream, r1, '\n')) {
         std::istringstream r1stream(r1);
+        bool missinglast=false;
+        if (r1.back()=='\t') missinglast=true;
         while(std::getline(r1stream, r2, '\t')) {
-            if (r2!=" ") resvec.push_back(r2);
+            if (r2=="") resvec.push_back("");
+            else resvec.push_back(r2);
         }
+        if (missinglast==true) resvec.push_back("");
     }
     return resvec;
 }
 
-std::vector<std::string> DuckStore::get_user_meta_column_names(){
-    std::string query = "select * from metadata limit 0";
+std::vector<std::string> DuckStore::get_user_meta_column_names(std::string table){
+    std::string query = "select * from " + table +" limit 0";
     execQuery(query);
     std::istringstream resstream(getResultAsString());
     std::string r;

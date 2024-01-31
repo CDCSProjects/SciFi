@@ -27,7 +27,7 @@ class DuckStore : public MetaStorage{
         std::string crop_single_result(std::string res);
         std::string crop_result(std::string res);
         std::string get_read_csv_query(std::string tablename, std::string filename, bool data_only=false, int skiplines=0);
-        std::vector<std::string> get_user_meta_column_names();
+        std::vector<std::string> get_user_meta_column_names(std::string table="metadata");
         std::vector<std::string> crop_and_split_result(std::string res);
    //     void initDB(std::string name);
 
