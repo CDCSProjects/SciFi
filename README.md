@@ -39,10 +39,12 @@ We will provide a more realistic example dataset as soon as we have figured out 
 
 Currently, we provide some simple examples for the usage of SciFi as a framework or as a shell. All examples can be found in the folder *examples*.
 
-There is a cython-based python wrapper which allows a direct access of the DataStore and the MetaStore. We are working on a wrapper which works with generic backends and which does not require a direct access. Our integration into PyTorch uses this wrapper to extend the Dataset class of Pytorch. This way, you can access all assets stored via SciFi while using PyTorch, like you would access any other map-style dataset. **If you are experienced in PyTorch and/or Cython, and are looking for a bachelor or master thesis topic at UHH or TUHH, drop us a message!**
+~~There is a cython-based python wrapper which allows a direct access of the DataStore and the MetaStore. We are working on a wrapper which works with generic backends and which does not require a direct access. Our integration into PyTorch uses this wrapper to extend the Dataset class of Pytorch. This way, you can access all assets stored via SciFi while using PyTorch, like you would access any other map-style dataset. **If you are experienced in PyTorch and/or Cython, and are looking for a bachelor or master thesis topic at UHH or TUHH, drop us a message!**~~
+The wrapper based on boost is in the testing branch and not necessarily up to date.
 
 ### SciFi on Conferences
 - **19.09.22** Presentation of SciFi at "Machine Learning in Natural Sciences: from Quantum Physics to Nanoscience and Structural Biology" in Hamburg. You can find the abstract at https://www.conferences.uni-hamburg.de/event/256/contributions/728/
+- **23.09.24** Presentation of SciFi at LWDA in Würzburg, Germany
 
 ## Folder Structure
 
@@ -69,7 +71,7 @@ We tested SciFi using Ubuntu in different versions and on different laptops and 
 
 *downloadAndBuild.sh* is a script for downloading and building the static libraries for rocksdb and duckdb, and for building a simple example shell which can be found in examples/SimpleStore.cpp. It has been tested with duckdb v0.4.1-dev1214 and rocksdb v. 7.5.0 on several notebooks and a Jetson Nano. After a successful build, you will find a binary called *simple* in the root folder of SciFi. Run this binary to be greeted with a nice little shell.
 
-### Build the Python Wrapper
+### Build the Python Wrapper (old cython version)
 
 **Note: The python wrapper does not support the central *Storage*-Interface. For this reason we do not advise to use it directly until a new version is released. This wrapper is mainly used for the extension if the Dataset class in PyTorch. We highly recommend to use that instead.**
 1. Change to the directory *pythonwrapper*
@@ -77,7 +79,7 @@ We tested SciFi using Ubuntu in different versions and on different laptops and 
 In case python3 is not set as your default python call, use *python3 setup.py build_ext --inplace*.
 3. Your library will have the name *scifi.cpython-38-\<architecture\>-linux-gnu.so*. You can now either install this library or use it directly from the same folder. The module is called *scifi*. It provides the classes *rocks* and *duck*. 
 
-### Use with PyTorch 
+### Use with PyTorch (old version)
 
 You can access your SciFi data directly without writing the assets back to the file system or using the original files.
  
@@ -109,5 +111,5 @@ All examples can be found in the *examples* folder.
 - All other examples were used for our paper to demonstrate the speed of different operations, e.g. writing datasets to main memory.
 
 ## Documentation
-Currently, the documentation consists of this readme, *some* code documentation in Doxygen style, and a user documentation which can be found in the file SciFiFirstSteps.pdf in the root folder of this repository. 
+Currently, the documentation consists of this readme, *some* code documentation in Doxygen style, and a user documentation which can be found in the file SciFiFirstSteps.pdf in the root folder of this repository. We are aware that the documentation needs an update.
 
